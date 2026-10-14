@@ -1,0 +1,32 @@
+# Dependencies
+/app-backend/node_modules
+/app-backend/vendor
+
+# Environment & local files
+/app-backend/.env
+/app-backend/.env.backup
+/app-backend/.env.production
+
+# Storage & Logs
+/app-backend/storage/*.key
+/app-backend/storage/logs/*.log
+/app-backend/storage/framework/cache/data/*
+/app-backend/storage/framework/sessions/*
+/app-backend/storage/framework/views/*
+/app-backend/storage/pail
+/app-backend/public/hot
+/app-backend/public/storage
+
+# SQLite databases
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# IDE & OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
