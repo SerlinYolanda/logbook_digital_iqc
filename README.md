@@ -1,54 +1,166 @@
 # Logbook Digital IQC Portal
 
-Stitch Project ID: `4698447116951736875`
+> **Incoming Quality Control (IQC) Digital Logbook & Inspection Management System**  
+> Developed for precision manufacturing, part verification, tolerance checking, and supervisor disposition workflow.
 
-This directory contains the downloaded screenshots (PNG images), full HTML source code, and metadata for all 8 screens of the **Logbook Digital IQC Portal** project.
-
----
-
-## Screen Inventory
-
-| # | Screen Name | Screen ID | Screenshot | HTML Code |
-|---|-------------|-----------|------------|-----------|
-| 1 | **Halaman Masuk - Logbook Digital IQC** | `909860c5cfa74d5da2511144537dd41e` | [`screens/01_halaman_masuk/screenshot.png`](screens/01_halaman_masuk/screenshot.png) | [`screens/01_halaman_masuk/index.html`](screens/01_halaman_masuk/index.html) |
-| 2 | **Dashboard Inspektur - Logbook Digital IQC** | `c6a4d482aa7448059b273d40a9a75583` | [`screens/02_dashboard_inspektur/screenshot.png`](screens/02_dashboard_inspektur/screenshot.png) | [`screens/02_dashboard_inspektur/index.html`](screens/02_dashboard_inspektur/index.html) |
-| 3 | **Master Data Management - Logbook Digital IQC** | `31c3e32821b14ce699feb35d7ff613a0` | [`screens/03_master_data_management/screenshot.png`](screens/03_master_data_management/screenshot.png) | [`screens/03_master_data_management/index.html`](screens/03_master_data_management/index.html) |
-| 4 | **Riwayat & Arsip Inspeksi - Logbook Digital IQC** | `4f1f6c64fd7e4259b1a4e5cc49726491` | [`screens/04_riwayat_arsip_inspeksi/screenshot.png`](screens/04_riwayat_arsip_inspeksi/screenshot.png) | [`screens/04_riwayat_arsip_inspeksi/index.html`](screens/04_riwayat_arsip_inspeksi/index.html) |
-| 5 | **Form Inspeksi & Pengukuran Dimensi** | `9a600f0945a44279a04ad5cd43bda5d1` | [`screens/05_form_inspeksi_pengukuran_dimensi/screenshot.png`](screens/05_form_inspeksi_pengukuran_dimensi/screenshot.png) | [`screens/05_form_inspeksi_pengukuran_dimensi/index.html`](screens/05_form_inspeksi_pengukuran_dimensi/index.html) |
-| 6 | **Panel Validasi Supervisor Kualitas** | `a75b01ae70634f7ab98ca0b447d43d98` | [`screens/06_panel_validasi_supervisor_kualitas/screenshot.png`](screens/06_panel_validasi_supervisor_kualitas/screenshot.png) | [`screens/06_panel_validasi_supervisor_kualitas/index.html`](screens/06_panel_validasi_supervisor_kualitas/index.html) |
-| 7 | **Akses Ditolak - Poka-Yoke System** | `b9b04e77179d4b82bfa0adfad743fc9e` | [`screens/07_akses_ditolak_poka_yoke_system/screenshot.png`](screens/07_akses_ditolak_poka_yoke_system/screenshot.png) | [`screens/07_akses_ditolak_poka_yoke_system/index.html`](screens/07_akses_ditolak_poka_yoke_system/index.html) |
-| 8 | **Modal Catatan Defect dalam Dashboard** | `c94ed771812b496f8700fa6e453ccfbd` | [`screens/08_modal_catatan_defect_dalam_dashboard/screenshot.png`](screens/08_modal_catatan_defect_dalam_dashboard/screenshot.png) | [`screens/08_modal_catatan_defect_dalam_dashboard/index.html`](screens/08_modal_catatan_defect_dalam_dashboard/index.html) |
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 ---
 
-## Directory Structure
+## 🌟 Key Features
+
+1. **⚡ Quick GRN Scanner**:
+   - Barcode / QR scanner integration on the Inspector Dashboard.
+   - Instantly finds incoming Good Receipt Notes (GRN) and routes inspectors directly to the synchronized inspection form.
+   - Alerts with friendly modal dialogs if an unknown GRN is scanned or if the GRN has already been inspected.
+
+2. **🔒 Locked Specifications & Audit Integrity**:
+   - When opened via GRN Quick Scanner or Queue, the **Lot Information & Component Specifications** are securely locked (`readonly` and `disabled` with hidden integrity inputs).
+   - Prevents accidental tampering of part drawing specs, GRN numbers, lot numbers, and arrival quantities.
+
+3. **📏 Real-Time Dimension Measurement & Auto-Evaluation**:
+   - Dynamic AQL sample measurement table with real-time deviation calculations against nominal drawings.
+   - Automatic `PASS` or `OUT OF SPEC` badge evaluation per sample.
+   - Instant pass/fail tally bar.
+
+4. **🛡️ Poka-Yoke & Role-Based Access Control**:
+   - **Inspector (`INS-001`)**: Can register GRNs, scan incoming shipments, input physical measurements, and submit reports.
+   - **Supervisor (`SPV-001`)**: Exclusive authority to review and approve or reject out-of-spec inspection lots with engineering disposition notes.
+   - **Administrator (`ADM-001`)**: Full control over Master Parts, Measurement Instruments, User Management, and System Settings.
+
+5. **📊 History, Reports & Audit Trail**:
+   - Filterable inspection logbook archive with full measurement data sheets, timestamps, and inspector/supervisor digital sign-offs.
+
+---
+
+## 💻 Tech Stack
+
+- **Framework**: Laravel 11
+- **Language**: PHP 8.2+
+- **Styling**: Tailwind CSS + Google Material Symbols
+- **Database**: SQLite (default zero-config) or MySQL / PostgreSQL
+- **Architecture**: MVC with Blade templating
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Prerequisites
+Ensure you have the following installed on your system:
+- **PHP 8.2** or higher (with `php-sqlite3`, `php-mbstring`, `php-xml`, `php-curl` extensions)
+- **Composer** (PHP dependency manager)
+- **Git**
+
+---
+
+### 2. Clone the Repository
+
+```bash
+git clone https://github.com/SerlinYolanda/logbook_digital_iqc.git
+cd logbook_digital_iqc
+```
+
+---
+
+### 3. Installation & Setup
+
+Navigate into the Laravel backend directory:
+
+```bash
+cd app-backend
+```
+
+Install Composer dependencies:
+
+```bash
+composer install
+```
+
+Set up the environment configuration file:
+
+```bash
+# On Windows (Command Prompt / PowerShell):
+copy .env.example .env
+
+# On Linux / macOS:
+cp .env.example .env
+```
+
+Generate the application encryption key:
+
+```bash
+php artisan key:generate
+```
+
+Prepare the database and seed initial test data (Parts, Instruments, Users, Incoming Materials):
+
+```bash
+# Create SQLite file if using SQLite (default):
+# Windows PowerShell:
+New-Item -ItemType File -Path database\database.sqlite -Force
+
+# Linux / macOS:
+touch database/database.sqlite
+
+# Run database migrations and seeders:
+php artisan migrate:fresh --seed
+```
+
+---
+
+### 4. Running the Development Server
+
+Start the Laravel local server:
+
+```bash
+php artisan serve --port=8000
+```
+
+The application will be accessible at:  
+👉 **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+
+> **Windows One-Click Shortcut:**  
+> You can also double-click [`start_laravel.bat`](start_laravel.bat) in the project root to start the server and open the browser automatically.
+
+---
+
+## 🔑 Default Login Credentials
+
+| Role | NIK | Password | Description |
+|---|---|---|---|
+| **Administrator** | `ADM-001` | `password123` | Full administrative access (Master Parts, Users, Instruments) |
+| **Inspector** | `INS-001` | `password123` | Quick Scanner, IQC Testing Form, Logbook History |
+| **Supervisor** | `SPV-001` | `password123` | Quality Review, Disposition, Pass/Reject Approval |
+
+---
+
+## 📁 Project Directory Structure
 
 ```text
-logbook-digital-iqc-portal/
-├── code/
-│   ├── 01_halaman_masuk.html
-│   ├── 02_dashboard_inspektur.html
-│   ├── 03_master_data_management.html
-│   ├── 04_riwayat_arsip_inspeksi.html
-│   ├── 05_form_inspeksi_pengukuran_dimensi.html
-│   ├── 06_panel_validasi_supervisor_kualitas.html
-│   ├── 07_akses_ditolak_poka_yoke_system.html
-│   └── 08_modal_catatan_defect_dalam_dashboard.html
-├── images/
-│   ├── 01_halaman_masuk.png
-│   ├── 02_dashboard_inspektur.png
-│   ├── 03_master_data_management.png
-│   ├── 04_riwayat_arsip_inspeksi.png
-│   ├── 05_form_inspeksi_pengukuran_dimensi.png
-│   ├── 06_panel_validasi_supervisor_kualitas.png
-│   ├── 07_akses_ditolak_poka_yoke_system.png
-│   └── 08_modal_catatan_defect_dalam_dashboard.png
-├── screens/
-│   ├── 01_halaman_masuk/
-│   │   ├── screenshot.png
-│   │   ├── index.html
-│   │   └── screen_info.json
-│   └── ... (screen 02 to 08)
-├── project_info.json
-└── README.md
+logbook_digital_iqc/
+├── app-backend/                    # Complete Laravel application
+│   ├── app/
+│   │   ├── Http/Controllers/       # IncomingMaterial, Inspection, MasterData, etc.
+│   │   ├── Models/                 # Part, Inspection, Defect, Instrument, User
+│   │   └── Middleware/             # RoleMiddleware (Poka-Yoke)
+│   ├── database/
+│   │   ├── migrations/             # Schema definitions
+│   │   └── seeders/                # Default parts, instruments & accounts
+│   ├── resources/
+│   │   └── views/                  # Blade templates (Dashboard, Inspections, etc.)
+│   └── routes/
+│       └── web.php                 # Application routes & middleware guards
+├── .gitignore                      # Git ignore rules
+├── deploy_optimize.bat             # Production cache & optimization script
+├── README.md                       # Documentation & run instructions
+└── start_laravel.bat               # Windows one-click launcher
 ```
+
+---
+
+## 📄 License
+
+This software is released under the [MIT License](LICENSE).
