@@ -72,21 +72,21 @@
                             <td class="py-3.5 px-4 text-center">
                                 @if($hasFail)
                                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-600 border border-rose-200">
-                                        ADA DEVIASI
+                                        OUT OF SPEC
                                     </span>
                                 @else
                                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
-                                        PASS (OK)
+                                        IN-SPEC / PASS
                                     </span>
                                 @endif
                             </td>
                             <td class="py-3.5 px-4 text-center">
                                 @if($defectCount > 0)
                                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200 font-mono">
-                                        {{ $defectCount }} Temuan
+                                        {{ $defectCount }} Defect(s)
                                     </span>
                                 @else
-                                    <span class="text-slate-500">Nihil (0)</span>
+                                    <span class="text-slate-500">None (0)</span>
                                 @endif
                             </td>
                             <td class="py-3.5 px-4 text-center text-slate-600">

@@ -51,4 +51,19 @@ class Inspection extends Model
     {
         return $this->hasMany(Defect::class);
     }
+
+    public function photos()
+    {
+        return $this->hasMany(InspectionPhoto::class);
+    }
+
+    public function passPhotos()
+    {
+        return $this->hasMany(InspectionPhoto::class)->where('photo_type', 'pass');
+    }
+
+    public function defectPhotos()
+    {
+        return $this->hasMany(InspectionPhoto::class)->where('photo_type', 'defect');
+    }
 }

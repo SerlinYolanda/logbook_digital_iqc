@@ -9,7 +9,7 @@
                 <span class="material-symbols-outlined text-indigo-600 icon-lg">bar_chart</span>
                 Quality Inspection Output & Formal Reports
             </h1>
-            <p class="text-xs text-slate-500 mt-1">Official quality verification documents and ISO 9001 compliance logs for EE Part Division.</p>
+            <p class="text-xs text-slate-500 mt-1">Official quality verification documents and ISO 9001 compliance logs for EE Part.</p>
         </div>
         
         <div class="flex items-center gap-2.5">
@@ -93,7 +93,7 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-black text-slate-900 uppercase tracking-wide">IQC QUALITY INSPECTION SUMMARY REPORT</h2>
-                        <p class="text-xs font-bold text-indigo-700 tracking-wider uppercase mt-0.5">EE PART DIVISION • LOGBOOK DIGITAL IQC PORTAL</p>
+                        <p class="text-xs font-bold text-indigo-700 tracking-wider uppercase mt-0.5">EE PART • LOGBOOK DIGITAL IQC PORTAL</p>
                     </div>
                 </div>
                 <div class="text-right text-xs text-slate-500 font-mono">

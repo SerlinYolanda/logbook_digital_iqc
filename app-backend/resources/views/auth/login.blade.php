@@ -267,6 +267,27 @@
                 Masuk ke Logbook IQC &rarr;
             </button>
         </form>
+
+        <!-- Quick Demo Accounts -->
+        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px dashed #e2e8f0;">
+            <div style="font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; text-align: center;">
+                ⚡ Masuk Cepat (Akun Demo)
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                <a href="{{ route('login.inspector') }}" style="text-align: center; padding: 0.6rem 0.25rem; background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">Inspector</span>
+                    <span style="font-size: 0.65rem; color: #6366f1;">INS-001</span>
+                </a>
+                <a href="{{ route('login.supervisor') }}" style="text-align: center; padding: 0.6rem 0.25rem; background: #fffbeb; color: #b45309; border: 1px solid #fde68a; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">Supervisor</span>
+                    <span style="font-size: 0.65rem; color: #d97706;">SPV-001</span>
+                </a>
+                <a href="{{ route('login.admin') }}" style="text-align: center; padding: 0.6rem 0.25rem; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">Admin</span>
+                    <span style="font-size: 0.65rem; color: #16a34a;">ADM-001</span>
+                </a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

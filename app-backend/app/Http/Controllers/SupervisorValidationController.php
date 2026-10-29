@@ -42,7 +42,7 @@ class SupervisorValidationController extends Controller
             ], 403);
         }
 
-        $inspection = Inspection::with(['part', 'inspector', 'measurements', 'defects'])->findOrFail($id);
+        $inspection = Inspection::with(['part', 'inspector', 'measurements', 'defects', 'photos.uploader'])->findOrFail($id);
         
         $totalMeasurements = $inspection->measurements->count();
         $failedMeasurements = $inspection->measurements->where('is_pass', false)->count();

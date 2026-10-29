@@ -12,7 +12,12 @@ class InspectionMeasurement extends Model
     protected $fillable = [
         'inspection_id',
         'sample_number',
+        'parameter_name',
+        'measurement_tool',
         'actual_value',
+        'nominal_value',
+        'tolerance_min',
+        'tolerance_max',
         'deviation',
         'is_pass',
         'notes',

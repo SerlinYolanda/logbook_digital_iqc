@@ -25,4 +25,9 @@ class Part extends Model
     {
         return $this->hasMany(Inspection::class);
     }
+
+    public function parameters()
+    {
+        return $this->hasMany(PartInspectionParameter::class);
+    }
 }

@@ -9,7 +9,7 @@
         <div class="h-32 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 w-full relative">
             <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 16px 16px;"></div>
             <div class="absolute bottom-3 right-6 text-[10px] font-mono font-bold text-slate-300 bg-black/50 px-3 py-1 rounded-full border border-white/15 uppercase tracking-widest backdrop-blur-xs">
-                EE Part Division • Quality Control
+                EE Part • Quality Control
             </div>
         </div>
         
@@ -79,12 +79,12 @@
                     </div>
                 </div>
                 
-                <!-- Department / Division -->
+                <!-- Department -->
                 <div class="p-3.5 bg-white rounded-xl border border-slate-200/60 shadow-xs">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">DEPARTMENT / DIVISION</label>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">DEPARTMENT</label>
                     <div class="text-sm font-bold text-slate-900 flex items-center gap-2">
                         <span class="material-symbols-outlined text-emerald-600 text-[18px]">precision_manufacturing</span> 
-                        <span>EE Part Division</span>
+                        <span>EE Part</span>
                     </div>
                 </div>
 

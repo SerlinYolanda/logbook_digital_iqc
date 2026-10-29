@@ -4,13 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InspectionController;
+use App\Http\Controllers\InspectionPhotoController;
 use App\Http\Controllers\SupervisorValidationController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\DefectController;
-
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\InstrumentController;
 use App\Http\Controllers\IncomingMaterialController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 // Public routes
 Route::get('/', [AuthController::class, 'rootRedirect'])->name('root');
@@ -18,15 +21,46 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Quick Demo / Instant Role Authentication (Autologin with full Auth session)
+Route::get('/login/inspector', function () {
+    $user = User::where('role', 'inspector')->first() ?? User::where('nik', 'INS-001')->first();
+    if ($user) {
+        Auth::login($user);
+        session(['user_role' => 'inspector']);
+    }
+    return redirect()->route('dashboard');
+})->name('login.inspector');
+
+Route::get('/login/supervisor', function () {
+    $user = User::where('role', 'supervisor')->first() ?? User::where('nik', 'SPV-001')->first();
+    if ($user) {
+        Auth::login($user);
+        session(['user_role' => 'supervisor']);
+    }
+    return redirect()->route('dashboard');
+})->name('login.supervisor');
+
+Route::get('/login/admin', function () {
+    $user = User::where('role', 'admin')->first() ?? User::where('nik', 'ADM-001')->first();
+    if ($user) {
+        Auth::login($user);
+        session(['user_role' => 'admin']);
+    }
+    return redirect()->route('dashboard');
+})->name('login.admin');
+
 // Authenticated routes
 Route::middleware(['auth'])->group(function () {
+    // Dashboard & Profile
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
 
-    // Inspections
+    // Inspections (Archive & Export routes MUST precede /{id})
     Route::get('/inspections', [InspectionController::class, 'index'])->name('inspections.index');
     Route::get('/inspections/create', [InspectionController::class, 'create'])->name('inspections.create');
     Route::post('/inspections', [InspectionController::class, 'store'])->name('inspections.store');
+    Route::get('/inspections/export', [InspectionController::class, 'exportCsv'])->name('inspections.export');
+    Route::get('/inspections/print', [InspectionController::class, 'printArchive'])->name('inspections.print');
     Route::get('/inspections/{id}', [InspectionController::class, 'show'])->name('inspections.show');
 
     // Reports & Output
@@ -45,12 +79,20 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/inspections/{id}/defects', [DefectController::class, 'store'])->name('defects.store');
     Route::delete('/defects/{id}', [DefectController::class, 'destroy'])->name('defects.destroy');
 
-    // Poka-Yoke error page simulation
+    // Inspection photo uploads (Inspector uploads before submitting to SPV)
+    Route::post('/inspections/{id}/photos', [InspectionPhotoController::class, 'store'])->name('inspection-photos.store');
+    Route::delete('/inspection-photos/{photo}', [InspectionPhotoController::class, 'destroy'])->name('inspection-photos.destroy');
+
+    // Inspector submits draft inspection to SPV after uploading photos
+    Route::post('/inspections/{id}/submit-to-spv', [InspectionController::class, 'submitToSpv'])->name('inspections.submit-to-spv');
+
+    // Poka-Yoke error page simulation & SOP explanation
     Route::get('/poka-yoke/denied', [AuthController::class, 'pokaYokeDenied'])->name('poka-yoke.denied');
 
     // Supervisor ONLY: Review and approve/disposition rejected materials
     Route::middleware(['role:supervisor'])->group(function () {
-        Route::get('/supervisor/validations', [SupervisorValidationController::class, 'index'])->name('supervisor.validation');
+        Route::get('/supervisor/validation', [SupervisorValidationController::class, 'index'])->name('supervisor.validation');
+        Route::get('/supervisor/validations', [SupervisorValidationController::class, 'index']);
         Route::get('/supervisor/validations/{id}', [SupervisorValidationController::class, 'show'])->name('supervisor.review');
         Route::post('/supervisor/validations/{id}/decide', [SupervisorValidationController::class, 'decide'])->name('supervisor.decide');
     });
@@ -58,8 +100,8 @@ Route::middleware(['auth'])->group(function () {
     // Master Data & User Shift Roster: Supervisor and Admin
     Route::middleware(['role:supervisor,admin'])->group(function () {
         Route::resource('master-data', MasterDataController::class)->except(['create', 'show', 'edit']);
-        Route::get('/admin/users', [\App\Http\Controllers\UserController::class, 'index'])->name('admin.users.index');
-        Route::post('/inspectors/{user}/set-shift', [\App\Http\Controllers\UserController::class, 'setInspectorShift'])->name('inspectors.set-shift');
+        Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::post('/inspectors/{user}/set-shift', [UserController::class, 'setInspectorShift'])->name('inspectors.set-shift');
 
         // Instrument registry management
         Route::post('/instruments', [InstrumentController::class, 'store'])->name('instruments.store');
@@ -70,9 +112,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Admin ONLY: Full Account Management (Create, Edit, Delete Inspector & SPV Credentials)
     Route::middleware(['role:admin'])->group(function () {
-        Route::post('/admin/users', [\App\Http\Controllers\UserController::class, 'store'])->name('admin.users.store');
-        Route::put('/admin/users/{user}', [\App\Http\Controllers\UserController::class, 'update'])->name('admin.users.update');
-        Route::delete('/admin/users/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('admin.users.destroy');
+        Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
+        Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+        Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     });
 });
-

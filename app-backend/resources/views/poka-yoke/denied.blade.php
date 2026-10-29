@@ -29,36 +29,48 @@
             </p>
 
             <!-- Technical Detail Box -->
-            <div class="w-full mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left text-xs font-mono space-y-1.5 text-slate-400">
-                <div class="flex justify-between">
-                    <span>Rule Triggered:</span>
-                    <span class="text-rose-600 font-bold">POKA-YOKE-RULE-04 (Dual Control)</span>
+            <div class="w-full mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left text-xs font-mono space-y-1.5 text-slate-600">
+                <div class="flex justify-between items-center py-0.5 border-b border-slate-200/60">
+                    <span class="text-slate-400">Rule Triggered:</span>
+                    <span class="text-rose-600 font-bold">{{ $rule_code ?? 'POKA-YOKE-RULE-08 (Mistake-Proofing System)' }}</span>
                 </div>
-                <div class="flex justify-between">
-                    <span>Your Current Role:</span>
-                    <span class="text-indigo-600 font-bold uppercase">{{ auth()->user()->role ?? $user_role ?? 'INSPECTOR' }}</span>
+                <div class="flex justify-between items-center py-0.5 border-b border-slate-200/60">
+                    <span class="text-slate-400">Active Operator / Section:</span>
+                    <span class="text-indigo-600 font-bold uppercase">{{ auth()->user()->role ?? $user_role ?? 'INSPECTOR' }} (EE PART)</span>
                 </div>
-                <div class="flex justify-between">
-                    <span>Required Role:</span>
-                    <span class="text-amber-700 font-bold">SUPERVISOR / QUALITY HEAD</span>
+                @if(isset($part_number))
+                <div class="flex justify-between items-center py-0.5 border-b border-slate-200/60">
+                    <span class="text-slate-400">Blocked Part Number:</span>
+                    <span class="text-rose-700 font-bold">{{ $part_number }}</span>
                 </div>
-                <div class="flex justify-between">
-                    <span>Target Resource:</span>
-                    <span class="text-slate-900">{{ $target_resource ?? 'Disposition Panel & Master Data' }}</span>
+                <div class="flex justify-between items-center py-0.5 border-b border-slate-200/60">
+                    <span class="text-slate-400">Part Description:</span>
+                    <span class="text-slate-800 font-semibold truncate max-w-xs">{{ $part_name ?? 'Non-EE Component' }}</span>
+                </div>
+                @endif
+                @if(isset($grn))
+                <div class="flex justify-between items-center py-0.5 border-b border-slate-200/60">
+                    <span class="text-slate-400">Scanned GRN:</span>
+                    <span class="text-amber-700 font-bold">{{ $grn }}</span>
+                </div>
+                @endif
+                <div class="flex justify-between items-center py-0.5">
+                    <span class="text-slate-400">Target Standard:</span>
+                    <span class="text-slate-900 font-semibold">{{ $target_resource ?? 'IQC Standard & Routing Verification' }}</span>
                 </div>
             </div>
 
             <!-- Resolution Guidance -->
-            <div class="w-full mt-4 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-left text-xs text-amber-700 flex items-start gap-3">
-                <span class="material-symbols-outlined text-amber-700 icon-lg shrink-0 mt-0.5">lightbulb</span>
+            <div class="w-full mt-4 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-left text-xs text-amber-800 flex items-start gap-3">
+                <span class="material-symbols-outlined text-amber-600 icon-lg shrink-0 mt-0.5">lightbulb</span>
                 <div class="leading-relaxed">
-                    <strong>Resolution:</strong> If you are a Quality Supervisor, please log out from this account and sign in again using the authorized account NIK: <code class="text-slate-900 font-mono font-bold">SPV-001</code>.
+                    <strong>Poka-Yoke Action Required:</strong> {{ $resolution ?? 'Tindakan ini diblokir secara otomatis oleh sistem agar kesalahan inspeksi lintas bagian tidak terjadi.' }}
                 </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="mt-8 flex items-center gap-3 w-full sm:w-auto">
-                <a href="{{ route('dashboard') }}" class="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-slate-900 font-semibold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+                <a href="{{ route('dashboard') }}" class="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined icon-md">dashboard</span>
                     <span>Back to Dashboard</span>
                 </a>

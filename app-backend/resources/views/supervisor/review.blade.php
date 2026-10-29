@@ -81,6 +81,92 @@
     </div>
     @endif
 
+    {{-- ── PHOTO EVIDENCE GALLERY (Inspector Uploads) ── --}}
+    @php
+        $allPhotos    = $inspection->photos ?? collect();
+        $passPhotos   = $allPhotos->where('photo_type', 'pass');
+        $defectPhotos = $allPhotos->where('photo_type', 'defect');
+    @endphp
+
+    <div class="bg-white/90 border border-slate-200 rounded-2xl overflow-hidden shadow-xl">
+        <div class="p-5 border-b border-slate-200 flex items-center gap-3">
+            <span class="p-2 rounded-xl bg-indigo-600 text-white">
+                <span class="material-symbols-outlined icon-md">photo_library</span>
+            </span>
+            <div>
+                <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Photo Evidence from Inspector</h2>
+                <p class="text-xs text-slate-400">{{ $allPhotos->count() }} file(s) uploaded — Pass evidence + Defect evidence</p>
+            </div>
+        </div>
+
+        <div class="p-5 space-y-6">
+            @if($allPhotos->count() === 0)
+                <div class="text-center py-8 text-slate-400 text-xs">
+                    <span class="material-symbols-outlined text-[36px] block mb-2">image_not_supported</span>
+                    No photos were uploaded for this inspection.
+                </div>
+            @else
+                {{-- Pass Photos --}}
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span class="text-xs font-bold text-emerald-700 uppercase tracking-wide">
+                            ✅ Pass / OK Evidence ({{ $passPhotos->count() }} photo{{ $passPhotos->count() === 1 ? '' : 's' }})
+                        </span>
+                    </div>
+                    @if($passPhotos->count() > 0)
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            @foreach($passPhotos as $photo)
+                                <div class="rounded-xl overflow-hidden border-2 border-emerald-200 bg-slate-50 group">
+                                    <a href="{{ Storage::disk('public')->url($photo->path) }}" target="_blank" title="Click to enlarge">
+                                        <img src="{{ Storage::disk('public')->url($photo->path) }}"
+                                             alt="{{ $photo->label }}"
+                                             class="w-full h-28 object-cover group-hover:brightness-90 transition">
+                                    </a>
+                                    <div class="p-2 text-[10px] text-slate-600">
+                                        <div class="font-semibold truncate">{{ $photo->label ?: 'Pass Photo' }}</div>
+                                        <div class="text-slate-400 mt-0.5">by {{ $photo->uploader->name ?? 'Inspector' }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-xs text-slate-400 italic">No pass photos uploaded.</p>
+                    @endif
+                </div>
+
+                {{-- Defect Photos --}}
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                        <span class="text-xs font-bold text-rose-700 uppercase tracking-wide">
+                            🔴 Defect Evidence ({{ $defectPhotos->count() }} photo{{ $defectPhotos->count() === 1 ? '' : 's' }})
+                        </span>
+                    </div>
+                    @if($defectPhotos->count() > 0)
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            @foreach($defectPhotos as $photo)
+                                <div class="rounded-xl overflow-hidden border-2 border-rose-200 bg-slate-50 group">
+                                    <a href="{{ Storage::disk('public')->url($photo->path) }}" target="_blank" title="Click to enlarge">
+                                        <img src="{{ Storage::disk('public')->url($photo->path) }}"
+                                             alt="{{ $photo->label }}"
+                                             class="w-full h-28 object-cover group-hover:brightness-90 transition">
+                                    </a>
+                                    <div class="p-2 text-[10px] text-slate-600">
+                                        <div class="font-semibold truncate">{{ $photo->label ?: 'Defect Photo' }}</div>
+                                        <div class="text-slate-400 mt-0.5">by {{ $photo->uploader->name ?? 'Inspector' }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-xs text-slate-400 italic">No defect photos uploaded.</p>
+                    @endif
+                </div>
+            @endif
+        </div>
+    </div>
+
     <!-- SPV Review Rules & Standards Callout -->
     <div class="bg-indigo-50/70 border border-indigo-200 rounded-2xl p-5 shadow-sm space-y-3">
         <h3 class="text-xs font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-2">

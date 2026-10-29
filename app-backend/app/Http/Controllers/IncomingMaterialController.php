@@ -23,8 +23,37 @@ class IncomingMaterialController extends Controller
         $material = IncomingMaterial::with('part')->where('grn_number', $code)->first();
 
         if (!$material) {
+            // Check if scanned code matches a known part directly
+            $partDirect = \App\Models\Part::where('part_number', $code)->first();
+            if ($partDirect && (
+                str_starts_with(strtoupper($partDirect->part_number), 'WH-') ||
+                str_starts_with(strtoupper($partDirect->part_number), 'AUTO-') ||
+                str_contains(strtoupper($partDirect->part_name), 'HARNESS') ||
+                str_contains(strtoupper($partDirect->part_name), 'AUTOMOTIVE')
+            )) {
+                return redirect()->route('poka-yoke.denied', [
+                    'part_number' => $partDirect->part_number,
+                    'part_name'   => $partDirect->part_name,
+                ]);
+            }
+
             // GRN not found → flash a special key so the dashboard can show the alert modal
             return redirect()->route('dashboard')->with('grn_not_found', $code);
+        }
+
+        // POKA-YOKE MISTAKE-PROOFING: Reject Wire Harness & Automotive parts scanned by EE Part inspectors
+        $part = $material->part;
+        if ($part && (
+            str_starts_with(strtoupper($part->part_number), 'WH-') ||
+            str_starts_with(strtoupper($part->part_number), 'AUTO-') ||
+            str_contains(strtoupper($part->part_name), 'HARNESS') ||
+            str_contains(strtoupper($part->part_name), 'AUTOMOTIVE')
+        )) {
+            return redirect()->route('poka-yoke.denied', [
+                'part_number' => $part->part_number,
+                'part_name'   => $part->part_name,
+                'grn'         => $material->grn_number,
+            ]);
         }
 
         if ($material->status !== 'waiting') {
