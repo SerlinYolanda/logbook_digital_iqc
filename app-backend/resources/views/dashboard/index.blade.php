@@ -31,6 +31,52 @@
         </div>
     </div>
 
+    {{-- ══ Full-Width Chart Section ══════════════════════════════════════════ --}}
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 pt-5 pb-4
+                    border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center
+                            justify-center border border-indigo-100 shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">show_chart</span>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-slate-800 tracking-tight">
+                        7-Day Inspection Trend
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        Daily outcome breakdown — approved, pending, and rejected.
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <span class="inline-flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50
+                             border border-emerald-200 px-2.5 py-1 rounded-full font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Live Data
+                </span>
+                @if(auth()->user()->role === 'admin')
+                <a href="{{ route('incoming-materials.index') }}"
+                   class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600
+                          hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5
+                          rounded-xl transition">
+                    <span class="material-symbols-outlined text-[14px]">local_shipping</span>
+                    GRN Tracking
+                </a>
+                @else
+                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-xl">
+                    <span class="material-symbols-outlined text-[14px] text-indigo-600">verified</span>
+                    AQL Level II
+                </span>
+                @endif
+            </div>
+        </div>
+        <div class="px-6 py-5">
+            <canvas id="inspectionTrendChart" height="65"></canvas>
+        </div>
+    </div>
+    {{-- ══ End Chart Section ════════════════════════════════════════════════ --}}
+
     <!-- 3 Modern Metric Cards with Smooth Hover & Micro-interactions -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Card 1: Antrean Hari Ini -->
@@ -768,5 +814,93 @@
             showGrnNotFoundModal(@json(session('grn_not_found')));
         });
     @endif
+</script>
+
+{{-- Chart.js --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    const labels   = @json($chartLabels);
+    const approved = @json($chartApproved);
+    const pending  = @json($chartPending);
+    const rejected = @json($chartRejected);
+
+    const ctx = document.getElementById('inspectionTrendChart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Approved',
+                    data: approved,
+                    borderColor: 'rgba(16,185,129,1)',
+                    backgroundColor: 'rgba(16,185,129,0.12)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: 'rgba(16,185,129,1)',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                },
+                {
+                    label: 'Pending',
+                    data: pending,
+                    borderColor: 'rgba(245,158,11,1)',
+                    backgroundColor: 'rgba(245,158,11,0.10)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: 'rgba(245,158,11,1)',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                },
+                {
+                    label: 'Rejected',
+                    data: rejected,
+                    borderColor: 'rgba(239,68,68,1)',
+                    backgroundColor: 'rgba(239,68,68,0.10)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: 'rgba(239,68,68,1)',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                },
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { font: { size: 11, family: 'Inter' }, boxWidth: 12, padding: 16, usePointStyle: true }
+                },
+                tooltip: { mode: 'index', intersect: false }
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Inter' } } },
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0, font: { size: 11, family: 'Inter' } },
+                    grid: { color: 'rgba(148,163,184,0.12)' }
+                }
+            }
+        }
+    });
+})();
 </script>
 @endsection

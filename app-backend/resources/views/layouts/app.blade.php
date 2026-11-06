@@ -178,11 +178,16 @@
             @if(in_array($role, ['admin', 'supervisor']))
             <div class="px-3 py-2 mt-4 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Master Data & Tools</div>
             
-            {{-- Master Part EE: Admin only --}}
+            {{-- Master Part EE & GRN Tracking: Admin ONLY --}}
             @if($role === 'admin')
             <a href="{{ route('master-data.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('master-data.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
                 <span class="material-symbols-outlined icon-sm">dns</span> Master Part EE
                 @if(request()->routeIs('master-data.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            </a>
+
+            <a href="{{ route('incoming-materials.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('incoming-materials.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
+                <span class="material-symbols-outlined icon-sm">local_shipping</span> GRN Tracking
+                @if(request()->routeIs('incoming-materials.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
             @endif
 

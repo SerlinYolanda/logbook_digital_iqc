@@ -70,10 +70,16 @@ Route::middleware(['auth'])->group(function () {
     // Instruments / Status Alat Ukur (view: all roles)
     Route::get('/instruments', [InstrumentController::class, 'index'])->name('instruments.index');
 
-    // Incoming material (GRN) queue management (all authenticated roles)
+    // Incoming material (GRN) queue operations (Barcode scanning & registration)
     Route::get('/incoming-materials/scan', [IncomingMaterialController::class, 'scanGrn'])->name('incoming-materials.scan');
     Route::post('/incoming-materials', [IncomingMaterialController::class, 'store'])->name('incoming-materials.store');
     Route::delete('/incoming-materials/{incomingMaterial}', [IncomingMaterialController::class, 'destroy'])->name('incoming-materials.destroy');
+
+    // Admin ONLY: GRN Tracking & Receiving Dock Backlog Module
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/incoming-materials', [IncomingMaterialController::class, 'index'])->name('incoming-materials.index');
+        Route::get('/incoming-materials/export', [IncomingMaterialController::class, 'exportCsv'])->name('incoming-materials.export');
+    });
 
     // Defects logging
     Route::post('/inspections/{id}/defects', [DefectController::class, 'store'])->name('defects.store');
