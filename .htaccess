@@ -1,3 +1,12 @@
+# Disable directory browsing
+Options -Indexes
+
+# Block sensitive files directly
+<FilesMatch "^\.env|\.git|.*\.(sql|log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
