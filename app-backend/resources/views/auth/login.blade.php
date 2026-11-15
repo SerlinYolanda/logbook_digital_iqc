@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logbook Digital IQC - Masuk</title>
+    <title>IQC Digital Logbook - Sign In</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
@@ -240,51 +240,63 @@
 
             <!-- NIK -->
             <div class="form-group">
-                <label class="form-label" for="nik">NIK / ID Operator</label>
+                <label class="form-label" for="nik">Operator ID / Employee ID (NIK)</label>
                 <input type="text" id="nik" name="nik" class="form-input"
                     value="{{ old('nik') }}"
-                    placeholder="Masukkan NIK akun Anda" required autofocus>
+                    placeholder="Enter your Employee ID (NIK)" required autofocus>
             </div>
 
             <!-- Password -->
             <div class="form-group">
-                <label class="form-label" for="password">Kata Sandi</label>
+                <label class="form-label" for="password">Password</label>
                 <input type="password" id="password" name="password" class="form-input"
-                    placeholder="Masukkan kata sandi" required>
+                    placeholder="Enter your password" required>
             </div>
 
             <div class="remember-row">
                 <label class="remember-label">
                     <input type="checkbox" name="remember"
                         style="width:13px;height:13px;accent-color:#6366f1;">
-                    <span>Ingat sesi saya</span>
+                    <span>Remember my session</span>
                 </label>
-                <a href="#" class="help-link">Bantuan IT?</a>
+                <a href="#" class="help-link">IT Helpdesk</a>
             </div>
 
             <!-- Submit -->
             <button type="submit" class="btn-primary">
-                Masuk ke Logbook IQC &rarr;
+                Sign In to IQC Logbook &rarr;
             </button>
         </form>
 
-        <!-- Quick Demo Accounts -->
+        <!-- Quick Demo Accounts (4 Actors / 6 Roles Proposal) -->
         <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px dashed #e2e8f0;">
             <div style="font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; text-align: center;">
-                ⚡ Masuk Cepat (Akun Demo)
+                ⚡ Quick Demo Login by System Role
             </div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
-                <a href="{{ route('login.inspector') }}" style="text-align: center; padding: 0.6rem 0.25rem; background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
-                    <span style="display: block; font-weight: 700;">Inspector</span>
-                    <span style="font-size: 0.65rem; color: #6366f1;">INS-001</span>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.45rem;">
+                <a href="{{ route('login.inspector.ee') }}" style="text-align: center; padding: 0.5rem 0.2rem; background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; border-radius: 8px; font-size: 0.68rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">EE Inspector</span>
+                    <span style="font-size: 0.62rem; color: #6366f1;">INS-EE-001</span>
                 </a>
-                <a href="{{ route('login.supervisor') }}" style="text-align: center; padding: 0.6rem 0.25rem; background: #fffbeb; color: #b45309; border: 1px solid #fde68a; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
-                    <span style="display: block; font-weight: 700;">Supervisor</span>
-                    <span style="font-size: 0.65rem; color: #d97706;">SPV-001</span>
+                <a href="{{ route('login.inspector.auto') }}" style="text-align: center; padding: 0.5rem 0.2rem; background: #f0fdfa; color: #0d9488; border: 1px solid #99f6e4; border-radius: 8px; font-size: 0.68rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">Automotive Insp.</span>
+                    <span style="font-size: 0.62rem; color: #14b8a6;">INS-AUTO-001</span>
                 </a>
-                <a href="{{ route('login.admin') }}" style="text-align: center; padding: 0.6rem 0.25rem; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
-                    <span style="display: block; font-weight: 700;">Admin</span>
-                    <span style="font-size: 0.65rem; color: #16a34a;">ADM-001</span>
+                <a href="{{ route('login.inspector.wh') }}" style="text-align: center; padding: 0.5rem 0.2rem; background: #faf5ff; color: #7e22ce; border: 1px solid #e9d5ff; border-radius: 8px; font-size: 0.68rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">Wire Harness Insp.</span>
+                    <span style="font-size: 0.62rem; color: #a855f7;">INS-WH-001</span>
+                </a>
+                <a href="{{ route('login.supervisor') }}" style="text-align: center; padding: 0.5rem 0.2rem; background: #fffbeb; color: #b45309; border: 1px solid #fde68a; border-radius: 8px; font-size: 0.68rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">IQC Supervisor</span>
+                    <span style="font-size: 0.62rem; color: #d97706;">SPV-001</span>
+                </a>
+                <a href="{{ route('login.logistik') }}" style="text-align: center; padding: 0.5rem 0.2rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 8px; font-size: 0.68rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">Logistics / GRN</span>
+                    <span style="font-size: 0.62rem; color: #2563eb;">LOG-001</span>
+                </a>
+                <a href="{{ route('login.admin') }}" style="text-align: center; padding: 0.5rem 0.2rem; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; border-radius: 8px; font-size: 0.68rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
+                    <span style="display: block; font-weight: 700;">System Admin</span>
+                    <span style="font-size: 0.62rem; color: #16a34a;">ADM-001</span>
                 </a>
             </div>
         </div>

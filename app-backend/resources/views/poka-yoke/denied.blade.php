@@ -64,7 +64,7 @@
             <div class="w-full mt-4 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-left text-xs text-amber-800 flex items-start gap-3">
                 <span class="material-symbols-outlined text-amber-600 icon-lg shrink-0 mt-0.5">lightbulb</span>
                 <div class="leading-relaxed">
-                    <strong>Poka-Yoke Action Required:</strong> {{ $resolution ?? 'Tindakan ini diblokir secara otomatis oleh sistem agar kesalahan inspeksi lintas bagian tidak terjadi.' }}
+                    <strong>Poka-Yoke Action Required:</strong> {{ $resolution ?? 'This action is automatically blocked by the system to prevent cross-commodity inspection errors.' }}
                 </div>
             </div>
 

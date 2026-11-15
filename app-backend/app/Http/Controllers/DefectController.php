@@ -21,7 +21,7 @@ class DefectController extends Controller
 
         $defect = $inspection->defects()->create($validated);
 
-        return back()->with('success', "Catatan cacat [{$defect->defect_type} - {$defect->severity}] berhasil ditambahkan!");
+        return back()->with('success', "Defect record [{$defect->defect_type} - {$defect->severity}] has been added successfully!");
     }
 
     public function destroy($id)
@@ -29,6 +29,6 @@ class DefectController extends Controller
         $defect = Defect::findOrFail($id);
         $defect->delete();
 
-        return back()->with('info', 'Catatan cacat telah dihapus.');
+        return back()->with('info', 'Defect record has been removed.');
     }
 }

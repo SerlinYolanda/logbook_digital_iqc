@@ -2,118 +2,193 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\IncomingMaterial;
-use App\Models\Inspection;
+use App\Models\Logbook;
+use App\Models\Receiving;
 use App\Models\Part;
 use App\Models\Defect;
+use App\Models\DefectCategory;
+use App\Models\User;
+use App\Models\AuditTrail;
+use App\Models\MrbDisposition;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    /**
+     * UC-11: Pantau Dashboard (Multi-actor adaptive)
+     */
     public function index()
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
-        // 1. Metric Counts
-        $totalInspections = Inspection::count();
-        $pendingCount = Inspection::where('status', 'pending_approval')->count();
-        $approvedCount = Inspection::where('status', 'approved')->count();
-        $rejectedCount = Inspection::where('status', 'rejected')->count();
+        // 1. Common KPI Stats
+        $totalInbound = Receiving::count();
+        $waitingQueue = Receiving::where('status_antrean', 'menunggu_inspeksi')->count();
+        $inProgress = Receiving::where('status_antrean', 'dalam_inspeksi')->count();
+        $totalLogbooks = Logbook::count();
+        $acceptedCount = Logbook::where('status', 'accept')->count();
+        $mrbPendingCount = Logbook::where('status', 'menunggu_penetapan')->count();
+        $revisionsCount = Logbook::where('status', 'perlu_revisi')->count();
+        $rejectedCount = Logbook::whereIn('status', ['return_to_vendor', 'scrap', 'rework'])->count();
 
-        // PPM calculation
-        $totalDefectQty  = Defect::sum('quantity');
-        $totalSampleSize = Inspection::sum('sample_size') ?: 1;
-        $defectPpm = (int) round(($totalDefectQty / $totalSampleSize) * 1_000_000);
+        $passRate = $totalLogbooks > 0 ? round(($acceptedCount / $totalLogbooks) * 100, 1) : 100.0;
 
-        // Daily / real-time stats
-        $inspectedTodayCount = Inspection::whereDate('created_at', now()->today())
-            ->orWhereDate('inspection_date', now()->today())
+        // 2. Queue Aging Breakdown (UC-02 & Logistik)
+        $normalAgingCount = Receiving::where('status_antrean', 'menunggu_inspeksi')
+            ->where('tanggal_terima', '>', now()->subHours(12))
             ->count();
-        $pendingDispositionCount = $pendingCount;
-        $passRate = $totalInspections > 0 ? round(($approvedCount / $totalInspections) * 100, 1) : 100.0;
+        $prioritasAgingCount = Receiving::where('status_antrean', 'menunggu_inspeksi')
+            ->whereBetween('tanggal_terima', [now()->subHours(24), now()->subHours(12)])
+            ->count();
+        $overdueAgingCount = Receiving::where('status_antrean', 'menunggu_inspeksi')
+            ->where('tanggal_terima', '<=', now()->subHours(24))
+            ->count();
 
-        // Recent inspections for table
-        $recentInspections = Inspection::with(['part', 'inspector', 'supervisor'])
-            ->latest('inspection_date')
-            ->latest('id')
-            ->take(10)
+        // 3. Pareto Chart Data (Defect frequency & cumulative percentage)
+        $defectsByCategory = Defect::select('defect_category_id', DB::raw('SUM(qty_defect) as total_qty'))
+            ->groupBy('defect_category_id')
+            ->orderBy('total_qty', 'desc')
+            ->with('defectCategory')
             ->get();
 
-        // Parts for GRN modal
-        $parts = Part::orderBy('part_number')->get();
+        $totalDefectQty = $defectsByCategory->sum('total_qty');
+        $paretoLabels = [];
+        $paretoBarData = [];
+        $paretoLineData = [];
+        $runningSum = 0;
 
-        // Incoming materials queue (dock arrivals waiting for inspection)
-        $queue = IncomingMaterial::with('part')
-            ->where('status', 'waiting')
-            ->orderBy('arrived_at', 'desc')
-            ->get();
-        $queueCount = $queue->count();
-        $arrivedTodayCount = IncomingMaterial::whereDate('arrived_at', now()->toDateString())->count();
-        if ($arrivedTodayCount === 0 && $queueCount > 0) {
-            $arrivedTodayCount = $queueCount;
+        foreach ($defectsByCategory as $item) {
+            $catName = $item->defectCategory->nama_defect ?? 'Lain-lain';
+            $qty = (int) $item->total_qty;
+            $runningSum += $qty;
+            $cumPct = $totalDefectQty > 0 ? round(($runningSum / $totalDefectQty) * 100, 1) : 0;
+
+            $paretoLabels[] = $catName;
+            $paretoBarData[] = $qty;
+            $paretoLineData[] = $cumPct;
         }
 
-        // Generate next sequential GRN number
-        $todayPrefix = 'GRN-' . now()->format('Ymd');
-        $todayGrnCount = IncomingMaterial::where('grn_number', 'like', "{$todayPrefix}-%")->count();
-        $nextGrnNumber = sprintf('%s-%03d', $todayPrefix, $todayGrnCount + 1);
+        // 4. 7-Day Trend of Inspection Volume & Pass/Fail
+        $trendDates = [];
+        $trendAccepted = [];
+        $trendRejected = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+            $trendDates[] = $date->format('d M');
 
-        // Additional variables for template flexibility
-        $role = $user->role ?? 'inspector';
-        $totalLotsArrived = IncomingMaterial::count();
-        $pendingReview = $pendingCount;
-        $pendingReviewCount = $pendingCount;
-        $inspectedToday = $inspectedTodayCount;
-        $passedToday = Inspection::where('status', 'approved')
-            ->where(function ($q) {
-                $q->whereDate('created_at', now()->today())
-                  ->orWhereDate('inspection_date', now()->today());
-            })->count();
-        $rejectedToday = Inspection::where('status', 'rejected')
-            ->where(function ($q) {
-                $q->whereDate('created_at', now()->today())
-                  ->orWhereDate('inspection_date', now()->today());
-            })->count();
-        $inspectionRate = ($totalLotsArrived > 0) ? round(($totalInspections / $totalLotsArrived) * 100) . '%' : '100%';
+            $acc = Logbook::whereDate('tanggal_inspeksi', $date)
+                ->where('status', 'accept')
+                ->count();
+            $rej = Logbook::whereDate('tanggal_inspeksi', $date)
+                ->whereIn('status', ['return_to_vendor', 'scrap', 'rework', 'menunggu_penetapan'])
+                ->count();
 
-        $topParts = Part::withCount('inspections')
-            ->orderBy('inspections_count', 'desc')
+            $trendAccepted[] = $acc;
+            $trendRejected[] = $rej;
+        }
+
+        // 5. Pass Rate per Commodity
+        $commodityStats = [];
+        $commodities = [
+            'ee_part' => 'EE Part',
+            'automotive' => 'Automotive',
+            'wire_harness' => 'Wire Harness',
+        ];
+        foreach ($commodities as $key => $label) {
+            $totalComm = Logbook::whereHas('receiving.part', function ($q) use ($key) {
+                $q->where('kategori_komoditas', $key);
+            })->count();
+
+            $accComm = Logbook::where('status', 'accept')
+                ->whereHas('receiving.part', function ($q) use ($key) {
+                    $q->where('kategori_komoditas', $key);
+                })->count();
+
+            $pct = $totalComm > 0 ? round(($accComm / $totalComm) * 100, 1) : 100.0;
+            $commodityStats[] = [
+                'key' => $key,
+                'label' => $label,
+                'total' => $totalComm,
+                'accepted' => $accComm,
+                'pass_rate' => $pct,
+            ];
+        }
+
+        // 6. Role-Specific Queues & Tables
+        $urgentMrbQueue = Logbook::with(['receiving.supplier', 'receiving.part', 'inspector', 'nestProcess'])
+            ->where('status', 'menunggu_penetapan')
+            ->orderBy('tanggal_inspeksi', 'asc')
             ->take(5)
             ->get();
 
-        $lots = $recentInspections;
+        $myRevisionQueue = [];
+        $myTodayInspections = 0;
+        $myTodaySamples = 0;
+        if ($user->isInspector()) {
+            $myRevisionQueue = Logbook::with(['receiving.part', 'receiving.supplier', 'latestMrbDisposition'])
+                ->where('inspector_id', $user->id)
+                ->where('status', 'perlu_revisi')
+                ->get();
+
+            $myTodayInspections = Logbook::where('inspector_id', $user->id)
+                ->whereDate('tanggal_inspeksi', Carbon::today())
+                ->count();
+
+            $myTodaySamples = (int) Logbook::where('inspector_id', $user->id)
+                ->whereDate('tanggal_inspeksi', Carbon::today())
+                ->sum('qty_sampel');
+        }
+
+        // Recent Audit Activity (Admin)
+        $recentAudits = AuditTrail::with('user')
+            ->orderBy('waktu', 'desc')
+            ->take(8)
+            ->get();
+
+        $activeUsersCount = User::where('status_aktif', true)->count();
+        $totalUsersCount = User::count();
+
+        // Queue waiting for inspector's commodity
+        $commodityQueue = Receiving::with(['supplier', 'part'])
+            ->where('status_antrean', 'menunggu_inspeksi');
+        if ($user->getInspectorCommodity()) {
+            $commodityQueue->whereHas('part', function ($q) use ($user) {
+                $q->where('kategori_komoditas', $user->getInspectorCommodity());
+            });
+        }
+        $pendingCommodityReceivings = $commodityQueue->orderBy('tanggal_terima', 'asc')->take(5)->get();
 
         return view('dashboard.index', compact(
-            'totalInspections',
-            'pendingCount',
-            'pendingReview',
-            'pendingReviewCount',
-            'approvedCount',
+            'user',
+            'totalInbound',
+            'waitingQueue',
+            'inProgress',
+            'totalLogbooks',
+            'acceptedCount',
+            'mrbPendingCount',
+            'revisionsCount',
             'rejectedCount',
-            'defectPpm',
             'passRate',
-            'recentInspections',
-            'parts',
-            'inspectedToday',
-            'inspectedTodayCount',
-            'pendingDispositionCount',
-            'queue',
-            'queueCount',
-            'arrivedTodayCount',
-            'nextGrnNumber',
-            'role',
-            'totalLotsArrived',
-            'passedToday',
-            'rejectedToday',
-            'inspectionRate',
-            'topParts',
-            'lots'
+            'normalAgingCount',
+            'prioritasAgingCount',
+            'overdueAgingCount',
+            'paretoLabels',
+            'paretoBarData',
+            'paretoLineData',
+            'trendDates',
+            'trendAccepted',
+            'trendRejected',
+            'commodityStats',
+            'urgentMrbQueue',
+            'myRevisionQueue',
+            'myTodayInspections',
+            'myTodaySamples',
+            'recentAudits',
+            'activeUsersCount',
+            'totalUsersCount',
+            'pendingCommodityReceivings'
         ));
-    }
-
-    public function validation()
-    {
-        return redirect()->route('supervisor.validation');
     }
 }

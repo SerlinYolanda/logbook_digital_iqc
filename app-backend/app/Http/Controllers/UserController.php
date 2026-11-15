@@ -3,21 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\AuditTrail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /**
+     * UC-14: Kelola Akun Pengguna (Actor: Admin Sistem)
+     */
     public function index(Request $request)
     {
-        if (!in_array(auth()->user()->role, ['admin', 'supervisor'])) {
-            return response()->view('poka-yoke.denied', [
-                'rule_violated' => 'Poka-Yoke Guard: Only Administrator and IQC Supervisor have the authority to manage user accounts and assign inspector shifts.',
-                'user_role' => auth()->user()->role,
-                'target_resource' => 'User Account & Shift Management',
-            ], 403);
-        }
-
         $query = User::query();
 
         if ($request->filled('role')) {
@@ -28,139 +24,136 @@ class UserController extends Controller
             $query->where('shift', $request->shift);
         }
 
+        if ($request->filled('status_aktif')) {
+            $query->where('status_aktif', $request->status_aktif == '1');
+        }
+
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('nik', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                $q->where('name', 'like', $search)
+                  ->orWhere('nik', 'like', $search)
+                  ->orWhere('nip', 'like', $search)
+                  ->orWhere('email', 'like', $search);
             });
         }
 
-        $users = $query->orderBy('role')->orderBy('name')->paginate(10);
+        $users = $query->orderBy('name')->paginate(12)->withQueryString();
 
-        $nextNiks = [
-            'inspector' => self::generateNextNik('inspector'),
-            'supervisor' => self::generateNextNik('supervisor'),
-            'admin' => self::generateNextNik('admin'),
+        $rolesCount = [
+            'total'                  => User::count(),
+            'active'                 => User::where('status_aktif', true)->count(),
+            'admin'                  => User::where('role', 'admin')->count(),
+            'master_data'            => User::where('role', 'master_data')->count(),
+            'supervisor'             => User::where('role', 'supervisor')->count(),
+            'inspector_ee'           => User::where('role', 'inspector_ee')->count(),
+            'inspector_automotive'   => User::where('role', 'inspector_automotive')->count(),
+            'inspector_wire_harness' => User::where('role', 'inspector_wire_harness')->count(),
         ];
 
-        return view('admin.users.index', compact('users', 'nextNiks'));
+        return view('admin.users.index', compact('users', 'rolesCount'));
     }
 
-    public static function generateNextNik(string $role): string
-    {
-        $prefix = match ($role) {
-            'inspector' => 'INS',
-            'supervisor' => 'SPV',
-            'admin' => 'ADM',
-            default => 'USR',
-        };
-
-        $users = User::where('nik', 'like', "{$prefix}-%")->get();
-        $maxNum = 0;
-        foreach ($users as $u) {
-            if (preg_match('/^' . preg_quote($prefix, '/') . '-(\d+)$/i', $u->nik, $matches)) {
-                $num = (int) $matches[1];
-                if ($num > $maxNum) {
-                    $maxNum = $num;
-                }
-            }
-        }
-
-        return sprintf('%s-%03d', $prefix, $maxNum + 1);
-    }
-
-    public function setInspectorShift(Request $request, User $user)
-    {
-        if (!in_array(auth()->user()->role, ['admin', 'supervisor'])) {
-            return back()->with('error', 'Poka-Yoke Rule Enforced: Only IQC Supervisor and Administrator can assign inspector shifts.');
-        }
-
-        $validated = $request->validate([
-            'shift' => 'required|in:1,2',
-        ]);
-
-        $user->shift = $validated['shift'];
-        $user->save();
-
-        $shiftName = $validated['shift'] === '1' ? 'Shift 1 (07:00-15:30)' : 'Shift 2 (15:30-23:00)';
-        return back()->with('success', "Inspector [{$user->name}] operational shift successfully updated to [{$shiftName}] by " . strtoupper(auth()->user()->role) . ".");
-    }
-
+    /**
+     * Store newly created user (UC-14)
+     */
     public function store(Request $request)
     {
-        if (auth()->user()->role !== 'admin') {
-            return back()->with('error', 'Unauthorized access.');
-        }
-
-        if (empty($request->nik) || trim($request->nik) === '' || strtoupper(trim($request->nik)) === 'AUTO') {
-            $request->merge(['nik' => self::generateNextNik($request->role ?? 'inspector')]);
-        }
-
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'nik'      => 'required|string|max:50|unique:users,nik',
-            'role'     => 'required|in:inspector,supervisor,admin',
-            'shift'    => 'nullable|string',
-            'email'    => 'required|email|max:255|unique:users,email',
+            'name'     => 'required|string|max:100',
+            'nik'      => 'required|string|unique:users,nik|max:30',
+            'nip'      => 'nullable|string|max:30',
+            'email'    => 'required|email|unique:users,email|max:100',
+            'role'     => 'required|in:admin,master_data,supervisor,inspector_ee,inspector_automotive,inspector_wire_harness',
+            'shift'    => 'required|in:1,2,3',
             'password' => 'required|string|min:6',
         ]);
 
-        $validated['shift'] = $validated['shift'] ?? '1';
-        $validated['password'] = Hash::make($validated['password']);
-
-        User::create($validated);
-
-        return redirect()->route('admin.users.index')
-            ->with('success', "User account [{$validated['name']}] created successfully as " . strtoupper($validated['role']) . ".");
-    }
-
-    public function update(Request $request, User $user)
-    {
-        if (auth()->user()->role !== 'admin') {
-            return back()->with('error', 'Unauthorized access.');
-        }
-
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'nik'      => 'required|string|max:50|unique:users,nik,' . $user->id,
-            'role'     => 'required|in:inspector,supervisor,admin',
-            'shift'    => 'nullable|string',
-            'email'    => 'required|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6',
+        $user = User::create([
+            'name'         => $validated['name'],
+            'nik'          => $validated['nik'],
+            'nip'          => $validated['nip'] ?? $validated['nik'],
+            'email'        => $validated['email'],
+            'role'         => $validated['role'],
+            'shift'        => $validated['shift'],
+            'status_aktif' => true,
+            'password'     => Hash::make($validated['password']),
         ]);
 
-        if (empty($validated['shift'])) {
-            unset($validated['shift']);
-        }
-
-        if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-
-        $user->update($validated);
+        AuditTrail::log(
+            'USER_CREATED',
+            "User: {$user->name} ({$user->nik})",
+            null,
+            "Role: {$user->role_label}, Shift: {$user->shift}"
+        );
 
         return redirect()->route('admin.users.index')
-            ->with('success', "User account [{$user->name}] updated successfully.");
+            ->with('success', "User account '{$user->name}' ({$user->role_label}) has been created successfully.");
     }
 
-    public function destroy(User $user)
+    /**
+     * Update user details (UC-14)
+     */
+    public function update(Request $request, User $user)
     {
-        if (auth()->user()->role !== 'admin') {
-            return back()->with('error', 'Unauthorized access.');
+        $validated = $request->validate([
+            'name'         => 'required|string|max:100',
+            'nip'          => 'nullable|string|max:30',
+            'email'        => 'required|email|unique:users,email,' . $user->id . '|max:100',
+            'role'         => 'required|in:admin,master_data,supervisor,inspector_ee,inspector_automotive,inspector_wire_harness',
+            'shift'        => 'required|in:1,2,3',
+            'status_aktif' => 'required|boolean',
+            'password'     => 'nullable|string|min:6',
+        ]);
+
+        $oldData = "Role: {$user->role}, Status: {$user->status_aktif}";
+
+        $updateData = [
+            'name'         => $validated['name'],
+            'nip'          => $validated['nip'] ?? $user->nip,
+            'email'        => $validated['email'],
+            'role'         => $validated['role'],
+            'shift'        => $validated['shift'],
+            'status_aktif' => (bool) $validated['status_aktif'],
+        ];
+
+        if (!empty($validated['password'])) {
+            $updateData['password'] = Hash::make($validated['password']);
         }
 
-        if ($user->id === auth()->id()) {
-            return back()->with('error', 'Poka-Yoke Guard: You cannot delete your own active administrator account!');
-        }
+        $user->update($updateData);
 
-        $name = $user->name;
-        $user->delete();
+        AuditTrail::log(
+            'USER_UPDATED',
+            "User: {$user->name} ({$user->nik})",
+            $oldData,
+            "Role: {$user->role}, Status: {$user->status_aktif}"
+        );
 
         return redirect()->route('admin.users.index')
-            ->with('success', "User account [{$name}] has been deleted.");
+            ->with('success', "User account details for '{$user->name}' have been updated.");
+    }
+
+    /**
+     * Toggle active/inactive status (UC-14)
+     */
+    public function toggleStatus(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'You cannot deactivate your own active session account.');
+        }
+
+        $newStatus = !$user->status_aktif;
+        $user->update(['status_aktif' => $newStatus]);
+
+        AuditTrail::log(
+            'USER_STATUS_TOGGLED',
+            "User: {$user->name} ({$user->nik})",
+            'Active: ' . ($user->status_aktif ? '1' : '0'),
+            'Active: ' . ($newStatus ? '1' : '0')
+        );
+
+        $msg = $newStatus ? "User account '{$user->name}' has been reactivated." : "User account '{$user->name}' has been deactivated.";
+        return redirect()->route('admin.users.index')->with('success', $msg);
     }
 }

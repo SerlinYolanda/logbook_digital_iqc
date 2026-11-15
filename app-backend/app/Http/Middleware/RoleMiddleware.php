@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\AuditTrail;
 
 class RoleMiddleware
 {
@@ -16,18 +17,41 @@ class RoleMiddleware
 
         $user = auth()->user();
 
-        // Check if user has one of the allowed roles
-        if (!in_array($user->role, $roles)) {
-            // Poka-Yoke error page: only strictly authorized role (SPV) can approve / decide
-            $roleLabel = in_array('supervisor', $roles) ? 'IQC Supervisor' : 'pihak yang berwenang';
+        // Check if account is active
+        if (isset($user->status_aktif) && !$user->status_aktif) {
+            auth()->logout();
+            return redirect()->route('login')->with('error', 'Akun Anda dinonaktifkan oleh Administrator Sistem.');
+        }
+
+        // Support role matching:
+        // 'inspector' matches 'inspector', 'inspector_ee', 'inspector_automotive', 'inspector_wire_harness'
+        $isAllowed = false;
+        foreach ($roles as $allowedRole) {
+            if ($user->role === $allowedRole) {
+                $isAllowed = true;
+                break;
+            }
+            if ($allowedRole === 'inspector' && str_starts_with($user->role, 'inspector')) {
+                $isAllowed = true;
+                break;
+            }
+        }
+
+        if (!$isAllowed) {
+            AuditTrail::log(
+                'ROLE_ACCESS_DENIED',
+                'Route: ' . $request->path(),
+                'User Role: ' . $user->role,
+                'Required Roles: ' . implode(', ', $roles)
+            );
+
             return response()->view('poka-yoke.denied', [
-                'rule_violated' => "Akses Ditolak (Sistem Poka-Yoke): Hanya {$roleLabel} yang memiliki wewenang untuk mengevaluasi & memberikan disposisi approval material bermasalah/reject. Inspektur dan Administrator dilarang memvalidasi hasil inspeksi.",
-                'user_role' => $user->role,
+                'rule_violated' => "Pemisahan Kewenangan (Separation of Duties): Role Anda ({$user->role_label}) tidak memiliki wewenang untuk mengakses halaman ini. Akses dibatasi untuk: " . implode(', ', $roles),
+                'user_role' => $user->role_label,
                 'target_resource' => $request->path(),
             ], 403);
         }
 
         return $next($request);
     }
-
 }

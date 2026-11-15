@@ -118,91 +118,140 @@
                 </div>
                 <div class="overflow-hidden">
                     <div class="font-bold text-sm tracking-tight text-white truncate">LOGBOOK DIGITAL IQC</div>
-                    <div class="text-[9px] text-emerald-400 font-bold tracking-wider truncate flex items-center gap-1.5 mt-0.5 uppercase">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> EE PART
+                    @php
+                        $user = auth()->user();
+                        $role = $user->role ?? 'inspector_ee';
+                        $subLabel = $user->role_label ?? 'IQC Inspector';
+                        $commLabel = match($role) {
+                            'inspector_ee' => 'EE PART',
+                            'inspector_automotive' => 'AUTOMOTIVE',
+                            'inspector_wire_harness' => 'WIRE HARNESS',
+                            'supervisor' => 'IQC SUPERVISOR',
+                            'master_data' => 'LOGISTICS & MASTER DATA',
+                            'admin' => 'SYSTEM ADMINISTRATOR',
+                            default => strtoupper(str_replace('_', ' ', $role)),
+                        };
+                        $dotColor = match($role) {
+                            'inspector_ee' => 'bg-emerald-400',
+                            'inspector_automotive' => 'bg-teal-400',
+                            'inspector_wire_harness' => 'bg-purple-400',
+                            'supervisor' => 'bg-amber-400',
+                            'master_data' => 'bg-blue-400',
+                            default => 'bg-indigo-400',
+                        };
+                    @endphp
+                    <div class="text-[9px] text-slate-300 font-bold tracking-wider truncate flex items-center gap-1.5 mt-0.5 uppercase">
+                        <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }}"></span> {{ $commLabel }}
                     </div>
                 </div>
             </a>
         </div>
 
         @php 
-            $role = auth()->user()->role ?? 'inspector'; 
-            $pendingReviewCount = \App\Models\Inspection::where('status', 'pending_approval')->count();
+            $pendingMrbCount = \App\Models\Logbook::where('status', 'menunggu_penetapan')->count();
+            $waitingGrnCount = \App\Models\Receiving::where('status_antrean', 'menunggu_inspeksi')->count();
+            $myRevisionCount = $user && $user->isInspector() ? \App\Models\Logbook::where('inspector_id', $user->id)->where('status', 'perlu_revisi')->count() : 0;
         @endphp
 
         <nav class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 flex flex-col gap-1.5">
-            <div class="px-3 py-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Main Menu</div>
+            <div class="px-3 py-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Main Navigation</div>
             
             {{-- Dashboard: visible to ALL roles --}}
             <a href="{{ route('dashboard') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
                 <span class="material-symbols-outlined icon-sm">dashboard</span> Dashboard
                 @if(request()->routeIs('dashboard')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
-            
-            {{-- Inspection Form: Inspector only --}}
-            @if($role === 'inspector')
-            <a href="{{ route('inspections.create') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('inspections.create') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">assignment</span> Inspection Form
-                @if(request()->routeIs('inspections.create')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+
+            {{-- 1. INSPECTOR IQC MENUS --}}
+            @if($user && ($user->isInspector() || $user->isSupervisor()))
+            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Quality Inspection</div>
+
+            @if($user->isInspector())
+            <a href="{{ route('logbooks.create') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('logbooks.create') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
+                <span class="material-symbols-outlined icon-sm">assignment</span> Inspection Logbook
+                @if(request()->routeIs('logbooks.create')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
             @endif
-            
-            {{-- Pending Review: Supervisor only --}}
-            @if($role === 'supervisor')
-            <a href="{{ route('supervisor.validation') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('supervisor.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">pending_actions</span> Pending Review
-                @if($pendingReviewCount > 0)
-                    <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
-                        {{ $pendingReviewCount }}
+
+            <a href="{{ route('logbooks.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('logbooks.index', 'logbooks.show', 'logbooks.edit') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
+                <span class="material-symbols-outlined icon-sm">history_edu</span> Logbook History
+                @if($myRevisionCount > 0)
+                    <span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-bounce">
+                        {{ $myRevisionCount }} Revisions
+                    </span>
+                @endif
+                @if(request()->routeIs('logbooks.index')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            </a>
+            @endif
+
+            {{-- 2. SUPERVISOR IQC MENUS --}}
+            @if($user && $user->isSupervisor())
+            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Supervision & MRB</div>
+
+            <a href="{{ route('supervisor.mrb.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('supervisor.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
+                <span class="material-symbols-outlined icon-sm">gavel</span> MRB Disposition
+                @if($pendingMrbCount > 0)
+                    <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs animate-pulse">
+                        {{ $pendingMrbCount }}
                     </span>
                 @endif
                 @if(request()->routeIs('supervisor.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
-            @endif
 
-            <div class="px-3 py-2 mt-4 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Documents & Reports</div>
-            
-            {{-- Logbook History: ALL roles --}}
-            <a href="{{ route('inspections.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('inspections.index') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">history_edu</span> Logbook History
-                @if(request()->routeIs('inspections.index')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
-            </a>
-            
-            {{-- Reports & Output: ALL roles --}}
             <a href="{{ route('reports.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('reports.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">bar_chart</span> Output & Reports
+                <span class="material-symbols-outlined icon-sm">bar_chart</span> Summary Reports
                 @if(request()->routeIs('reports.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
+            @endif
 
-            {{-- Master Data & Instruments: Admin and Supervisor only --}}
-            @if(in_array($role, ['admin', 'supervisor']))
-            <div class="px-3 py-2 mt-4 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Master Data & Tools</div>
-            
-            {{-- Master Part EE: Admin only --}}
-            @if($role === 'admin')
+            {{-- 3. MASTER DATA / LOGISTIK MENUS --}}
+            @if($user && ($user->isMasterData() || $user->isAdmin()))
+            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Logistics & Master Data</div>
+
+            <a href="{{ route('receivings.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('receivings.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
+                <span class="material-symbols-outlined icon-sm">conveyor_belt</span> Inbound GRN Queue
+                @if($waitingGrnCount > 0)
+                    <span class="ml-auto bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                        {{ $waitingGrnCount }}
+                    </span>
+                @endif
+                @if(request()->routeIs('receivings.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            </a>
+
             <a href="{{ route('master-data.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('master-data.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">dns</span> Master Part EE
+                <span class="material-symbols-outlined icon-sm">database</span> Master Data
                 @if(request()->routeIs('master-data.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
             @endif
 
-            {{-- User Accounts: Admin and Supervisor --}}
+            {{-- 4. TRACEABILITY (Inspector, Supervisor, Logistik) --}}
+            @if($user && ($user->isInspector() || $user->isSupervisor() || $user->isMasterData()))
+            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Quality Traceability</div>
+            <a href="{{ route('traceability.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('traceability.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
+                <span class="material-symbols-outlined icon-sm">search_check</span> Material Traceability
+                @if(request()->routeIs('traceability.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            </a>
+            @endif
+
+            {{-- 5. ADMIN SISTEM MENUS --}}
+            @if($user && $user->isAdmin())
+            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">System & Security</div>
+
             <a href="{{ route('admin.users.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('admin.users.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">manage_accounts</span> User Management
+                <span class="material-symbols-outlined icon-sm">manage_accounts</span> User Accounts
                 @if(request()->routeIs('admin.users.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
-            
-            {{-- Instrument Status: Admin and Supervisor --}}
-            <a href="{{ route('instruments.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('instruments.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">speed</span> Instrument Status
-                <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+
+            <a href="{{ route('admin.audit-trails.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('admin.audit-trails.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
+                <span class="material-symbols-outlined icon-sm">security</span> Audit Trail
+                @if(request()->routeIs('admin.audit-trails.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
             @endif
         </nav>
 
         <div class="p-4 border-t border-slate-800 flex justify-between items-center text-slate-500 text-[10px] font-mono">
             <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px] text-emerald-400">shield</span> ISO 9001:2015</span>
-            <span>v4.8-PROD</span>
+            <span>v5.0-PROPOSAL</span>
         </div>
     </aside>
 
@@ -216,8 +265,9 @@
                     <span>IQC Digital Logbook</span>
                 </div>
                 <span class="text-slate-300">/</span>
-                <div class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-lg text-xs font-bold border border-indigo-100">
-                    EE Part
+                <div class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-lg text-xs font-bold border border-indigo-100 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }}"></span>
+                    {{ $commLabel }}
                 </div>
             </div>
             
@@ -230,14 +280,14 @@
 
                 <!-- Active Role Badge -->
                 <div class="flex items-center gap-2 text-xs border border-indigo-100/80 rounded-xl bg-indigo-50/60 px-3 py-1.5 shadow-xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="w-2 h-2 rounded-full {{ $dotColor }} animate-pulse"></span>
                     <span class="font-medium text-slate-500">Role:</span>
-                    <span class="font-bold text-indigo-700">{{ ucfirst(auth()->user()->role ?? 'Inspector') }}</span>
+                    <span class="font-bold text-indigo-700">{{ auth()->user()->role_label ?? 'Inspector' }}</span>
                 </div>
                 <!-- Notif -->
                 <div class="relative cursor-pointer p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition">
                     <span class="material-symbols-outlined icon-md">notifications</span>
-                    @if($pendingReviewCount > 0)
+                    @if($pendingMrbCount > 0)
                         <span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-white animate-pulse"></span>
                     @endif
                 </div>
@@ -263,20 +313,33 @@
                     <!-- Dropdown Menu -->
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <div class="py-1">
-                            <a href="{{ route('profile') }}" class="px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
-                                <span class="material-symbols-outlined icon-sm">person</span> My Profile
+                            <a href="{{ route('profile') }}" class="px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
+                                <span class="material-symbols-outlined icon-sm">person</span> User Profile
                             </a>
-                            <a href="{{ route('reports.index') }}" class="px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
-                                <span class="material-symbols-outlined icon-sm">bar_chart</span> Output & Reports
+                            <a href="{{ route('traceability.index') }}" class="px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
+                                <span class="material-symbols-outlined icon-sm">search_check</span> Material Traceability
                             </a>
-                            <a href="{{ route('instruments.index') }}" class="px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
-                                <span class="material-symbols-outlined icon-sm">speed</span> Instruments
+                            @if(auth()->user() && auth()->user()->isAdmin())
+                            <a href="{{ route('admin.users.index') }}" class="px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
+                                <span class="material-symbols-outlined icon-sm">manage_accounts</span> Manage Users
+                            </a>
+                            <a href="{{ route('admin.audit-trails.index') }}" class="px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
+                                <span class="material-symbols-outlined icon-sm">security</span> Audit Trail
+                            </a>
+                            @endif
+                            @if(auth()->user() && auth()->user()->isSupervisor())
+                            <a href="{{ route('reports.index') }}" class="px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
+                                <span class="material-symbols-outlined icon-sm">bar_chart</span> Summary Reports
+                            </a>
+                            @endif
+                            <a href="{{ route('instruments.index') }}" class="px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 font-medium">
+                                <span class="material-symbols-outlined icon-sm">speed</span> Instrument Status
                             </a>
                             <div class="border-t border-slate-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" class="block">
                                 @csrf
-                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-rose-600 hover:bg-rose-50 flex items-center gap-2 font-medium">
-                                    <span class="material-symbols-outlined icon-sm">logout</span> Log Out
+                                <button type="submit" class="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 flex items-center gap-2 font-bold">
+                                    <span class="material-symbols-outlined icon-sm">logout</span> Sign Out
                                 </button>
                             </form>
                         </div>

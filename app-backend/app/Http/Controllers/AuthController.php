@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\AuditTrail;
 
 class AuthController extends Controller
 {
@@ -23,28 +24,59 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('nik', $credentials['nik'])->first();
+        $user = User::where('nik', $credentials['nik'])
+            ->orWhere('nip', $credentials['nik'])
+            ->orWhere('email', $credentials['nik'])
+            ->first();
 
         if ($user && password_verify($credentials['password'], $user->password)) {
+            if (isset($user->status_aktif) && !$user->status_aktif) {
+                return back()->withErrors([
+                    'nik' => 'Your account has been deactivated by the System Administrator.',
+                ])->onlyInput('nik');
+            }
+
             Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
 
+            AuditTrail::log(
+                'LOGIN',
+                'User Login: ' . $user->name . ' (' . $user->role_label . ')',
+                null,
+                'Success'
+            );
+
             return redirect()->intended(route('dashboard'))
-                ->with('success', "Selamat datang, {$user->name}!");
+                ->with('success', "Welcome back, {$user->name} ({$user->role_label})!");
         }
 
+        AuditTrail::log(
+            'LOGIN_FAILED',
+            'Attempted NIK: ' . $credentials['nik'],
+            null,
+            'Failed - Invalid credentials',
+            $user ? $user->id : null
+        );
+
         return back()->withErrors([
-            'nik' => 'NIK atau kata sandi yang Anda masukkan tidak sesuai.',
+            'nik' => 'The NIK / Employee ID or password entered is incorrect.',
         ])->onlyInput('nik');
     }
 
     public function logout(Request $request)
     {
+        if (Auth::check()) {
+            AuditTrail::log(
+                'LOGOUT',
+                'User Logout: ' . Auth::user()->name
+            );
+        }
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('info', 'Anda telah keluar dari sistem.');
+        return redirect()->route('login')->with('info', 'You have been logged out of the system.');
     }
 
     public function rootRedirect()
@@ -61,32 +93,21 @@ class AuthController extends Controller
     {
         $partNumber = $request->query('part_number');
         $partName = $request->query('part_name');
+        $commodity = $request->query('commodity');
         $grn = $request->query('grn');
 
-        if ($partNumber || $partName) {
-            $pUpper = strtoupper($partNumber . ' ' . $partName);
-            if (str_contains($pUpper, 'WH-') || str_contains($pUpper, 'HARNESS') || str_contains($pUpper, 'WIRING')) {
-                $ruleViolated = "Sistem Poka-Yoke: Inspektur EE Part otomatis ditolak memeriksa komponen {$partNumber} ({$partName}) karena merupakan kategori Wire Harness (Bukan Komponen EE).";
-                $ruleCode = "POKA-YOKE-RULE-08 (Wire Harness Isolation Guard)";
-                $targetResource = "Wire Harness Testing Standard (USCAR-21 / JIS C 5402)";
-                $resolution = "Material ini adalah komponen Wire Harness dan memiliki standar uji kontinuitas multi-pin, terminal crimping & pull-force terpisah. Dokumen dan lot fisik harus dialihkan ke Tim IQC Wire Harness per SOP WH-SOP-004.";
-            } else {
-                $ruleViolated = "Sistem Poka-Yoke: Inspektur EE Part otomatis ditolak memeriksa komponen {$partNumber} ({$partName}) karena merupakan kategori Automotive Part (Bukan Komponen EE).";
-                $ruleCode = "POKA-YOKE-RULE-09 (Automotive Stamping Isolation Guard)";
-                $targetResource = "Automotive Mechanical Standard (ISO/TS 16949 / JIS D 0201)";
-                $resolution = "Material ini adalah komponen Automotive Part / Stamping dan memerlukan uji ketebalan plat, coating thickness & tensile test tersendiri. Dokumen dan lot fisik harus dialihkan ke Tim IQC Automotive per SOP AUTO-SOP-012.";
-            }
-        } else {
-            $ruleViolated = $request->query('reason', 'Sistem Poka-Yoke: Inspektur dilarang memvalidasi keputusannya sendiri atau mengubah parameter spesifikasi.');
-            $ruleCode = "POKA-YOKE-RULE-04 (Dual Control & Segregation)";
-            $targetResource = 'Approval & Master Parameter';
-            $resolution = 'Aksi ini memerlukan wewenang Quality Supervisor (SPV-001) atau otoritas yang berwenang.';
-        }
+        $user = Auth::user();
+        $userRole = $user ? $user->role_label : 'Inspector';
+
+        $ruleViolated = $request->query('reason', "Poka-Yoke System: Inspector sub-role {$userRole} is not authorized to inspect material in the " . ($commodity ? strtoupper($commodity) : 'this') . " category. The physical lot must be routed to the respective division inspector per IQC SOP.");
+        $ruleCode = "POKA-YOKE-COM-GUARD (Commodity Segregation Guard)";
+        $targetResource = "Lot Inspection: " . ($grn ?? 'Inbound Material');
+        $resolution = "This material belongs to commodity " . ($commodity ? strtoupper($commodity) : '') . ". Only personnel certified in that specific commodity sub-role may access the inspection form.";
 
         return view('poka-yoke.denied', [
             'rule_violated'   => $ruleViolated,
             'rule_code'       => $ruleCode,
-            'user_role'       => auth()->user()->role ?? 'inspector',
+            'user_role'       => $userRole,
             'target_resource' => $targetResource,
             'resolution'      => $resolution,
             'part_number'     => $partNumber,
@@ -95,5 +116,3 @@ class AuthController extends Controller
         ]);
     }
 }
-
-

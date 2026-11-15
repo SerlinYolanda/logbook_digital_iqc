@@ -2,99 +2,205 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inspection;
+use App\Models\Logbook;
+use App\Models\Supplier;
 use App\Models\Part;
+use App\Models\Defect;
+use App\Models\DefectCategory;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+    /**
+     * UC-12: Buat Laporan Rekapitulasi (Supervisor IQC)
+     */
     public function index(Request $request)
     {
-        $query = Inspection::with(['part', 'inspector', 'supervisor']);
+        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
+        $endDate   = $request->input('end_date', Carbon::now()->toDateString());
+        $status    = $request->input('status');
+        $komoditas = $request->input('komoditas');
+        $supplierId = $request->input('supplier_id');
 
-        if ($request->filled('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
+        $query = Logbook::with([
+            'receiving.supplier',
+            'receiving.part',
+            'inspector',
+            'defects.defectCategory',
+            'latestMrbDisposition.supervisor'
+        ])
+        ->whereDate('tanggal_inspeksi', '>=', $startDate)
+        ->whereDate('tanggal_inspeksi', '<=', $endDate);
+
+        if (!empty($status)) {
+            $query->where('status', $status);
         }
 
-        if ($request->filled('disposition') && $request->disposition !== 'all') {
-            $query->where('disposition', $request->disposition);
+        if (!empty($komoditas)) {
+            $query->whereHas('receiving.part', function ($q) use ($komoditas) {
+                $q->where('kategori_komoditas', $komoditas);
+            });
         }
 
-        if ($request->filled('part_id') && $request->part_id !== 'all') {
-            $query->where('part_id', $request->part_id);
+        if (!empty($supplierId)) {
+            $query->whereHas('receiving', function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            });
         }
 
-        if ($request->filled('period')) {
-            if ($request->period === 'today') {
-                $query->whereDate('inspection_date', now()->toDateString());
-            } elseif ($request->period === 'this_week') {
-                $query->whereBetween('inspection_date', [now()->startOfWeek()->toDateString(), now()->endOfWeek()->toDateString()]);
-            } elseif ($request->period === 'this_month') {
-                $query->whereMonth('inspection_date', now()->month)
-                      ->whereYear('inspection_date', now()->year);
-            }
-        }
+        $logbooks = $query->orderBy('tanggal_inspeksi', 'desc')->get();
 
-        $inspections = $query->latest()->get();
-        $parts = Part::all();
+        // Summary Calculations
+        $totalLots = $logbooks->count();
+        $totalAccepted = $logbooks->where('status', 'accept')->count();
+        $totalRtv = $logbooks->where('status', 'return_to_vendor')->count();
+        $totalScrap = $logbooks->where('status', 'scrap')->count();
+        $totalRework = $logbooks->where('status', 'rework')->count();
+        $totalPending = $logbooks->where('status', 'menunggu_penetapan')->count();
 
-        return view('reports.index', compact('inspections', 'parts'));
+        $passRate = $totalLots > 0 ? round(($totalAccepted / $totalLots) * 100, 1) : 100.0;
+
+        // Defect Summary in this period
+        $logbookIds = $logbooks->pluck('id');
+        $defectsSummary = Defect::whereIn('logbook_id', $logbookIds)
+            ->select('defect_category_id', DB::raw('SUM(qty_defect) as total_qty'), DB::raw('COUNT(*) as occurrences'))
+            ->groupBy('defect_category_id')
+            ->with('defectCategory')
+            ->orderBy('total_qty', 'desc')
+            ->get();
+
+        $suppliers = Supplier::where('status_aktif', true)->orderBy('nama_supplier')->get();
+
+        return view('reports.index', compact(
+            'logbooks',
+            'totalLots',
+            'totalAccepted',
+            'totalRtv',
+            'totalScrap',
+            'totalRework',
+            'totalPending',
+            'passRate',
+            'defectsSummary',
+            'suppliers',
+            'startDate',
+            'endDate',
+            'status',
+            'komoditas',
+            'supplierId'
+        ));
     }
 
-    public function exportCsv(Request $request): StreamedResponse
+    /**
+     * Export styled Excel (.xls / CSV) report (UC-12)
+     */
+    public function exportExcel(Request $request)
     {
-        $query = Inspection::with(['part', 'inspector', 'supervisor']);
+        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
+        $endDate   = $request->input('end_date', Carbon::now()->toDateString());
+        $status    = $request->input('status');
+        $komoditas = $request->input('komoditas');
+        $supplierId = $request->input('supplier_id');
 
-        if ($request->filled('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
+        $query = Logbook::with([
+            'receiving.supplier',
+            'receiving.part',
+            'inspector',
+            'defects.defectCategory',
+            'latestMrbDisposition.supervisor'
+        ])
+        ->whereDate('tanggal_inspeksi', '>=', $startDate)
+        ->whereDate('tanggal_inspeksi', '<=', $endDate);
+
+        if (!empty($status)) {
+            $query->where('status', $status);
         }
-        if ($request->filled('disposition') && $request->disposition !== 'all') {
-            $query->where('disposition', $request->disposition);
+        if (!empty($komoditas)) {
+            $query->whereHas('receiving.part', function ($q) use ($komoditas) {
+                $q->where('kategori_komoditas', $komoditas);
+            });
+        }
+        if (!empty($supplierId)) {
+            $query->whereHas('receiving', function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            });
         }
 
-        $inspections = $query->latest()->get();
+        $logbooks = $query->orderBy('tanggal_inspeksi', 'asc')->get();
 
+        $format = $request->input('format', 'xls');
+        $filename = 'Laporan_Rekapitulasi_IQC_' . Carbon::now()->format('Ymd_His');
+
+        if ($format === 'xls') {
+            return response()
+                ->view('reports.excel', [
+                    'logbooks'  => $logbooks,
+                    'startDate' => $startDate,
+                    'endDate'   => $endDate,
+                    'generatedAt' => Carbon::now()->translatedFormat('d F Y H:i:s'),
+                ])
+                ->header('Content-Type', 'application/vnd.ms-excel; charset=utf-8')
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '.xls"')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
+        }
+
+        // CSV export with UTF-8 BOM
         $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="IQC_Inspection_Summary_Report_' . date('Ymd_His') . '.csv"',
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}.csv\"",
+            'Pragma'              => 'no-cache',
+            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires'             => '0',
         ];
 
-        $callback = function () use ($inspections) {
+        $callback = function () use ($logbooks) {
             $file = fopen('php://output', 'w');
+            fwrite($file, "\xEF\xBB\xBF");
+            fwrite($file, "sep=,\r\n");
+
             fputcsv($file, [
                 'No',
-                'PO / GRN Number',
-                'Lot Number',
-                'Part Code',
-                'Component Name',
+                'No GRN IQA',
+                'No PO',
+                'No Lot',
+                'Kode Part',
+                'Nama Komponen',
+                'Komoditas',
                 'Supplier / Vendor',
-                'Lot Qty',
-                'Sample Size',
-                'Inspection Date',
-                'Inspector',
-                'Supervisor',
-                'Final Status',
-                'Disposition',
-                'Evaluation Notes'
+                'Negara Asal',
+                'Qty Datang',
+                'Qty Sampel',
+                'Tanggal Inspeksi',
+                'Inspektur IQC',
+                'Status Keputusan',
+                'Disposisi MRB',
+                'Catatan Supervisor',
             ]);
 
-            foreach ($inspections as $index => $ins) {
+            $no = 1;
+            foreach ($logbooks as $log) {
+                $rcv = $log->receiving;
+                $mrb = $log->latestMrbDisposition;
+
                 fputcsv($file, [
-                    $index + 1,
-                    $ins->po_number,
-                    $ins->lot_number,
-                    $ins->part->part_number ?? '-',
-                    $ins->part->part_name ?? '-',
-                    $ins->part->supplier_name ?? '-',
-                    $ins->lot_quantity,
-                    $ins->sample_size,
-                    $ins->inspection_date,
-                    $ins->inspector->name ?? '-',
-                    $ins->supervisor->name ?? '-',
-                    strtoupper($ins->status),
-                    strtoupper(str_replace('_', ' ', $ins->disposition ?? '-')),
-                    $ins->disposition_notes ?? '-',
+                    $no++,
+                    $rcv->no_grn_iqa ?? '-',
+                    $rcv->no_po ?? '-',
+                    $rcv->no_lot ?? '-',
+                    $rcv->part->kode_part ?? '-',
+                    $rcv->part->nama_part ?? '-',
+                    $rcv->part->komoditas_label ?? '-',
+                    $rcv->supplier->nama_supplier ?? '-',
+                    $rcv->supplier->negara_asal ?? '-',
+                    $rcv->qty_datang ?? 0,
+                    $log->qty_sampel ?? 0,
+                    Carbon::parse($log->tanggal_inspeksi)->format('Y-m-d H:i'),
+                    $log->inspector->name ?? '-',
+                    $log->status_label,
+                    $mrb ? $mrb->decision_label : '-',
+                    $mrb ? $mrb->catatan : '-',
                 ]);
             }
 

@@ -19,10 +19,15 @@
             </p>
         </div>
         <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+            <!-- Export Excel Button -->
+            <a href="{{ route('inspections.export', array_merge(request()->query(), ['format' => 'excel'])) }}" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm shadow-emerald-600/20 cursor-pointer" title="Download formatted Microsoft Excel spreadsheet">
+                <span class="material-symbols-outlined icon-sm text-white">table_chart</span>
+                <span>Export Excel</span>
+            </a>
             <!-- Export CSV Button -->
-            <a href="{{ route('inspections.export', request()->query()) }}" class="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300 transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Download filtered history as CSV/Excel">
-                <span class="material-symbols-outlined icon-sm text-emerald-600">download</span>
-                <span>Export CSV</span>
+            <a href="{{ route('inspections.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-300 transition flex items-center gap-1 shadow-2xs cursor-pointer" title="Download raw CSV with UTF-8 BOM">
+                <span class="material-symbols-outlined icon-sm text-slate-600">download</span>
+                <span>CSV</span>
             </a>
 
             <!-- Full Archive Printable Audit Report (All Records Matching Current Filter) -->

@@ -99,56 +99,80 @@ class InspectionController extends Controller
         $query = $this->buildFilteredQuery($request);
         $inspections = $query->latest('inspection_date')->latest('id')->get();
 
+        $format = strtolower($request->query('format', 'excel'));
+
+        if ($format === 'csv') {
+            $headers = [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="IQC_Logbook_Archive_' . date('Ymd_His') . '.csv"',
+                'Cache-Control' => 'max-age=0, no-cache, must-revalidate',
+            ];
+
+            return response()->stream(function () use ($inspections) {
+                $file = fopen('php://output', 'w');
+                // UTF-8 BOM
+                fwrite($file, "\xEF\xBB\xBF");
+                // Excel delimiter hint
+                fwrite($file, "sep=,\r\n");
+
+                fputcsv($file, [
+                    'No',
+                    'Inspection Date',
+                    'PO / GRN Number',
+                    'Vendor Lot Number',
+                    'Part Number',
+                    'Part Name',
+                    'Supplier / Manufacturer',
+                    'Inspection Mode',
+                    'Lot Quantity (pcs)',
+                    'Sample Size (pcs)',
+                    'Quality Status',
+                    'Final Disposition',
+                    'Inspector',
+                    'Supervisor Authorized',
+                    'Disposition Notes',
+                ]);
+
+                foreach ($inspections as $idx => $ins) {
+                    fputcsv($file, [
+                        $idx + 1,
+                        $ins->inspection_date ? $ins->inspection_date->format('Y-m-d') : '-',
+                        $ins->po_number,
+                        $ins->lot_number,
+                        $ins->part->part_number ?? '-',
+                        $ins->part->part_name ?? '-',
+                        $ins->part->supplier_name ?? '-',
+                        $ins->inspection_type === 'visual' ? 'Visual & Packaging (JEDEC)' : 'Physical Dimensional Measurement',
+                        $ins->lot_quantity,
+                        $ins->sample_size,
+                        strtoupper($ins->status),
+                        strtoupper(str_replace('_', ' ', $ins->disposition ?? '-')),
+                        $ins->inspector->name ?? '-',
+                        $ins->supervisor->name ?? '-',
+                        $ins->disposition_notes ?? '-',
+                    ]);
+                }
+
+                fclose($file);
+            }, 200, $headers);
+        }
+
+        // Default: Formatted Excel spreadsheet (.xls)
+        $filename = 'IQC_Logbook_Archive_' . date('Ymd_His') . '.xls';
         $headers = [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="IQC_Logbook_Archive_' . date('Ymd_His') . '.csv"',
+            'Content-Type' => 'application/vnd.ms-excel; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Cache-Control' => 'max-age=0, no-cache, must-revalidate',
+            'Pragma' => 'public',
         ];
 
-        $callback = function () use ($inspections) {
-            $file = fopen('php://output', 'w');
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            fputcsv($file, [
-                'No',
-                'Inspection Date',
-                'PO / GRN Number',
-                'Vendor Lot Number',
-                'Part Number',
-                'Part Name',
-                'Supplier / Manufacturer',
-                'Inspection Mode',
-                'Lot Quantity (pcs)',
-                'Sample Size (pcs)',
-                'Quality Status',
-                'Final Disposition',
-                'Inspector',
-                'Supervisor Authorized',
-                'Disposition Notes',
-            ]);
-
-            foreach ($inspections as $idx => $ins) {
-                fputcsv($file, [
-                    $idx + 1,
-                    $ins->inspection_date ? $ins->inspection_date->format('Y-m-d') : '-',
-                    $ins->po_number,
-                    $ins->lot_number,
-                    $ins->part->part_number ?? '-',
-                    $ins->part->part_name ?? '-',
-                    $ins->part->supplier_name ?? '-',
-                    $ins->inspection_type === 'visual' ? 'Visual & Packaging (JEDEC)' : 'Physical Dimensional Measurement',
-                    $ins->lot_quantity,
-                    $ins->sample_size,
-                    strtoupper($ins->status),
-                    strtoupper(str_replace('_', ' ', $ins->disposition ?? '-')),
-                    $ins->inspector->name ?? '-',
-                    $ins->supervisor->name ?? '-',
-                    $ins->disposition_notes ?? '-',
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return response()->stream(function () use ($inspections, $request) {
+            echo view('inspections.excel', [
+                'inspections' => $inspections,
+                'filters' => $request->all(),
+                'generatedAt' => now()->format('d M Y H:i:s'),
+            ])->render();
+        }, 200, $headers);
     }
 
     public function create(Request $request)

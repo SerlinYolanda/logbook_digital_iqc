@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('nik')->unique();
-            $table->string('role')->default('inspector'); // inspector, supervisor, admin
+            $table->string('nip')->nullable();
+            $table->string('role')->default('inspector_ee'); // admin, master_data, supervisor, inspector_ee, inspector_automotive, inspector_wire_harness
+            $table->boolean('status_aktif')->default(true);
             $table->string('shift')->default('1');
             $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();

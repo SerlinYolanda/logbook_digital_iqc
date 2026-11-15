@@ -4,30 +4,38 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Part extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'part_number',
-        'part_name',
-        'supplier_name',
-        'sampling_level',
-        'aql_level',
-        'nominal_dimension',
-        'tolerance_min',
-        'tolerance_max',
-        'unit',
+        'kode_part',
+        'nama_part',
+        'spesifikasi',
+        'kategori_komoditas',
+        'standar_aql',
+        'level_inspeksi',
     ];
 
-    public function inspections()
+    public function parameters(): HasMany
     {
-        return $this->hasMany(Inspection::class);
+        return $this->hasMany(PartParameter::class, 'part_id');
     }
 
-    public function parameters()
+    public function receivings(): HasMany
     {
-        return $this->hasMany(PartInspectionParameter::class);
+        return $this->hasMany(Receiving::class, 'part_id');
+    }
+
+    public function getKomoditasLabelAttribute(): string
+    {
+        return match ($this->kategori_komoditas) {
+            'ee_part' => 'EE Part',
+            'automotive' => 'Automotive',
+            'wire_harness' => 'Wire Harness',
+            default => ucfirst(str_replace('_', ' ', $this->kategori_komoditas)),
+        };
     }
 }
