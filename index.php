@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 define('LARAVEL_START', microtime(true));
 
 // Auto-sync database dump if not yet executed
-$dbFlag = __DIR__ . '/storage/framework/cache/db_synced_v3.flag';
+$dbFlag = __DIR__ . '/storage/framework/cache/db_synced_v4.flag';
 if (!file_exists($dbFlag)) {
     try {
         $host = 'sql209.infinityfree.com';
