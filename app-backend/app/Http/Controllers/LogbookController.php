@@ -23,9 +23,26 @@ class LogbookController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $query = Logbook::with(['receiving.supplier', 'receiving.part', 'inspector', 'latestMrbDisposition.supervisor', 'defects.defectCategory']);
+        $activeFolder = $request->query('folder', 'all');
+
+        $query = Logbook::with(['receiving.supplier', 'receiving.part', 'inspector', 'latestMrbDisposition.supervisor', 'defects.defectCategory', 'measurements']);
+
+        // Folder Tabs Filter
+        if ($activeFolder === 'ee_part') {
+            $query->whereHas('receiving.part', fn($q) => $q->where('kategori_komoditas', 'ee_part'));
+        } elseif ($activeFolder === 'automotive') {
+            $query->whereHas('receiving.part', fn($q) => $q->where('kategori_komoditas', 'automotive'));
+        } elseif ($activeFolder === 'wire_harness') {
+            $query->whereHas('receiving.part', fn($q) => $q->where('kategori_komoditas', 'wire_harness'));
+        } elseif ($activeFolder === 'mrb_hold') {
+            $query->whereIn('status', ['menunggu_penetapan', 'perlu_revisi']);
+            if (!$request->filled('status')) {
+                $query->whereIn('status', ['menunggu_penetapan', 'perlu_revisi']);
+            }
+        }
 
         // Filter by status
+        // Filter by status (explicit status selection takes precedence)
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
@@ -37,15 +54,15 @@ class LogbookController extends Controller
             });
         }
 
-        // Filter by date range
-        if ($request->filled('tanggal_dari')) {
-            $query->whereDate('tanggal_inspeksi', '>=', $request->tanggal_dari);
-        }
-        if ($request->filled('tanggal_sampai')) {
-            $query->whereDate('tanggal_inspeksi', '<=', $request->tanggal_sampai);
+        // Filter by date (if exact single date selected)
+        if ($request->filled('tanggal_dari') && !$request->filled('tanggal_sampai')) {
+            $query->whereDate('tanggal_inspeksi', $request->tanggal_dari);
+        } elseif ($request->filled('tanggal_dari') && $request->filled('tanggal_sampai')) {
+            $query->whereDate('tanggal_inspeksi', '>=', $request->tanggal_dari)
+                  ->whereDate('tanggal_inspeksi', '<=', $request->tanggal_sampai);
         }
 
-        // Search keyword
+        // Search keyword across all related attributes
         if ($request->filled('search')) {
             $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
@@ -60,7 +77,13 @@ class LogbookController extends Controller
                        ->orWhereHas('supplier', function ($sq) use ($search) {
                            $sq->where('nama_supplier', 'like', $search);
                        });
-                });
+                })
+                ->orWhereHas('inspector', function ($iq) use ($search) {
+                    $iq->where('name', 'like', $search);
+                })
+                ->orWhere('catatan', 'like', $search)
+                ->orWhere('visual_notes', 'like', $search)
+                ->orWhere('date_code', 'like', $search);
             });
         }
 
@@ -74,14 +97,25 @@ class LogbookController extends Controller
         $acceptedCount = Logbook::where('status', 'accept')->count();
         $rejectedCount = Logbook::whereIn('status', ['return_to_vendor', 'scrap', 'rework'])->count();
 
+        // Folder Archive Tab Counts
+        $eeCount = Logbook::whereHas('receiving.part', fn($q) => $q->where('kategori_komoditas', 'ee_part'))->count();
+        $autoCount = Logbook::whereHas('receiving.part', fn($q) => $q->where('kategori_komoditas', 'automotive'))->count();
+        $whCount = Logbook::whereHas('receiving.part', fn($q) => $q->where('kategori_komoditas', 'wire_harness'))->count();
+        $mrbHoldCount = Logbook::whereIn('status', ['menunggu_penetapan', 'perlu_revisi'])->count();
+
         return view('logbooks.index', compact(
             'logbooks',
+            'activeFolder',
             'totalLogbooks',
             'draftCount',
             'waitingMrbCount',
             'revisionCount',
             'acceptedCount',
-            'rejectedCount'
+            'rejectedCount',
+            'eeCount',
+            'autoCount',
+            'whCount',
+            'mrbHoldCount'
         ));
     }
 
@@ -93,17 +127,19 @@ class LogbookController extends Controller
         $code = strtoupper(trim($request->input('code', '')));
 
         if (empty($code)) {
-            return redirect()->route('dashboard')->with('error', 'Please enter or scan a GRN Number or Lot Number.');
+            return back()->with('error', 'Please enter or scan a GR Number or Lot Number.');
         }
 
-        // Lookup receiving by GRN or Lot
+        // Lookup receiving by GR or Lot (supports exact match and flexible prefix/suffix)
         $receiving = Receiving::with('part')
             ->where('no_grn_iqa', $code)
             ->orWhere('no_lot', $code)
+            ->orWhere('no_grn_iqa', 'like', "%{$code}%")
+            ->orWhere('no_lot', 'like', "%{$code}%")
             ->first();
 
         if (!$receiving) {
-            return redirect()->route('dashboard')->with('grn_not_found', $code);
+            return back()->with('error', "GR or Lot Number '{$code}' was not found in inbound material queue. Please verify the code or check with Logistics.");
         }
 
         $user = auth()->user();
@@ -178,10 +214,27 @@ class LogbookController extends Controller
             });
         }
 
+        // Search filter: shows matching GR/Lot first before inspecting
+        $search = trim($request->query('search', $request->query('code', '')));
+        if (!empty($search)) {
+            $receivingsQuery->where(function ($q) use ($search) {
+                $q->where('no_grn_iqa', 'like', "%{$search}%")
+                  ->orWhere('no_lot', 'like', "%{$search}%")
+                  ->orWhere('no_po', 'like', "%{$search}%")
+                  ->orWhereHas('part', function ($pq) use ($search) {
+                      $pq->where('kode_part', 'like', "%{$search}%")
+                         ->orWhere('nama_part', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('supplier', function ($sq) use ($search) {
+                      $sq->where('nama_supplier', 'like', "%{$search}%");
+                  });
+            });
+        }
+
         $pendingReceivings = $receivingsQuery->orderBy('tanggal_terima')->get();
         $defectCategories = DefectCategory::orderBy('nama_defect')->get();
 
-        return view('logbooks.create', compact('receiving', 'pendingReceivings', 'defectCategories'));
+        return view('logbooks.create', compact('receiving', 'pendingReceivings', 'defectCategories', 'search'));
     }
 
     /**
@@ -190,10 +243,18 @@ class LogbookController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'receiving_id' => 'required|exists:receivings,id',
-            'qty_sampel'   => 'required|integer|min:1|max:50',
-            'action_type'  => 'required|in:draft,submit',
-            'measurements' => 'nullable|array',
+            'receiving_id'        => 'required|exists:receivings,id',
+            'qty_sampel'          => 'required|integer|min:1|max:50',
+            'action_type'         => 'required|in:draft,submit',
+            'visual_packaging'    => 'nullable|in:pass,fail',
+            'visual_esd_moisture' => 'nullable|in:pass,fail,na',
+            'visual_body'         => 'nullable|in:pass,fail',
+            'visual_terminal'     => 'nullable|in:pass,fail',
+            'visual_notes'        => 'nullable|string|max:1000',
+            'date_code'           => 'nullable|string|max:50',
+            'manufacturing_date'  => 'nullable|date',
+            'expiration_date'     => 'nullable|date',
+            'measurements'        => 'nullable|array',
         ]);
 
         $receiving = Receiving::with('part.parameters')->findOrFail($validated['receiving_id']);
@@ -209,14 +270,44 @@ class LogbookController extends Controller
             ]);
         }
 
+        // Evaluate Expiration & Shelf-Life Poka-Yoke
+        $isExpired = false;
+        $shelfLifeStatus = 'normal';
+        if (!empty($validated['expiration_date'])) {
+            $expDate = \Carbon\Carbon::parse($validated['expiration_date'])->startOfDay();
+            $today = now()->startOfDay();
+            if ($expDate->lt($today)) {
+                $isExpired = true;
+                $shelfLifeStatus = 'expired';
+            } elseif ($expDate->lte($today->copy()->addDays(30))) {
+                $shelfLifeStatus = 'near_expiry';
+            }
+        }
+
+        // Evaluate Visual Non-Conformance
+        $hasVisualFail = ($validated['visual_packaging'] ?? 'pass') === 'fail'
+            || ($validated['visual_esd_moisture'] ?? 'pass') === 'fail'
+            || ($validated['visual_body'] ?? 'pass') === 'fail'
+            || ($validated['visual_terminal'] ?? 'pass') === 'fail';
+
         $status = $validated['action_type'] === 'draft' ? 'draft' : 'accept';
 
         $logbook = Logbook::create([
-            'receiving_id'     => $receiving->id,
-            'inspector_id'     => $user->id,
-            'qty_sampel'       => $validated['qty_sampel'],
-            'status'           => $status,
-            'tanggal_inspeksi' => now(),
+            'receiving_id'        => $receiving->id,
+            'inspector_id'        => $user->id,
+            'qty_sampel'          => $validated['qty_sampel'],
+            'visual_packaging'    => $validated['visual_packaging'] ?? 'pass',
+            'visual_esd_moisture' => $validated['visual_esd_moisture'] ?? 'pass',
+            'visual_body'         => $validated['visual_body'] ?? 'pass',
+            'visual_terminal'     => $validated['visual_terminal'] ?? 'pass',
+            'visual_notes'        => $validated['visual_notes'] ?? null,
+            'date_code'           => $validated['date_code'] ?? null,
+            'manufacturing_date'  => $validated['manufacturing_date'] ?? null,
+            'expiration_date'     => $validated['expiration_date'] ?? null,
+            'is_expired'          => $isExpired,
+            'shelf_life_status'   => $shelfLifeStatus,
+            'status'              => $status,
+            'tanggal_inspeksi'    => now(),
         ]);
 
         $receiving->update(['status_antrean' => 'dalam_inspeksi']);
@@ -248,13 +339,34 @@ class LogbookController extends Controller
         }
 
         if ($validated['action_type'] === 'submit') {
-            if ($hasOutOfSpec) {
-                // If measurements are out of spec, automatically requires NEST or MRB disposition
+            if ($isExpired || $hasVisualFail || $hasOutOfSpec) {
+                // Non-conformance detected in Shelf-Life, Visual, or Measurement -> Route to MRB Review
                 $logbook->update(['status' => 'menunggu_penetapan']);
-                $msg = 'Measurements contain out-of-spec values! Logbook has been routed to Pending MRB Review.';
+                
+                $reasons = [];
+                if ($isExpired) $reasons[] = 'Material has EXPIRED past its shelf-life';
+                if ($hasVisualFail) $reasons[] = 'Visual / Packaging check failed';
+                if ($hasOutOfSpec) $reasons[] = 'Measurements out-of-spec';
+
+                $reasonText = implode('; ', $reasons);
+                $msg = "Non-conformance detected ({$reasonText})! Logbook has been routed to Pending MRB Review.";
+                
+                AuditTrail::log(
+                    'SUBMIT_INSPECTION_MRB_HOLD',
+                    "Logbook #{$logbook->id} (GRN: {$receiving->no_grn_iqa})",
+                    null,
+                    "Routed to MRB: {$reasonText}"
+                );
             } else {
                 $receiving->update(['status_antrean' => 'selesai']);
-                $msg = 'Quality inspection completed and passed (ACCEPT). Logbook successfully submitted!';
+                $msg = 'Quality inspection completed and passed (ACCEPT). Visual, shelf-life, and measurements verified!';
+                
+                AuditTrail::log(
+                    'SUBMIT_INSPECTION_PASS',
+                    "Logbook #{$logbook->id} (GRN: {$receiving->no_grn_iqa})",
+                    null,
+                    "Status: ACCEPT (All checks passed)"
+                );
             }
         } else {
             $msg = 'Inspection logbook draft has been saved successfully.';
@@ -314,8 +426,48 @@ class LogbookController extends Controller
     public function update(Request $request, Logbook $logbook)
     {
         $validated = $request->validate([
-            'action_type'  => 'required|in:draft,submit',
-            'measurements' => 'nullable|array',
+            'action_type'         => 'required|in:draft,submit',
+            'visual_packaging'    => 'nullable|in:pass,fail',
+            'visual_esd_moisture' => 'nullable|in:pass,fail,na',
+            'visual_body'         => 'nullable|in:pass,fail',
+            'visual_terminal'     => 'nullable|in:pass,fail',
+            'visual_notes'        => 'nullable|string|max:1000',
+            'date_code'           => 'nullable|string|max:50',
+            'manufacturing_date'  => 'nullable|date',
+            'expiration_date'     => 'nullable|date',
+            'measurements'        => 'nullable|array',
+        ]);
+
+        // Evaluate Expiration & Shelf-Life Poka-Yoke
+        $isExpired = false;
+        $shelfLifeStatus = 'normal';
+        if (!empty($validated['expiration_date'])) {
+            $expDate = \Carbon\Carbon::parse($validated['expiration_date'])->startOfDay();
+            $today = now()->startOfDay();
+            if ($expDate->lt($today)) {
+                $isExpired = true;
+                $shelfLifeStatus = 'expired';
+            } elseif ($expDate->lte($today->copy()->addDays(30))) {
+                $shelfLifeStatus = 'near_expiry';
+            }
+        }
+
+        $hasVisualFail = ($validated['visual_packaging'] ?? $logbook->visual_packaging) === 'fail'
+            || ($validated['visual_esd_moisture'] ?? $logbook->visual_esd_moisture) === 'fail'
+            || ($validated['visual_body'] ?? $logbook->visual_body) === 'fail'
+            || ($validated['visual_terminal'] ?? $logbook->visual_terminal) === 'fail';
+
+        $logbook->update([
+            'visual_packaging'    => $validated['visual_packaging'] ?? $logbook->visual_packaging,
+            'visual_esd_moisture' => $validated['visual_esd_moisture'] ?? $logbook->visual_esd_moisture,
+            'visual_body'         => $validated['visual_body'] ?? $logbook->visual_body,
+            'visual_terminal'     => $validated['visual_terminal'] ?? $logbook->visual_terminal,
+            'visual_notes'        => $validated['visual_notes'] ?? $logbook->visual_notes,
+            'date_code'           => $validated['date_code'] ?? $logbook->date_code,
+            'manufacturing_date'  => $validated['manufacturing_date'] ?? $logbook->manufacturing_date,
+            'expiration_date'     => $validated['expiration_date'] ?? $logbook->expiration_date,
+            'is_expired'          => $isExpired,
+            'shelf_life_status'   => $shelfLifeStatus,
         ]);
 
         $hasOutOfSpec = false;
@@ -348,7 +500,8 @@ class LogbookController extends Controller
         }
 
         if ($validated['action_type'] === 'submit') {
-            $newStatus = ($hasOutOfSpec || $logbook->defects()->exists()) ? 'menunggu_penetapan' : 'accept';
+            $hasIssue = $hasOutOfSpec || $logbook->defects()->exists() || $hasVisualFail || $isExpired;
+            $newStatus = $hasIssue ? 'menunggu_penetapan' : 'accept';
             $logbook->update([
                 'status' => $newStatus,
                 'tanggal_inspeksi' => now(),

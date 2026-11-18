@@ -12,6 +12,7 @@
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Material Quality History & Traceability</h1>
                 <p class="text-xs text-slate-500 mt-0.5">UC-08: End-to-end tracking of material quality from GRN inbound, sampling inspection, through MRB disposition.</p>
+                <p class="text-xs text-slate-500 mt-0.5">UC-08: End-to-end tracking of material quality from GR inbound, sampling inspection, through MRB disposition.</p>
             </div>
         </div>
     </div>
@@ -26,8 +27,10 @@
         <form method="GET" action="{{ route('traceability.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div class="lg:col-span-2">
                 <label class="block text-slate-600 font-bold text-xs mb-1">General Search (Lot / GRN / PO / Part No):</label>
+                <label class="block text-slate-600 font-bold text-xs mb-1">General Search (Lot / GR / PO / Part No):</label>
                 <input type="text" name="search" value="{{ request('search') }}" 
                     placeholder="e.g. LOT-STM-2610A or GRN-202611-001..." 
+                    placeholder="e.g. LOT-STM-2610A or GR-202611-001..." 
                     class="w-full text-xs font-mono rounded-xl border-slate-200 py-2.5">
             </div>
 
@@ -97,6 +100,7 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                         <th class="py-3.5 px-4">Lot & GRN No</th>
+                        <th class="py-3.5 px-4">Lot & GR No</th>
                         <th class="py-3.5 px-4">Component & Commodity</th>
                         <th class="py-3.5 px-4">Supplier & Country</th>
                         <th class="py-3.5 px-4 text-right">Inbound Qty</th>
@@ -141,6 +145,7 @@
                             @else
                                 <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800">
                                     GRN Inbound Queue
+                                    GR Inbound Queue
                                 </span>
                             @endif
                         </td>

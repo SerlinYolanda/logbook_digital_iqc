@@ -45,6 +45,7 @@
             </div>
             <div>
                 <span class="text-slate-400">Inbound Qty & GRN:</span>
+                <span class="text-slate-400">Inbound Qty & GR:</span>
                 <div class="font-mono font-bold text-slate-800 mt-0.5">{{ number_format($receiving->qty_datang) }} pcs</div>
                 <div class="font-mono text-slate-500 mt-0.5">{{ $receiving->no_grn_iqa }}</div>
             </div>
@@ -60,6 +61,7 @@
 
         <div class="relative pl-6 sm:pl-8 border-l-2 border-indigo-200 space-y-8">
             <!-- Step 1: Inbound GRN Arrival -->
+            <!-- Step 1: Inbound GR Arrival -->
             <div class="relative">
                 <span class="absolute -left-[35px] sm:-left-[43px] top-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-blue-500/30">
                     1
@@ -69,8 +71,10 @@
                         {{ $receiving->tanggal_terima ? $receiving->tanggal_terima->format('d M Y - H:i') : '-' }} WIB
                     </span>
                     <h4 class="text-sm font-bold text-slate-900 mt-0.5">Material Arrived at Receiving Dock & Registered to GRN</h4>
+                    <h4 class="text-sm font-bold text-slate-900 mt-0.5">Material Arrived at Receiving Dock & Registered to GR</h4>
                     <p class="text-xs text-slate-600 mt-1">
                         Material received with GRN No <b class="font-mono">{{ $receiving->no_grn_iqa }}</b>, PO <b class="font-mono">{{ $receiving->no_po }}</b>, Qty <b class="font-mono">{{ number_format($receiving->qty_datang) }} pcs</b>.
+                        Material received with GR No <b class="font-mono">{{ $receiving->no_grn_iqa }}</b>, PO <b class="font-mono">{{ $receiving->no_po }}</b>, Qty <b class="font-mono">{{ number_format($receiving->qty_datang) }} pcs</b>.
                     </p>
                     <div class="mt-2 text-[11px]">
                         Queue Status: <span class="px-2 py-0.5 rounded font-bold border {{ $receiving->aging_badge_class }}">{{ $receiving->aging_status }}</span>

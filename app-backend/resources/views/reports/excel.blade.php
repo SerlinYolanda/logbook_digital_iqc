@@ -133,6 +133,7 @@
         <tr>
             <th style="width: 45px;">No</th>
             <th style="width: 160px;">GRN No</th>
+            <th style="width: 160px;">GR No</th>
             <th style="width: 150px;">PO No</th>
             <th style="width: 150px;">Lot No</th>
             <th style="width: 160px;">Part Code</th>

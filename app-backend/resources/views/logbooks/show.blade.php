@@ -17,6 +17,7 @@
                     </span>
                 </div>
                 <p class="text-xs text-slate-500 mt-0.5">GRN No: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_grn_iqa }}</b> | Lot: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_lot }}</b></p>
+                <p class="text-xs text-slate-500 mt-0.5">GR No: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_grn_iqa }}</b> | Lot: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_lot }}</b></p>
             </div>
         </div>
 
@@ -102,6 +103,119 @@
             <div>
                 <span class="text-slate-400">Inspection Sample Size:</span>
                 <div class="font-mono font-bold text-indigo-700">{{ $logbook->qty_sampel }} samples</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visual & Shelf-Life Verification Results -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Visual & Packaging Checklist Results -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                    Visual & Packaging Verification
+                </span>
+                @if($logbook->hasVisualFail())
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                        NON-CONFORMANCE
+                    </span>
+                @else
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        ALL VISUAL PASSED
+                    </span>
+                @endif
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-slate-700 font-medium">Packaging & Label Integrity</span>
+                    @if($logbook->visual_packaging === 'pass')
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
+                    @else
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">FAIL</span>
+                    @endif
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-slate-700 font-medium">ESD Protection & Moisture Barrier (HIC)</span>
+                    @if($logbook->visual_esd_moisture === 'pass')
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
+                    @elseif($logbook->visual_esd_moisture === 'na')
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">N/A</span>
+                    @else
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">FAIL</span>
+                    @endif
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-slate-700 font-medium">Physical Body Condition (No Cracks)</span>
+                    @if($logbook->visual_body === 'pass')
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
+                    @else
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">FAIL</span>
+                    @endif
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-slate-700 font-medium">Lead Pin / Terminal (No Bent Leads/Oxidation)</span>
+                    @if($logbook->visual_terminal === 'pass')
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
+                    @else
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">FAIL</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <!-- Shelf-Life & Expiry Verification Results -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px]">event_available</span>
+                    Shelf-Life & Expiration Status
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border {{ $logbook->shelf_life_badge_class }}">
+                    @if($logbook->is_expired)
+                        EXPIRED LOT
+                    @elseif($logbook->shelf_life_status === 'near_expiry')
+                        NEAR EXPIRY (&lt;30d)
+                    @else
+                        CERTIFIED VALID
+                    @endif
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Date Code / Lot DOM</span>
+                    <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
+                        {{ $logbook->date_code ?? 'Not Recorded' }}
+                    </span>
+                </div>
+                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Manufacturing Date</span>
+                    <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
+                        {{ $logbook->manufacturing_date ? $logbook->manufacturing_date->format('d/m/Y') : '-' }}
+                    </span>
+                </div>
+                <div class="col-span-2 p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-slate-400 block text-[10px] uppercase font-bold">Expiration / Solderability Limit</span>
+                        <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
+                            {{ $logbook->expiration_date ? $logbook->expiration_date->format('d F Y') : 'Not Specified' }}
+                        </span>
+                    </div>
+                    @if($logbook->expiration_date)
+                        @php
+                            $diff = (int) now()->diffInDays($logbook->expiration_date, false);
+                        @endphp
+                        <div class="text-right">
+                            @if($diff < 0)
+                                <span class="text-rose-600 font-bold font-mono text-xs">Expired {{ abs($diff) }} days ago</span>
+                            @else
+                                <span class="text-emerald-700 font-bold font-mono text-xs">{{ $diff }} days remaining</span>
+                            @endif
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

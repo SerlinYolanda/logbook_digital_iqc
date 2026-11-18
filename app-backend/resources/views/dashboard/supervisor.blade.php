@@ -60,6 +60,7 @@
                           rounded-xl transition">
                     <span class="material-symbols-outlined icon-sm">local_shipping</span>
                     GRN Tracking
+                    GR Tracking
                 </a>
                 @endif
             </div>

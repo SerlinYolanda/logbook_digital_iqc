@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'GRN Tracking & Receiving Dock Backlog — Digital IQC')
+@section('title', 'GR Tracking & Receiving Dock Backlog — Digital IQC')
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
@@ -16,6 +17,7 @@
                     <div class="flex items-center gap-2.5 flex-wrap">
                         <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
                             GRN Tracking & Receiving Dock Backlog
+                            GR Tracking & Receiving Dock Backlog
                         </h1>
                         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold
                                      bg-rose-50 text-rose-700 border border-rose-200/80">
@@ -30,6 +32,7 @@
                     </div>
                     <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-3xl leading-relaxed">
                         Live receiving log of physical shipments arrived at the dock. Tracks lot batches, GRN barcodes,
+                        Live receiving log of physical shipments arrived at the dock. Tracks lot batches, GR barcodes,
                         arrival timestamps, and IQC testing backlogs — 
                         <span class="text-slate-700 font-medium">separate from Master Data</span>
                         (which manages engineering drawings, tolerances, and nominal specs).
@@ -115,6 +118,7 @@
                 <div class="mt-3 flex items-baseline gap-2">
                     <span class="font-extrabold text-3xl text-slate-800">{{ $counts['all'] }}</span>
                     <span class="text-xs font-semibold text-slate-500">GRN Shipments</span>
+                    <span class="text-xs font-semibold text-slate-500">GR Shipments</span>
                 </div>
             </div>
             <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
@@ -304,6 +308,7 @@
                 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Search GRN, Lot Number, Part Number, Component..."
+                       placeholder="Search GR, Lot Number, Part Number, Component..."
                        class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 focus:border-indigo-500
                               focus:ring-4 focus:ring-indigo-500/10 rounded-xl text-xs text-slate-700 placeholder-slate-400 transition">
             </div>
@@ -388,6 +393,7 @@
                     <tr class="bg-slate-50/80 border-b border-slate-100 text-slate-500 uppercase font-bold text-[10px] tracking-wider">
                         <th class="py-3 px-5">Arrival & Aging SLA</th>
                         <th class="py-3 px-5">GRN Barcode</th>
+                        <th class="py-3 px-5">GR Barcode</th>
                         <th class="py-3 px-5">Arrived Component & Supplier</th>
                         <th class="py-3 px-5">Lot Batch</th>
                         <th class="py-3 px-5 text-right">Received Qty</th>
@@ -579,6 +585,7 @@
 
                                     <form action="{{ route('incoming-materials.destroy', $item->id) }}" method="POST"
                                           onsubmit="return confirm('Remove GRN {{ $item->grn_number }} from receiving backlog?')"
+                                          onsubmit="return confirm('Remove GR {{ $item->grn_number }} from receiving backlog?')"
                                           class="inline">
                                         @csrf
                                         @method('DELETE')
@@ -613,6 +620,7 @@
                                 <button type="button" onclick="toggleRegisterModal(true)"
                                         class="mt-4 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition">
                                     + Register Incoming GRN
+                                    + Register Incoming GR
                                 </button>
                             </div>
                         </td>
@@ -650,6 +658,7 @@
                 </div>
                 <div>
                     <h3 class="text-sm font-bold text-slate-900">Dockside Quick GRN Barcode Scanner</h3>
+                    <h3 class="text-sm font-bold text-slate-900">Dockside Quick GR Barcode Scanner</h3>
                     <p class="text-xs text-slate-400">Scan physical shipment tag to instantly verify lot and open inspection form.</p>
                 </div>
             </div>
@@ -664,6 +673,7 @@
                 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">qr_code_2</span>
                 <input type="text" name="grn"
                        placeholder="Scan or type GRN barcode (e.g. GRN-20261021-001)..."
+                       placeholder="Scan or type GR barcode (e.g. GR-20261021-001)..."
                        class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-300 focus:border-indigo-500 rounded-xl text-xs font-mono uppercase tracking-wide focus:bg-white focus:ring-4 focus:ring-indigo-500/10 text-slate-900 transition">
             </div>
             <button type="submit"
@@ -699,9 +709,11 @@
             @csrf
 
             {{-- GRN Code --}}
+            {{-- GR Code --}}
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                     GRN Number / Barcode *
+                    GR Number / Barcode *
                 </label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">qr_code</span>

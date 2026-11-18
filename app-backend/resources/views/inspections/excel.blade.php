@@ -159,6 +159,7 @@
             <th style="width: 45px;">No</th>
             <th style="width: 120px;">Inspection Date</th>
             <th style="width: 170px;">PO / GRN Number</th>
+            <th style="width: 170px;">PO / GR Number</th>
             <th style="width: 170px;">Vendor Lot Number</th>
             <th style="width: 170px;">Part Number</th>
             <th style="width: 280px;">Part Name</th>

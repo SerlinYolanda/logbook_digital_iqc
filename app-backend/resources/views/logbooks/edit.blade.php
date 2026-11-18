@@ -47,6 +47,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
                 <div>
                     <span class="text-slate-400 font-medium">GRN / Lot No:</span>
+                    <span class="text-slate-400 font-medium">GR / Lot No:</span>
                     <div class="font-mono font-bold text-slate-800 text-sm mt-0.5">{{ $logbook->receiving->no_grn_iqa }}</div>
                     <div class="font-mono text-slate-500 mt-0.5">Lot: {{ $logbook->receiving->no_lot }}</div>
                 </div>
@@ -64,6 +65,124 @@
                     <span class="text-slate-400 font-medium">Sample Size:</span>
                     <div class="font-mono font-bold text-indigo-700 text-sm mt-0.5">{{ $logbook->qty_sampel }} pcs</div>
                     <div class="text-slate-500 mt-0.5">Level II Standard</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. Visual & Packaging Verification (Correction) -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
+                <div>
+                    <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
+                        <span class="material-symbols-outlined text-[16px]">visibility</span>
+                        <span>Visual & Packaging Inspection Gate</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 mt-0.5">Physical Packaging & Visual Verification</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">Packaging & Labeling</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Reel/box sealed, label matching PO & Lot.</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_packaging" value="pass" {{ $logbook->visual_packaging === 'pass' ? 'checked' : '' }} class="text-emerald-600">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_packaging" value="fail" {{ $logbook->visual_packaging === 'fail' ? 'checked' : '' }} class="text-rose-600">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">ESD & Moisture (HIC)</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Bag intact, HIC card blue (not pink).</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_esd_moisture" value="pass" {{ $logbook->visual_esd_moisture === 'pass' ? 'checked' : '' }} class="text-emerald-600">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 cursor-pointer">
+                            <input type="radio" name="visual_esd_moisture" value="na" {{ $logbook->visual_esd_moisture === 'na' ? 'checked' : '' }} class="text-slate-600">
+                            <span>N/A</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_esd_moisture" value="fail" {{ $logbook->visual_esd_moisture === 'fail' ? 'checked' : '' }} class="text-rose-600">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">Body Integrity</div>
+                        <p class="text-[11px] text-slate-500 mt-1">No chips, cracks, burns, or flashing.</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_body" value="pass" {{ $logbook->visual_body === 'pass' ? 'checked' : '' }} class="text-emerald-600">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_body" value="fail" {{ $logbook->visual_body === 'fail' ? 'checked' : '' }} class="text-rose-600">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">Lead Pin & Solderability</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Pins straight, no oxidation or rust.</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_terminal" value="pass" {{ $logbook->visual_terminal === 'pass' ? 'checked' : '' }} class="text-emerald-600">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_terminal" value="fail" {{ $logbook->visual_terminal === 'fail' ? 'checked' : '' }} class="text-rose-600">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Shelf-Life & Expiration (Correction) -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
+                <div>
+                    <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
+                        <span class="material-symbols-outlined text-[16px]">event_available</span>
+                        <span>Shelf-Life & Expiration Verification</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 mt-0.5">Date Code & Expiry Limit</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-slate-700 font-bold text-xs mb-1">Date Code / Lot Code:</label>
+                    <input type="text" name="date_code" value="{{ $logbook->date_code }}"
+                        class="w-full text-xs font-mono rounded-xl border border-slate-200 py-2.5 px-3">
+                </div>
+                <div>
+                    <label class="block text-slate-700 font-bold text-xs mb-1">Manufacturing Date:</label>
+                    <input type="date" name="manufacturing_date" value="{{ $logbook->manufacturing_date ? $logbook->manufacturing_date->format('Y-m-d') : '' }}"
+                        class="w-full text-xs rounded-xl border border-slate-200 py-2.5 px-3">
+                </div>
+                <div>
+                    <label class="block text-slate-700 font-bold text-xs mb-1">Expiration Date:</label>
+                    <input type="date" name="expiration_date" value="{{ $logbook->expiration_date ? $logbook->expiration_date->format('Y-m-d') : '' }}"
+                        class="w-full text-xs rounded-xl border border-slate-200 py-2.5 px-3">
                 </div>
             </div>
         </div>

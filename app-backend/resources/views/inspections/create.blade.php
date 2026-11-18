@@ -60,6 +60,7 @@
                 <a href="{{ route('dashboard') }}" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs border border-slate-300 transition flex items-center gap-1.5 font-medium">
                     <span class="material-symbols-outlined icon-sm">qr_code_scanner</span>
                     Scan Different GRN
+                    Scan Different GR
                 </a>
             @endif
             <a href="{{ route('inspections.index') }}" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 text-xs border border-slate-300 transition">
@@ -88,6 +89,7 @@
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 shadow-sm w-fit">
                         <span class="material-symbols-outlined text-[14px]">lock</span>
                         Locked &amp; Synced with GRN
+                        Locked &amp; Synced with GR
                     </span>
                 @endif
             </div>
@@ -97,8 +99,10 @@
                     <span class="material-symbols-outlined text-amber-600 text-lg flex-shrink-0">lock</span>
                     <div class="flex-1">
                         <span class="font-bold">GRN Direct Mode:</span>
+                        <span class="font-bold">GR Direct Mode:</span>
                         Part specification and lot details are locked to match incoming material 
                         <span class="font-mono font-bold text-indigo-700 bg-white/90 px-1.5 py-0.5 rounded border border-amber-200 ml-1">{{ request('grn', $incomingMaterial->grn_number ?? 'GRN') }}</span>.
+                        <span class="font-mono font-bold text-indigo-700 bg-white/90 px-1.5 py-0.5 rounded border border-amber-200 ml-1">{{ request('grn', $incomingMaterial->grn_number ?? 'GR') }}</span>.
                         Fields cannot be modified to ensure audit compliance.
                     </div>
                 </div>
@@ -157,6 +161,7 @@
                 <div>
                     <label for="po_number" class="block font-semibold text-slate-600 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                         <span>Purchase Order / GRN Number *</span>
+                        <span>Purchase Order / GR Number *</span>
                         @if($isGrnLocked) <span class="text-[10px] text-amber-600 font-bold lowercase flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">lock</span>locked</span> @endif
                     </label>
                     <div class="relative">
@@ -164,6 +169,7 @@
                             {{ $isGrnLocked ? 'readonly' : '' }}
                             class="w-full {{ $isGrnLocked ? 'bg-slate-100 text-slate-700 cursor-not-allowed select-none pr-9' : 'bg-slate-50 text-slate-900 focus:outline-none focus:border-indigo-500' }} border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono transition"
                             placeholder="e.g.: GRN-2026-8901">
+                            placeholder="e.g.: GR-2026-8901">
                         @if($isGrnLocked)
                             <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[16px] pointer-events-none">lock</span>
                         @endif

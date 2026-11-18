@@ -127,6 +127,7 @@
                         <th class="py-2.5 px-2 border-r border-slate-300 text-center w-10">No</th>
                         <th class="py-2.5 px-2.5 border-r border-slate-300 w-24">Date</th>
                         <th class="py-2.5 px-3 border-r border-slate-300">PO / GRN No</th>
+                        <th class="py-2.5 px-3 border-r border-slate-300">PO / GR No</th>
                         <th class="py-2.5 px-3 border-r border-slate-300">Vendor Lot No</th>
                         <th class="py-2.5 px-3 border-r border-slate-300">Component Part &amp; Spec</th>
                         <th class="py-2.5 px-3 border-r border-slate-300">Supplier / Vendor</th>

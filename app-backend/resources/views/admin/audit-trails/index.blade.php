@@ -33,6 +33,7 @@
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Search Object / Details / IP:</label>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name, GRN, lot, IP..." 
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name, GR, lot, IP..." 
                     class="w-full text-xs rounded-xl border-slate-200 py-2">
             </div>
 

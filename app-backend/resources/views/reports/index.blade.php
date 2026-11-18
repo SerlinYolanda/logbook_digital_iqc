@@ -179,6 +179,7 @@
                         <tr>
                             <th class="py-2.5 px-3">No</th>
                             <th class="py-2.5 px-3">GRN & Lot No</th>
+                            <th class="py-2.5 px-3">GR & Lot No</th>
                             <th class="py-2.5 px-3">Component / Part</th>
                             <th class="py-2.5 px-3">Commodity</th>
                             <th class="py-2.5 px-3">Supplier</th>

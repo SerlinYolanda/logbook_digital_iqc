@@ -40,6 +40,7 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                         <th class="py-3 px-4">GRN & Lot No</th>
+                        <th class="py-3 px-4">GR & Lot No</th>
                         <th class="py-3 px-4">Component & Commodity</th>
                         <th class="py-3 px-4">Supplier / Vendor</th>
                         <th class="py-3 px-4">Inspector & Date</th>
@@ -120,6 +121,7 @@
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                         <th class="py-3 px-4">Decision Date</th>
                         <th class="py-3 px-4">GRN & Lot No</th>
+                        <th class="py-3 px-4">GR & Lot No</th>
                         <th class="py-3 px-4">Component & Supplier</th>
                         <th class="py-3 px-4">Authorized Disposition</th>
                         <th class="py-3 px-4">Supervisor</th>

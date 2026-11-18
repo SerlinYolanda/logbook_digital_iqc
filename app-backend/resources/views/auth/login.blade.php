@@ -292,6 +292,7 @@
                 </a>
                 <a href="{{ route('login.logistik') }}" style="text-align: center; padding: 0.5rem 0.2rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 8px; font-size: 0.68rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">
                     <span style="display: block; font-weight: 700;">Logistics / GRN</span>
+                    <span style="display: block; font-weight: 700;">Logistics / GR</span>
                     <span style="font-size: 0.62rem; color: #2563eb;">LOG-001</span>
                 </a>
                 <a href="{{ route('login.admin') }}" style="text-align: center; padding: 0.5rem 0.2rem; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; border-radius: 8px; font-size: 0.68rem; font-weight: 600; text-decoration: none; display: block; transition: all 0.2s;">

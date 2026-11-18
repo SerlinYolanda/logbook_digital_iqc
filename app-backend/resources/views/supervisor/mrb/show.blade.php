@@ -17,6 +17,7 @@
                     </span>
                 </div>
                 <p class="text-xs text-slate-500 mt-0.5">Logbook #{{ $logbook->id }} | GRN No: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_grn_iqa }}</b> | Lot: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_lot }}</b></p>
+                <p class="text-xs text-slate-500 mt-0.5">Logbook #{{ $logbook->id }} | GR No: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_grn_iqa }}</b> | Lot: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_lot }}</b></p>
             </div>
         </div>
 

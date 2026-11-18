@@ -51,6 +51,7 @@
                 @if(isset($grn))
                 <div class="flex justify-between items-center py-0.5 border-b border-slate-200/60">
                     <span class="text-slate-400">Scanned GRN:</span>
+                    <span class="text-slate-400">Scanned GR:</span>
                     <span class="text-amber-700 font-bold">{{ $grn }}</span>
                 </div>
                 @endif

@@ -16,14 +16,46 @@ class Logbook extends Model
         'receiving_id',
         'inspector_id',
         'qty_sampel',
+        'visual_packaging',
+        'visual_esd_moisture',
+        'visual_body',
+        'visual_terminal',
+        'visual_notes',
+        'date_code',
+        'manufacturing_date',
+        'expiration_date',
+        'is_expired',
+        'shelf_life_status',
         'status',
         'tanggal_inspeksi',
     ];
 
     protected $casts = [
         'tanggal_inspeksi' => 'datetime',
+        'manufacturing_date' => 'date',
+        'expiration_date' => 'date',
         'qty_sampel' => 'integer',
+        'is_expired' => 'boolean',
     ];
+
+    public function hasVisualFail(): bool
+    {
+        return $this->visual_packaging === 'fail'
+            || $this->visual_esd_moisture === 'fail'
+            || $this->visual_body === 'fail'
+            || $this->visual_terminal === 'fail';
+    }
+
+    public function getShelfLifeBadgeClassAttribute(): string
+    {
+        if ($this->is_expired || $this->shelf_life_status === 'expired') {
+            return 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse';
+        }
+        if ($this->shelf_life_status === 'near_expiry') {
+            return 'bg-amber-100 text-amber-800 border-amber-300';
+        }
+        return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+    }
 
     public function receiving(): BelongsTo
     {

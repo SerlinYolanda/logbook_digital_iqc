@@ -28,6 +28,7 @@
             <a href="{{ route('incoming-materials.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition">
                 <span class="material-symbols-outlined icon-sm">local_shipping</span>
                 GRN Tracking
+                GR Tracking
             </a>
             <a href="{{ route('master-data.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition">
                 <span class="material-symbols-outlined icon-sm">dns</span>
@@ -59,6 +60,7 @@
                       rounded-xl transition shrink-0">
                 <span class="material-symbols-outlined icon-sm">local_shipping</span>
                 GRN Tracking
+                GR Tracking
             </a>
         </div>
         <div class="px-6 py-5">
@@ -139,6 +141,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Total GRN Received</span>
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Total GR Received</span>
                     <h3 class="text-3xl font-extrabold text-slate-700 mt-1">{{ $totalLotsArrived }}</h3>
                 </div>
                 <div class="p-3 rounded-2xl bg-slate-100 text-slate-600 border border-slate-200">
@@ -149,6 +152,7 @@
                 <span class="text-slate-500">Incoming arrivals backlog</span>
                 <a href="{{ route('incoming-materials.index') }}" class="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200 hover:bg-indigo-100 transition">
                     Track GRN →
+                    Track GR →
                 </a>
             </div>
         </div>
