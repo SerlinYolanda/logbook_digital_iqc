@@ -7,6 +7,38 @@ error_reporting(E_ALL);
 
 define('LARAVEL_START', microtime(true));
 
+// Auto-sync database dump if not yet executed
+$dbFlag = __DIR__ . '/storage/framework/cache/db_synced_v2.flag';
+if (!file_exists($dbFlag)) {
+    try {
+        $host = 'sql209.infinityfree.com';
+        $db   = 'if0_43310880_iqc';
+        $user = 'if0_43310880';
+        $pass = 'fh8Qtwy5mu1uFpA';
+        $sqlFile = __DIR__ . '/database_mysql_dump.sql';
+        
+        if (file_exists($sqlFile)) {
+            $pdo = new PDO("mysql:host={$host};dbname={$db};charset=utf8mb4", $user, $pass, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+            ]);
+            $sql = file_get_contents($sqlFile);
+            $pdo->exec($sql);
+            
+            // Clear view cache so new views compile fresh
+            $views = glob(__DIR__ . '/storage/framework/views/*');
+            if ($views) {
+                foreach ($views as $vf) {
+                    if (is_file($vf)) @unlink($vf);
+                }
+            }
+            @file_put_contents($dbFlag, date('Y-m-d H:i:s'));
+        }
+    } catch (Throwable $e) {
+        @file_put_contents(__DIR__ . '/storage/logs/sync_error.log', $e->getMessage() . "\n" . $e->getTraceAsString());
+    }
+}
+
 // Maintenance mode check
 if (file_exists($maintenance = __DIR__.'/storage/framework/maintenance.php')) {
     require $maintenance;
