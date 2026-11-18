@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 define('LARAVEL_START', microtime(true));
 
 // Auto-sync database dump if not yet executed
-$dbFlag = __DIR__ . '/storage/framework/cache/db_synced_v2.flag';
+$dbFlag = __DIR__ . '/storage/framework/cache/db_synced_v3.flag';
 if (!file_exists($dbFlag)) {
     try {
         $host = 'sql209.infinityfree.com';
@@ -33,6 +33,9 @@ if (!file_exists($dbFlag)) {
                 }
             }
             @file_put_contents($dbFlag, date('Y-m-d H:i:s'));
+            if (file_exists(__DIR__ . '/storage/logs/sync_error.log')) {
+                @unlink(__DIR__ . '/storage/logs/sync_error.log');
+            }
         }
     } catch (Throwable $e) {
         @file_put_contents(__DIR__ . '/storage/logs/sync_error.log', $e->getMessage() . "\n" . $e->getTraceAsString());
