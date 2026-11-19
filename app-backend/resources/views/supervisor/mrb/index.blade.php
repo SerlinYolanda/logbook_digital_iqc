@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Logbook Verification & MRB Disposition</h1>
-                <p class="text-xs text-slate-500 mt-0.5">UC-09 & UC-10: Evaluate sampling inspection records, NEST chronology evidence, and authorize formal disposition status.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Evaluate sampling inspection records, NEST chronology evidence, and authorize formal disposition status.</p>
             </div>
         </div>
 
@@ -23,13 +23,13 @@
         </div>
     </div>
 
-    <!-- Active Pending Review Queue (UC-09) -->
+    <!-- Active Pending Review Queue -->
     <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
             <div>
                 <div class="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-wider">
                     <span class="material-symbols-outlined text-[16px]">pending_actions</span>
-                    <span>Urgent Verification Queue (UC-09)</span>
+                    <span>Urgent Verification Queue</span>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mt-0.5">Lots Awaiting Supervisor MRB Disposition</h3>
             </div>

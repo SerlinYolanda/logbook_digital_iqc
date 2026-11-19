@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Audit Trail & System Security Log</h1>
-                <p class="text-xs text-slate-500 mt-0.5">UC-15: Immutable (read-only) digital event records, IP address tracking, and Poka-Yoke violation deterrence.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Immutable (read-only) digital event records, IP address tracking, and Poka-Yoke violation deterrence.</p>
             </div>
         </div>
 

@@ -13,7 +13,7 @@
                 <div class="flex items-center gap-2 flex-wrap">
                     <h1 class="text-xl font-black text-slate-900 tracking-tight">Inspection Logbook Digital Archive</h1>
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                        UC-07 Standard
+                        Digital Inspection Standard
                     </span>
                 </div>
                 <p class="text-xs text-slate-500 mt-0.5">Centralized digital repository of lot quality inspections, multi-point verification audits, and MRB review loop.</p>
@@ -213,67 +213,75 @@
 
     <!-- 5. Filters & Search Toolbar -->
     <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs space-y-3">
-        <form id="filterForm" method="GET" action="{{ route('logbooks.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+        <form id="filterForm" method="GET" action="{{ route('logbooks.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
             <input type="hidden" name="folder" id="folderInput" value="{{ $activeFolder }}">
             
-            <!-- Search bar (col-span-5) -->
-            <div class="sm:col-span-5 relative">
-                <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+            <!-- Search bar (col-span-4) -->
+            <div class="sm:col-span-4 relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
                 <input type="text" id="searchInput" name="search" value="{{ request('search') }}" 
-                    placeholder="Search by GRN, Lot, PO, Part Code, Supplier, Inspector..." 
-                    placeholder="Search by GR, Lot, PO, Part Code, Supplier, Inspector..." 
+                    placeholder="Search by GR, Lot, PO, Part, Supplier, Inspector..." 
                     autocomplete="off"
-                    class="w-full text-xs rounded-xl border border-slate-200 pl-10 pr-8 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    class="w-full text-xs rounded-xl border border-slate-200 pl-9 pr-7 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                 @if(request('search'))
                     <a href="{{ route('logbooks.index', array_merge(request()->except('search'), ['folder' => $activeFolder])) }}" 
-                       class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-bold" title="Clear search">&times;</a>
+                       class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-bold" title="Clear search">&times;</a>
                 @endif
             </div>
 
-            <!-- Status dropdown (col-span-3) with Instant Auto-Submit -->
-            <div class="sm:col-span-3">
+            <!-- Status dropdown (col-span-2) -->
+            <div class="sm:col-span-2">
                 <select id="statusFilter" name="status" onchange="this.form.submit()" 
-                    class="w-full text-xs rounded-xl border border-slate-200 px-3.5 py-2.5 focus:ring-2 focus:ring-indigo-500 bg-white font-medium text-slate-700 cursor-pointer transition">
-                    <option value="">All Running Statuses</option>
+                    class="w-full text-xs rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-indigo-500 bg-white font-medium text-slate-700 cursor-pointer transition">
+                    <option value="">All Statuses</option>
                     <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
-                    <option value="menunggu_penetapan" {{ request('status') === 'menunggu_penetapan' ? 'selected' : '' }}>Pending MRB Review</option>
+                    <option value="menunggu_penetapan" {{ request('status') === 'menunggu_penetapan' ? 'selected' : '' }}>Pending MRB</option>
                     <option value="perlu_revisi" {{ request('status') === 'perlu_revisi' ? 'selected' : '' }}>Needs Revision</option>
-                    <option value="accept" {{ request('status') === 'accept' ? 'selected' : '' }}>Accepted / Released</option>
-                    <option value="return_to_vendor" {{ request('status') === 'return_to_vendor' ? 'selected' : '' }}>Return to Vendor (RTV)</option>
+                    <option value="accept" {{ request('status') === 'accept' ? 'selected' : '' }}>Accepted</option>
+                    <option value="return_to_vendor" {{ request('status') === 'return_to_vendor' ? 'selected' : '' }}>RTV</option>
                     <option value="scrap" {{ request('status') === 'scrap' ? 'selected' : '' }}>Scrap</option>
                     <option value="rework" {{ request('status') === 'rework' ? 'selected' : '' }}>Rework</option>
+                </select>
+            </div>
+
+            <!-- Supplier dropdown (col-span-3) -->
+            <div class="sm:col-span-3">
+                <select id="supplierFilter" name="supplier_id" onchange="this.form.submit()" 
+                    class="w-full text-xs rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-indigo-500 bg-white font-medium text-slate-700 cursor-pointer transition">
+                    <option value="">All Suppliers</option>
+                    @if(isset($suppliers))
+                        @foreach($suppliers as $sup)
+                            <option value="{{ $sup->id }}" {{ request('supplier_id') == $sup->id ? 'selected' : '' }}>
+                                {{ Str::limit($sup->nama_supplier, 24) }}
+                            </option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
 
             <!-- Date filter (col-span-2) -->
             <div class="sm:col-span-2">
                 <input type="date" id="dateFilter" name="tanggal_dari" value="{{ request('tanggal_dari') }}" onchange="this.form.submit()"
-                    class="w-full text-xs rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-indigo-500 text-slate-700" title="Filter by Inspection Date">
+                    class="w-full text-xs rounded-xl border border-slate-200 px-2.5 py-2.5 focus:ring-2 focus:ring-indigo-500 text-slate-700" title="Filter by Inspection Date">
             </div>
 
-            <!-- Actions (col-span-2) -->
-            <div class="sm:col-span-2 flex items-center gap-2">
-                <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex-1 transition shadow-xs">
-                    <span class="material-symbols-outlined text-[15px]">filter_alt</span>
-                    <span>Apply</span>
-                </button>
-                @if(request()->hasAny(['search', 'status', 'tanggal_dari']) || $activeFolder !== 'all')
+            <!-- Actions (col-span-1) -->
+            <div class="sm:col-span-1 flex items-center gap-1.5">
+                @if(request()->hasAny(['search', 'status', 'supplier_id', 'tanggal_dari']) || $activeFolder !== 'all')
                 <a href="{{ route('logbooks.index', ['folder' => 'all']) }}" 
-                    class="inline-flex items-center justify-center px-3 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition border border-rose-200" title="Reset all filters">
-                    <span class="material-symbols-outlined text-[15px]">restart_alt</span>
-                    <span>Reset</span>
+                    class="w-full inline-flex items-center justify-center p-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition border border-rose-200" title="Reset all filters">
+                    <span class="material-symbols-outlined text-[16px]">restart_alt</span>
                 </a>
                 @else
-                <a href="{{ route('logbooks.index', ['folder' => $activeFolder]) }}" 
-                    class="inline-flex items-center justify-center px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition" title="Clear inputs">
-                    <span>Reset</span>
-                </a>
+                <button type="submit" class="w-full inline-flex items-center justify-center p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-xs" title="Apply filter">
+                    <span class="material-symbols-outlined text-[16px]">filter_alt</span>
+                </button>
                 @endif
             </div>
         </form>
 
         <!-- Active Filter Indicator Bar -->
-        @if(request()->hasAny(['search', 'status', 'tanggal_dari']) || ($activeFolder && $activeFolder !== 'all'))
+        @if(request()->hasAny(['search', 'status', 'supplier_id', 'tanggal_dari']) || ($activeFolder && $activeFolder !== 'all'))
         <div class="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100 text-xs">
             <span class="text-slate-400 font-bold uppercase text-[10px] flex items-center gap-1">
                 <span class="material-symbols-outlined text-[13px]">tune</span>
@@ -292,6 +300,16 @@
                     <span>Status: <strong>{{ ucwords(str_replace('_', ' ', request('status'))) }}</strong></span>
                     <a href="{{ route('logbooks.index', array_merge(request()->except('status'), ['folder' => $activeFolder])) }}" class="text-indigo-400 hover:text-indigo-700 font-bold ml-1" title="Remove status filter">&times;</a>
                 </span>
+            @endif
+
+            @if(request('supplier_id') && isset($suppliers))
+                @php $activeSup = $suppliers->firstWhere('id', request('supplier_id')); @endphp
+                @if($activeSup)
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-[11px] font-semibold border border-indigo-200">
+                    <span>Supplier: <strong>{{ $activeSup->nama_supplier }}</strong></span>
+                    <a href="{{ route('logbooks.index', array_merge(request()->except('supplier_id'), ['folder' => $activeFolder])) }}" class="text-indigo-400 hover:text-indigo-700 font-bold ml-1" title="Remove supplier filter">&times;</a>
+                </span>
+                @endif
             @endif
 
             @if(request('search'))

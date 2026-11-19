@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Manage User Accounts & Access Rights</h1>
-                <p class="text-xs text-slate-500 mt-0.5">UC-14: User credentials management, 6 system sub-roles assignment, work shifts, and activation status.</p>
+                <p class="text-xs text-slate-500 mt-0.5">User credentials management, 6 system sub-roles assignment, work shifts, and activation status.</p>
             </div>
         </div>
 
@@ -170,7 +170,7 @@
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-indigo-600">person_add</span>
-                Create New User Account (UC-14)
+                Create New User Account
             </h3>
             <button type="button" onclick="document.getElementById('addUserModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
                 <span class="material-symbols-outlined">close</span>

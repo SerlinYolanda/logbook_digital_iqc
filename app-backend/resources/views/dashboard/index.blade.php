@@ -168,14 +168,14 @@
         </div>
     </div>
 
-    <!-- Inspector Poka-Yoke Quick Scanner Widget (UC-03) -->
+    <!-- Inspector Poka-Yoke Quick Scanner Widget -->
     @if($user->isInspector())
     <div class="bg-gradient-to-r from-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl relative overflow-hidden">
         <div class="absolute right-0 top-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="relative z-10 max-w-3xl">
             <div class="flex items-center gap-2 text-indigo-300 text-xs font-bold uppercase tracking-wider">
                 <span class="material-symbols-outlined text-[16px]">qr_code_scanner</span>
-                <span>UC-03: Scan Lot Barcode & Poka-Yoke Validation</span>
+                <span>Scan Lot Barcode & Poka-Yoke Validation</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black mt-2 tracking-tight">
                 Scan Inbound Lot / GRN Number
@@ -202,7 +202,7 @@
     </div>
     @endif
 
-    <!-- Material Flow & Throughput Monitoring Section (UC-11) -->
+    <!-- Material Flow & Throughput Monitoring Section -->
     <div class="space-y-4">
         <!-- Section Controls & Tabs -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -605,14 +605,14 @@
         </div>
     </div>
 
-    <!-- Admin Section: Recent Audit Trail Feed (UC-15) -->
+    <!-- Admin Section: Recent Audit Trail Feed -->
     @if($user->isAdmin())
     <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
         <div class="flex items-center justify-between gap-4">
             <div>
                 <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
                     <span class="material-symbols-outlined text-[16px]">shield_lock</span>
-                    <span>System Security & Integrity (UC-15)</span>
+                    <span>System Security & Integrity</span>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mt-1">Recent Real-Time Audit Trail</h3>
                 <p class="text-xs text-slate-500">Immutable audit log tracking user actions, critical changes, and Poka-Yoke violations.</p>

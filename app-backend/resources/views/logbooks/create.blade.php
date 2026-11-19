@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">IQC Quality Inspection Logbook Form</h1>
-                <p class="text-xs text-slate-500 mt-0.5">UC-04: Testing dimensional, electrical & visual parameters against nominal tolerance specifications.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Testing dimensional, electrical & visual parameters against nominal tolerance specifications.</p>
             </div>
         </div>
 

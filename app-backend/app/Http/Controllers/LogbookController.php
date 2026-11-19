@@ -54,6 +54,13 @@ class LogbookController extends Controller
             });
         }
 
+        // Filter by supplier
+        if ($request->filled('supplier_id')) {
+            $query->whereHas('receiving', function ($q) use ($request) {
+                $q->where('supplier_id', $request->supplier_id);
+            });
+        }
+
         // Filter by date (if exact single date selected)
         if ($request->filled('tanggal_dari') && !$request->filled('tanggal_sampai')) {
             $query->whereDate('tanggal_inspeksi', $request->tanggal_dari);
@@ -103,8 +110,11 @@ class LogbookController extends Controller
         $whCount = Logbook::whereHas('receiving.part', fn($q) => $q->where('kategori_komoditas', 'wire_harness'))->count();
         $mrbHoldCount = Logbook::whereIn('status', ['menunggu_penetapan', 'perlu_revisi'])->count();
 
+        $suppliers = Supplier::where('status_aktif', true)->orderBy('nama_supplier')->get();
+
         return view('logbooks.index', compact(
             'logbooks',
+            'suppliers',
             'activeFolder',
             'totalLogbooks',
             'draftCount',

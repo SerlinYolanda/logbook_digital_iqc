@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Manage System Master Data</h1>
-                <p class="text-xs text-slate-500 mt-0.5">UC-13: Management of master component catalog (Parts & Parameters), Supplier vendor records, and Defect taxonomy.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Management of master component catalog (Parts & Parameters), Supplier vendor records, and Defect taxonomy.</p>
             </div>
         </div>
 

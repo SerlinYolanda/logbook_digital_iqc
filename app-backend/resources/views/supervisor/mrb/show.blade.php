@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <!-- Parameter Measurements Table (UC-09) -->
+    <!-- Parameter Measurements Table -->
     <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span class="material-symbols-outlined text-indigo-600">straighten</span>
@@ -177,12 +177,12 @@
         </div>
     </div>
 
-    <!-- Official MRB Disposition Decision Form (UC-10) -->
+    <!-- Official MRB Disposition Decision Form -->
     <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl space-y-6">
         <div>
             <div class="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider">
                 <span class="material-symbols-outlined text-[18px]">verified</span>
-                <span>UC-10: Material Review Board (MRB) Disposition Determination</span>
+                <span>Material Review Board (MRB) Disposition Determination</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black mt-1 tracking-tight">Official IQC Quality Supervisor Decision</h2>
             <p class="text-xs sm:text-sm text-slate-300 mt-1">

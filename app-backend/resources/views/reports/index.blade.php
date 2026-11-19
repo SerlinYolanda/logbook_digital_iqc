@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">IQC Quality Recapitulation Report</h1>
-                <p class="text-xs text-slate-500 mt-0.5">UC-12: Recapitulation of incoming material inspections, pass rates, and MRB disposition records.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Recapitulation of incoming material inspections, pass rates, and MRB disposition records.</p>
             </div>
         </div>
         

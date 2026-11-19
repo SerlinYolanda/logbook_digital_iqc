@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Revise Measurement Data - Logbook #{{ $logbook->id }}</h1>
-                <p class="text-xs text-slate-500 mt-0.5">UC-07: Correct measurement values based on Quality Supervisor directives and evaluation notes.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Correct measurement values based on Quality Supervisor directives and evaluation notes.</p>
             </div>
         </div>
 

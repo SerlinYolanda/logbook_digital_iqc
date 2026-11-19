@@ -287,29 +287,124 @@
         </div>
     </div>
 
-    <!-- Section: Defect Recording & Evidence Photos (UC-05) -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
+    <!-- Section: Quality Non-Conformance, Defects & NEST Escalation -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-5">
+        <!-- Section Header with Inspector Quick Actions -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-3">
             <div>
-                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-rose-600">bug_report</span>
-                    Defect Records & Photo Evidence (UC-05)
-                </h3>
-                <p class="text-xs text-slate-500">Physical, visual, or functional non-conformance defects found during inspection.</p>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-rose-600">report_problem</span>
+                    <h3 class="text-base font-bold text-slate-900">
+                        Quality Non-Conformance, Defects & Anomaly Escalation
+                    </h3>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Physical non-conformance defect logs, sample photo evidence, and special track (NEST) incident escalations.</p>
             </div>
 
             @if(auth()->user()->isInspector() && in_array($logbook->status, ['draft', 'menunggu_penetapan', 'perlu_revisi']))
-            <button type="button" onclick="document.getElementById('addDefectModal').classList.remove('hidden')"
-                class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
-                <span class="material-symbols-outlined text-[16px]">add_a_photo</span>
-                <span>+ Record Defect & Photo</span>
-            </button>
+            <div class="flex items-center gap-2 flex-wrap">
+                <button type="button" onclick="document.getElementById('addDefectModal').classList.remove('hidden')"
+                    class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
+                    <span class="material-symbols-outlined text-[16px]">add_a_photo</span>
+                    <span>+ Record Defect & Photo</span>
+                </button>
+
+                @if(!$logbook->nestProcess)
+                <button type="button" onclick="document.getElementById('nestModal').classList.remove('hidden')"
+                    class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs" title="Escalate special anomaly to Supervisor MRB">
+                    <span class="material-symbols-outlined text-[16px]">warning</span>
+                    <span>+ Escalate via NEST</span>
+                </button>
+                @endif
+            </div>
             @endif
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Integrated NEST Escalation Banner (Active Incident) -->
+        @if($logbook->nestProcess)
+        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-300 space-y-2.5">
+            <div class="flex justify-between items-center text-xs flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-600 text-white shadow-xs flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[13px]">warning</span>
+                        Active NEST Special Escalation
+                    </span>
+                    <span class="font-bold text-amber-950">Submitted by: {{ $logbook->nestProcess->inspector->name ?? 'Inspector' }}</span>
+                </div>
+                <span class="text-slate-500 font-mono text-[11px]">{{ $logbook->nestProcess->diajukan_pada ? $logbook->nestProcess->diajukan_pada->format('d/m/Y H:i') : '-' }}</span>
+            </div>
+            <div class="text-xs text-slate-800 leading-relaxed font-sans bg-white p-3.5 rounded-xl border border-amber-200">
+                <div class="text-[11px] font-extrabold uppercase text-amber-800 tracking-wider mb-1">Problem Chronology & Risk Analysis:</div>
+                {{ $logbook->nestProcess->kronologi_masalah }}
+            </div>
+            @if($logbook->nestProcess->bukti_pendukung)
+            <div class="text-xs pt-0.5">
+                <a href="{{ asset('storage/' . $logbook->nestProcess->bukti_pendukung) }}" target="_blank" class="inline-flex items-center gap-1 text-indigo-600 hover:underline font-bold">
+                    <span class="material-symbols-outlined text-[16px]">attachment</span>
+                    <span>Open Supporting Evidence Document</span>
+                </a>
+            </div>
+            @endif
+        </div>
+        @endif
+
+        <!-- Interactive Filters Bar for Defects -->
+        @php
+            $totalDefectsCount = $logbook->defects->count();
+            $criticalCount = $logbook->defects->where('tingkat_keparahan', 'critical')->count();
+            $majorCount = $logbook->defects->where('tingkat_keparahan', 'major')->count();
+            $minorCount = $logbook->defects->where('tingkat_keparahan', 'minor')->count();
+            $withPhotoCount = $logbook->defects->filter(fn($d) => !empty($d->foto_bukti))->count();
+        @endphp
+
+        @if($totalDefectsCount > 0)
+        <div class="flex items-center justify-between flex-wrap gap-2 pt-1 pb-1">
+            <!-- Filter Pills -->
+            <div class="flex items-center gap-1.5 flex-wrap" id="defectFilterPills">
+                <button type="button" onclick="filterDefects('all')" class="defect-filter-btn px-3 py-1 rounded-lg text-xs font-bold transition bg-slate-900 text-white shadow-xs" data-filter="all">
+                    All Issues ({{ $totalDefectsCount }})
+                </button>
+                @if($criticalCount > 0)
+                <button type="button" onclick="filterDefects('critical')" class="defect-filter-btn px-3 py-1 rounded-lg text-xs font-semibold transition bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200" data-filter="critical">
+                    Critical ({{ $criticalCount }})
+                </button>
+                @endif
+                @if($majorCount > 0)
+                <button type="button" onclick="filterDefects('major')" class="defect-filter-btn px-3 py-1 rounded-lg text-xs font-semibold transition bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200" data-filter="major">
+                    Major ({{ $majorCount }})
+                </button>
+                @endif
+                @if($minorCount > 0)
+                <button type="button" onclick="filterDefects('minor')" class="defect-filter-btn px-3 py-1 rounded-lg text-xs font-semibold transition bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200" data-filter="minor">
+                    Minor ({{ $minorCount }})
+                </button>
+                @endif
+                @if($withPhotoCount > 0)
+                <button type="button" onclick="filterDefects('photo')" class="defect-filter-btn px-3 py-1 rounded-lg text-xs font-semibold transition bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200" data-filter="photo">
+                    <span class="inline-flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">photo_camera</span>
+                        With Photos ({{ $withPhotoCount }})
+                    </span>
+                </button>
+                @endif
+            </div>
+
+            <!-- Instant Search Input inside Defect section -->
+            <div class="relative w-full sm:w-64">
+                <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[16px]">search</span>
+                <input type="text" id="defectSearchInput" onkeyup="searchDefects(this.value)" placeholder="Search defect notes or category..."
+                    class="w-full text-xs rounded-xl border border-slate-200 pl-8 pr-3 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+            </div>
+        </div>
+        @endif
+
+        <!-- Defect Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="defectsGrid">
             @forelse($logbook->defects as $defect)
-            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between">
+            <div class="defect-card p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between transition hover:border-slate-300 hover:shadow-xs"
+                data-severity="{{ strtolower($defect->tingkat_keparahan) }}"
+                data-has-photo="{{ !empty($defect->foto_bukti) ? 'true' : 'false' }}"
+                data-text="{{ strtolower(($defect->defectCategory->nama_defect ?? '') . ' ' . $defect->deskripsi) }}">
                 <div>
                     <div class="flex justify-between items-start gap-2">
                         <span class="font-bold text-slate-900 text-xs">{{ $defect->defectCategory->nama_defect ?? 'IQC Defect' }}</span>
@@ -318,7 +413,7 @@
                         </span>
                     </div>
                     <div class="text-xs text-slate-600 mt-2">{{ $defect->deskripsi }}</div>
-                    <div class="text-[11px] text-slate-400 mt-1 font-mono">Defect Qty: <b>{{ $defect->qty_defect }} pcs</b></div>
+                    <div class="text-[11px] text-slate-500 mt-1 font-mono">Defect Qty: <b class="text-slate-800">{{ $defect->qty_defect }} pcs</b></div>
                 </div>
 
                 <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between">
@@ -343,64 +438,21 @@
                 </div>
             </div>
             @empty
-            <div class="col-span-full py-6 text-center text-slate-400">
-                <span class="material-symbols-outlined text-[28px] text-emerald-500 block mb-1">check_circle</span>
-                No defects recorded on this lot.
+            <div class="col-span-full py-8 text-center text-slate-400">
+                <span class="material-symbols-outlined text-[32px] text-emerald-500 block mb-1">verified</span>
+                <span class="text-xs font-medium text-slate-600 block">No physical defects or visual anomalies recorded for this lot.</span>
+                <span class="text-[11px] text-slate-400">Standard sampling inspection passed with zero non-conformances.</span>
             </div>
             @endforelse
         </div>
+
+        <div id="defectNoFilterResult" class="hidden py-6 text-center text-slate-400 text-xs">
+            <span class="material-symbols-outlined text-[24px] text-slate-300 block mb-1">filter_alt_off</span>
+            No defects match the selected filter criteria.
+        </div>
     </div>
 
-    <!-- Section: NEST Process (Not Evaluated Special Track) (UC-06) -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
-            <div>
-                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-amber-600">track_changes</span>
-                    NEST Special Track Process (UC-06)
-                </h3>
-                <p class="text-xs text-slate-500">Not Evaluated Special Track: Handling high-risk lot anomalies requiring MRB disposition.</p>
-            </div>
-
-            @if(auth()->user()->isInspector() && in_array($logbook->status, ['draft', 'menunggu_penetapan', 'perlu_revisi']) && !$logbook->nestProcess)
-            <button type="button" onclick="document.getElementById('nestModal').classList.remove('hidden')"
-                class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
-                <span class="material-symbols-outlined text-[16px]">assignment_late</span>
-                <span>+ Submit NEST Process</span>
-            </button>
-            @endif
-        </div>
-
-        @if($logbook->nestProcess)
-        <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 space-y-2">
-            <div class="flex justify-between items-center text-xs">
-                <span class="font-bold text-amber-900 flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[16px] text-amber-600">pending</span>
-                    Submitted by: {{ $logbook->nestProcess->inspector->name ?? 'Inspector' }}
-                </span>
-                <span class="text-slate-500 font-mono">{{ $logbook->nestProcess->diajukan_pada ? $logbook->nestProcess->diajukan_pada->format('d/m/Y H:i') : '-' }}</span>
-            </div>
-            <div class="text-xs text-slate-800 leading-relaxed font-sans bg-white p-3.5 rounded-xl border border-amber-200/80">
-                <b>Problem Chronology & Risk Analysis:</b><br>
-                {{ $logbook->nestProcess->kronologi_masalah }}
-            </div>
-            @if($logbook->nestProcess->bukti_pendukung)
-            <div class="text-xs pt-1">
-                <a href="{{ asset('storage/' . $logbook->nestProcess->bukti_pendukung) }}" target="_blank" class="inline-flex items-center gap-1 text-indigo-600 hover:underline font-bold">
-                    <span class="material-symbols-outlined text-[16px]">attachment</span>
-                    <span>Open NEST Supporting Evidence Document</span>
-                </a>
-            </div>
-            @endif
-        </div>
-        @else
-        <div class="py-4 text-center text-slate-400 text-xs">
-            This lot did not go through the NEST special track (standard inspection procedure).
-        </div>
-        @endif
-    </div>
-
-    <!-- Section: Supervisor MRB Dispositions History (UC-10) -->
+    <!-- Section: Supervisor MRB Dispositions History -->
     <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span class="material-symbols-outlined text-purple-600">gavel</span>
@@ -434,13 +486,13 @@
 
 </div>
 
-<!-- Modal Record Defect (UC-05) -->
+<!-- Modal Record Defect -->
 <div id="addDefectModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-600">bug_report</span>
-                Record Defect & Upload Photo (UC-05)
+                Record Defect & Upload Photo
             </h3>
             <button type="button" onclick="document.getElementById('addDefectModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
                 <span class="material-symbols-outlined">close</span>
@@ -496,13 +548,13 @@
     </div>
 </div>
 
-<!-- Modal Submit NEST (UC-06) -->
+<!-- Modal Submit NEST Escalation -->
 <div id="nestModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber-600">track_changes</span>
-                Submit NEST Special Track (UC-06)
+                Submit NEST Special Track Escalation
             </h3>
             <button type="button" onclick="document.getElementById('nestModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
                 <span class="material-symbols-outlined">close</span>
@@ -538,5 +590,58 @@
         </form>
     </div>
 </div>
+
+<script>
+let currentDefectFilter = 'all';
+let defectSearchTerm = '';
+
+function filterDefects(type) {
+    currentDefectFilter = type;
+    document.querySelectorAll('.defect-filter-btn').forEach(btn => {
+        if (btn.getAttribute('data-filter') === type) {
+            btn.className = 'defect-filter-btn px-3 py-1 rounded-lg text-xs font-bold transition bg-slate-900 text-white shadow-xs';
+        } else {
+            btn.className = 'defect-filter-btn px-3 py-1 rounded-lg text-xs font-semibold transition bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200';
+        }
+    });
+    applyDefectFilters();
+}
+
+function searchDefects(query) {
+    defectSearchTerm = query.toLowerCase().trim();
+    applyDefectFilters();
+}
+
+function applyDefectFilters() {
+    const cards = document.querySelectorAll('.defect-card');
+    let visibleCount = 0;
+    cards.forEach(card => {
+        const severity = card.getAttribute('data-severity');
+        const hasPhoto = card.getAttribute('data-has-photo') === 'true';
+        const text = card.getAttribute('data-text') || '';
+
+        let matchesFilter = true;
+        if (currentDefectFilter === 'critical' && severity !== 'critical') matchesFilter = false;
+        if (currentDefectFilter === 'major' && severity !== 'major') matchesFilter = false;
+        if (currentDefectFilter === 'minor' && severity !== 'minor') matchesFilter = false;
+        if (currentDefectFilter === 'photo' && !hasPhoto) matchesFilter = false;
+
+        let matchesSearch = true;
+        if (defectSearchTerm && !text.includes(defectSearchTerm)) matchesSearch = false;
+
+        if (matchesFilter && matchesSearch) {
+            card.style.display = '';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    const noResult = document.getElementById('defectNoFilterResult');
+    if (noResult) {
+        noResult.style.display = (visibleCount === 0 && cards.length > 0) ? 'block' : 'none';
+    }
+}
+</script>
 @endsection
 
