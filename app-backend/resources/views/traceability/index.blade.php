@@ -100,11 +100,10 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                         <th class="py-3.5 px-4">Lot & GRN No</th>
-                        <th class="py-3.5 px-4">Lot & GR No</th>
                         <th class="py-3.5 px-4">Component & Commodity</th>
                         <th class="py-3.5 px-4">Supplier & Country</th>
                         <th class="py-3.5 px-4 text-right">Inbound Qty</th>
-                        <th class="py-3.5 px-4">Current Status</th>
+                        <th class="py-3.5 px-4">Status & Tgl Proses</th>
                         <th class="py-3.5 px-4">MRB Disposition</th>
                         <th class="py-3.5 px-4 text-right">Action</th>
                     </tr>
@@ -119,6 +118,9 @@
                         <td class="py-3.5 px-4">
                             <span class="font-mono font-bold text-indigo-600 text-sm">Lot: {{ $item->no_lot }}</span>
                             <div class="text-[10px] text-slate-400 font-mono">{{ $item->no_grn_iqa }} | PO: {{ $item->no_po }}</div>
+                            <div class="text-[10px] text-slate-500 font-sans mt-0.5">
+                                <span class="text-slate-400">Masuk:</span> <b class="text-slate-700 font-mono">{{ $item->tanggal_terima ? $item->tanggal_terima->format('d/m/Y') : '-' }}</b>
+                            </div>
                         </td>
                         <td class="py-3.5 px-4">
                             <div class="font-bold text-slate-800">{{ $item->part->kode_part ?? '-' }}</div>
@@ -142,10 +144,12 @@
                                 <span class="px-2.5 py-1 rounded-full text-[11px] font-bold border {{ $log->status_badge_class }}">
                                     {{ $log->status_label }}
                                 </span>
+                                @if($log->tanggal_inspeksi)
+                                    <div class="text-[10px] text-slate-400 font-mono mt-1">Selesai: {{ $log->tanggal_inspeksi->format('d/m/Y') }}</div>
+                                @endif
                             @else
                                 <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800">
                                     GRN Inbound Queue
-                                    GR Inbound Queue
                                 </span>
                             @endif
                         </td>

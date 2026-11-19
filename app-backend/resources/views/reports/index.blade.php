@@ -235,13 +235,13 @@
                     <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[11px]">
                         <tr>
                             <th class="py-2.5 px-3">No</th>
-                            <th class="py-2.5 px-3">GR & Lot No</th>
+                            <th class="py-2.5 px-3">GRN & Lot No</th>
                             <th class="py-2.5 px-3">Component / Part</th>
                             <th class="py-2.5 px-3">Commodity</th>
                             <th class="py-2.5 px-3">Supplier</th>
                             <th class="py-2.5 px-3 text-right">Inbound Qty</th>
                             <th class="py-2.5 px-3 text-center">Sample</th>
-                            <th class="py-2.5 px-3">Inspector & Date</th>
+                            <th class="py-2.5 px-3">Tgl Masuk / Keluar & Inspector</th>
                             <th class="py-2.5 px-3">Decision</th>
                             <th class="py-2.5 px-3">Supervisor Notes</th>
                         </tr>
@@ -275,8 +275,9 @@
                                 {{ $log->qty_sampel }}
                             </td>
                             <td class="py-2 px-3 text-slate-600 text-[11px]">
-                                <span class="font-bold text-slate-800">{{ $log->inspector->name ?? '-' }}</span>
-                                <div class="text-slate-400">{{ $log->tanggal_inspeksi ? $log->tanggal_inspeksi->format('d/m/Y') : '-' }}</div>
+                                <div><span class="text-slate-400 text-[10px]">Masuk:</span> <span class="font-mono font-semibold text-slate-700">{{ $rcv->tanggal_terima ? $rcv->tanggal_terima->format('d/m/Y') : '-' }}</span></div>
+                                <div><span class="text-slate-400 text-[10px]">Keluar:</span> <span class="font-mono font-bold text-emerald-700">{{ $log->tanggal_inspeksi ? $log->tanggal_inspeksi->format('d/m/Y') : '-' }}</span></div>
+                                <div class="text-[10px] text-slate-500 font-medium mt-0.5">{{ $log->inspector->name ?? '-' }}</div>
                             </td>
                             <td class="py-2 px-3">
                                 <span class="px-2 py-0.5 rounded text-[10px] font-bold border {{ $log->status_badge_class }}">

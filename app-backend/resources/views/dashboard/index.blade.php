@@ -237,10 +237,16 @@
                 <div>
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
-                                Real-Time Throughput
-                            </span>
-                            <h3 class="text-base font-bold text-slate-900 mt-1">Material Flow Velocity: Inbound vs Outbound vs Backlog</h3>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                    Real-Time Throughput
+                                </span>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 inline-flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[13px] text-slate-500">calendar_month</span>
+                                    Periode: {{ $flowDates[0] ?? '' }} – {{ end($flowDates) ?? '' }} (7 Hari Terakhir)
+                                </span>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 mt-1.5">Material Flow Velocity: Inbound vs Outbound vs Backlog</h3>
                             <p class="text-xs text-slate-500">Daily comparison of dock inbound arrivals, lots cleared & released by IQC, and pending queue backlog.</p>
                         </div>
                         <div class="flex items-center gap-4 text-xs font-semibold shrink-0">
@@ -285,10 +291,16 @@
             <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col justify-between">
                 <div>
                     <div>
-                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200">
-                            Material Lifecycle
-                        </span>
-                        <h3 class="text-base font-bold text-slate-900 mt-1">Inbound Status Breakdown</h3>
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200">
+                                Material Lifecycle
+                            </span>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 inline-flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[13px] text-slate-500">schedule</span>
+                                Aktual per: {{ now()->translatedFormat('d M Y') }}
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 mt-1.5">Inbound Status Breakdown</h3>
                         <p class="text-xs text-slate-500">Real-time distribution of all lots across the IQC inspection pipeline.</p>
                     </div>
 
@@ -369,11 +381,17 @@
                 <div>
                     <div class="flex items-center justify-between gap-4">
                         <div>
-                            <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
-                                <span class="material-symbols-outlined text-[16px]">bar_chart</span>
-                                <span>IQC Quality Analytics</span>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <div class="flex items-center gap-1.5 text-indigo-600 text-xs font-bold uppercase tracking-wider">
+                                    <span class="material-symbols-outlined text-[16px]">bar_chart</span>
+                                    <span>IQC Quality Analytics</span>
+                                </div>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 inline-flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[13px] text-slate-500">date_range</span>
+                                    Periode: {{ now()->startOfMonth()->translatedFormat('d M') }} – {{ now()->translatedFormat('d M Y') }} (MTD)
+                                </span>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 mt-1">Defect Pareto Chart (80/20 Rule)</h3>
+                            <h3 class="text-base font-bold text-slate-900 mt-1.5">Defect Pareto Chart (80/20 Rule)</h3>
                             <p class="text-xs text-slate-500">Defect frequency distribution and cumulative percentage.</p>
                         </div>
                     </div>
@@ -393,11 +411,17 @@
                 <div>
                     <div class="flex items-center justify-between gap-4">
                         <div>
-                            <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
-                                <span class="material-symbols-outlined text-[16px]">trending_up</span>
-                                <span>Last 7 Days Trend</span>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <div class="flex items-center gap-1.5 text-indigo-600 text-xs font-bold uppercase tracking-wider">
+                                    <span class="material-symbols-outlined text-[16px]">trending_up</span>
+                                    <span>Inspection Trend</span>
+                                </div>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 inline-flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[13px] text-slate-500">calendar_month</span>
+                                    Periode: {{ $trendDates[0] ?? '' }} – {{ end($trendDates) ?? '' }} (7 Hari)
+                                </span>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 mt-1">Daily Inspection Output Volume</h3>
+                            <h3 class="text-base font-bold text-slate-900 mt-1.5">Daily Inspection Output Volume</h3>
                             <p class="text-xs text-slate-500">Comparison of accepted lots versus non-conforming / MRB lots.</p>
                         </div>
                     </div>
@@ -515,11 +539,10 @@
                         <thead>
                             <tr class="border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                                 <th class="pb-3">GRN & Lot No</th>
-                                <th class="pb-3">GR & Lot No</th>
                                 <th class="pb-3">Component / Part</th>
                                 <th class="pb-3">Supplier</th>
                                 <th class="pb-3 text-center">Qty Arrived</th>
-                                <th class="pb-3">Arrival Aging</th>
+                                <th class="pb-3">Tgl Masuk (Inbound) & Aging</th>
                                 <th class="pb-3 text-right">Action</th>
                             </tr>
                         </thead>
@@ -548,10 +571,10 @@
                                     {{ number_format($rcv->qty_datang) }}
                                 </td>
                                 <td class="py-3">
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border {{ $rcv->aging_badge_class }}">
+                                    <div class="font-bold text-slate-800 text-[11px]">{{ $rcv->tanggal_terima ? $rcv->tanggal_terima->format('d M Y, H:i') : '-' }}</div>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border {{ $rcv->aging_badge_class }} mt-0.5 inline-block">
                                         {{ $rcv->aging_status }} ({{ $rcv->aging_hours }}h)
                                     </span>
-                                    <span class="block text-[10px] text-slate-400 mt-0.5">{{ $rcv->tanggal_terima->format('d M, H:i') }}</span>
                                 </td>
                                 <td class="py-3 text-right">
                                     @if($user->isInspector())

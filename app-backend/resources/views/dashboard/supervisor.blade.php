@@ -48,6 +48,11 @@
                 </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
+                <span class="inline-flex items-center gap-1.5 text-xs text-slate-700 bg-slate-100
+                             border border-slate-200 px-2.5 py-1 rounded-full font-medium shrink-0">
+                    <span class="material-symbols-outlined text-[14px] text-slate-500">calendar_month</span>
+                    Periode: {{ $chartLabels[0] ?? '' }} – {{ end($chartLabels) ?? '' }}
+                </span>
                 <span class="inline-flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50
                              border border-emerald-200 px-2.5 py-1 rounded-full font-medium shrink-0">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>

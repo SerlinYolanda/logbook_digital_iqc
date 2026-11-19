@@ -356,11 +356,10 @@
                 <thead>
                     <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                         <th class="py-3.5 px-4">GRN & Lot No</th>
-                        <th class="py-3.5 px-4">GR & Lot No</th>
                         <th class="py-3.5 px-4">Component & Commodity</th>
                         <th class="py-3.5 px-4">Supplier & Origin</th>
                         <th class="py-3.5 px-4">Inspection Checks</th>
-                        <th class="py-3.5 px-4">Inspector & Timestamp</th>
+                        <th class="py-3.5 px-4">Tgl Keluar / Rilis & Inspector</th>
                         <th class="py-3.5 px-4">Running Status</th>
                         <th class="py-3.5 px-4">MRB Disposition</th>
                         <th class="py-3.5 px-4 text-right">Actions</th>
@@ -393,6 +392,10 @@
                             <span class="font-mono font-bold text-indigo-600 text-sm block">{{ $rcv->no_grn_iqa ?? '-' }}</span>
                             <div class="text-[10px] text-slate-400 font-mono mt-0.5">Lot: <b class="text-slate-600">{{ $rcv->no_lot ?? '-' }}</b></div>
                             <div class="text-[10px] text-slate-400 font-mono">PO: {{ $rcv->no_po ?? '-' }}</div>
+                            <div class="text-[10px] text-slate-500 flex items-center gap-1 mt-1 font-sans">
+                                <span class="material-symbols-outlined text-[13px] text-blue-600">login</span>
+                                <span>Masuk: <b class="text-slate-700 font-mono">{{ $rcv->tanggal_terima ? $rcv->tanggal_terima->format('d M Y') : '-' }}</b></span>
+                            </div>
                         </td>
 
                         <!-- Component & Commodity -->
@@ -451,13 +454,14 @@
                             </div>
                         </td>
 
-                        <!-- Inspector & Timestamp -->
+                        <!-- Tgl Selesai / Keluar & Inspector -->
                         <td class="py-3.5 px-4 text-slate-600">
-                            <div class="font-bold text-slate-800">{{ $log->inspector->name ?? '-' }}</div>
-                            <div class="text-[10px] text-slate-500">{{ $log->inspector->role_label ?? 'Inspector' }}</div>
-                            <div class="text-[10px] text-slate-400 font-mono mt-0.5">
+                            <div class="text-xs font-bold text-slate-900 font-mono flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px] text-emerald-600">logout</span>
                                 {{ $log->tanggal_inspeksi ? $log->tanggal_inspeksi->format('d M Y, H:i') : '-' }}
                             </div>
+                            <div class="font-semibold text-slate-700 text-[11px] mt-1">{{ $log->inspector->name ?? '-' }}</div>
+                            <div class="text-[10px] text-slate-400">{{ $log->inspector->role_label ?? 'Inspector' }}</div>
                         </td>
 
                         <!-- Running Status -->
