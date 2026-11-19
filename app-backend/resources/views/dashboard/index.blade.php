@@ -294,6 +294,11 @@
 
                     <div class="mt-4 relative h-48 w-full flex items-center justify-center">
                         <canvas id="statusDonutChart"></canvas>
+                        <!-- Center Counter Badge in Donut -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                            <span class="text-2xl font-black text-slate-900 font-mono tracking-tight leading-none">{{ $totalInbound }}</span>
+                            <span class="text-[9px] font-extrabold uppercase text-slate-400 tracking-wider mt-1">Total Lots</span>
+                        </div>
                     </div>
 
                     <!-- Status Breakdown List -->
@@ -302,31 +307,46 @@
                             <span class="flex items-center gap-2 font-medium text-emerald-900">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Accepted / Released
                             </span>
-                            <span class="font-bold font-mono text-emerald-800">{{ $statusBreakdown['released'] }} Lots</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold font-mono text-emerald-800">{{ $statusBreakdown['released'] }} Lots</span>
+                                <span class="text-[10px] text-emerald-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['released'] / $totalInbound) * 100, 1) : 0 }}%)</span>
+                            </div>
                         </div>
                         <div class="flex items-center justify-between p-2 rounded-xl bg-blue-50 border border-blue-100">
                             <span class="flex items-center gap-2 font-medium text-blue-900">
                                 <span class="w-2 h-2 rounded-full bg-blue-500"></span> Under Inspection (WIP)
                             </span>
-                            <span class="font-bold font-mono text-blue-800">{{ $statusBreakdown['in_inspection'] }} Lots</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold font-mono text-blue-800">{{ $statusBreakdown['in_inspection'] }} Lots</span>
+                                <span class="text-[10px] text-blue-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['in_inspection'] / $totalInbound) * 100, 1) : 0 }}%)</span>
+                            </div>
                         </div>
                         <div class="flex items-center justify-between p-2 rounded-xl bg-amber-50 border border-amber-100">
                             <span class="flex items-center gap-2 font-medium text-amber-900">
                                 <span class="w-2 h-2 rounded-full bg-amber-500"></span> Waiting in Queue
                             </span>
-                            <span class="font-bold font-mono text-amber-800">{{ $statusBreakdown['waiting'] }} Lots</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold font-mono text-amber-800">{{ $statusBreakdown['waiting'] }} Lots</span>
+                                <span class="text-[10px] text-amber-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['waiting'] / $totalInbound) * 100, 1) : 0 }}%)</span>
+                            </div>
                         </div>
                         <div class="flex items-center justify-between p-2 rounded-xl bg-orange-50 border border-orange-100">
                             <span class="flex items-center gap-2 font-medium text-orange-900">
                                 <span class="w-2 h-2 rounded-full bg-orange-500"></span> Pending MRB Review
                             </span>
-                            <span class="font-bold font-mono text-orange-800">{{ $statusBreakdown['mrb_hold'] }} Lots</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold font-mono text-orange-800">{{ $statusBreakdown['mrb_hold'] }} Lots</span>
+                                <span class="text-[10px] text-orange-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['mrb_hold'] / $totalInbound) * 100, 1) : 0 }}%)</span>
+                            </div>
                         </div>
                         <div class="flex items-center justify-between p-2 rounded-xl bg-rose-50 border border-rose-100">
                             <span class="flex items-center gap-2 font-medium text-rose-900">
                                 <span class="w-2 h-2 rounded-full bg-rose-500"></span> Rejected / RTV / Scrap
                             </span>
-                            <span class="font-bold font-mono text-rose-800">{{ $statusBreakdown['rejected'] }} Lots</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold font-mono text-rose-800">{{ $statusBreakdown['rejected'] }} Lots</span>
+                                <span class="text-[10px] text-rose-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['rejected'] / $totalInbound) * 100, 1) : 0 }}%)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
