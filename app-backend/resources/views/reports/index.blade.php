@@ -250,7 +250,13 @@
                     ( Digital Signature )
                 </div>
                 <div class="border-t border-slate-300 pt-1 font-bold text-slate-700">
-                    {{ auth()->user()->name ?? 'Serlin Yolanda' }}
+                    @php
+                        $preparedInspector = 'Serlin Yolanda';
+                        if (auth()->check() && str_starts_with(auth()->user()->role, 'inspector')) {
+                            $preparedInspector = auth()->user()->name;
+                        }
+                    @endphp
+                    {{ $preparedInspector }}
                 </div>
             </div>
 

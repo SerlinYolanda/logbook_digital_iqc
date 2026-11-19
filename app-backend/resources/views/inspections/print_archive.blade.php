@@ -235,8 +235,16 @@
                     </div>
                 </div>
                 <div class="mt-2 border-t border-slate-200 pt-1.5">
-                    <div class="font-extrabold text-slate-900">{{ auth()->user()->name ?? 'Inspector' }}</div>
-                    <div class="text-[10px] text-slate-500">IQC Quality Inspector (NIK: {{ auth()->user()->nik ?? '-' }})</div>
+                    @php
+                        $printInspector = 'Serlin Yolanda';
+                        $printNik = '3312411105';
+                        if (auth()->check() && str_starts_with(auth()->user()->role, 'inspector')) {
+                            $printInspector = auth()->user()->name;
+                            $printNik = auth()->user()->nik ?? '-';
+                        }
+                    @endphp
+                    <div class="font-extrabold text-slate-900">{{ $printInspector }}</div>
+                    <div class="text-[10px] text-slate-500">IQC Quality Inspector (NIK: {{ $printNik }})</div>
                 </div>
             </div>
 
