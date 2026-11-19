@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Inbound Material & GRN Queue - IQC Digital Logbook')
-@section('title', 'Inbound Material & GR Queue - IQC Digital Logbook')
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
@@ -12,9 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Inbound Material (GRN) & Queue Management</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Inbound material registration, IQA GR assignment, and queue aging benchmark monitoring.</p>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">Inbound Material (GR) & Queue Management</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Inbound material registration, IQA GR assignment, and queue aging benchmark monitoring.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Inbound material registration, IQA GRN assignment, and queue aging benchmark monitoring.</p>
             </div>
         </div>
 
@@ -56,7 +53,6 @@
         <form method="GET" action="{{ route('receivings.index') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search GRN, PO, Lot, Part..." 
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search GR, PO, Lot, Part..." 
                     class="w-full text-xs rounded-xl border-slate-200 px-3.5 py-2.5">
             </div>
             <div>
@@ -93,7 +89,6 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                         <th class="py-3.5 px-4">IQA GRN No</th>
-                        <th class="py-3.5 px-4">IQA GR No</th>
                         <th class="py-3.5 px-4">Received Date & Aging</th>
                         <th class="py-3.5 px-4">Supplier & Country</th>
                         <th class="py-3.5 px-4">Component & Commodity</th>
@@ -183,14 +178,12 @@
 </div>
 
 <!-- Modal Inbound Material Registration (GRN) -->
-<!-- Modal Inbound Material Registration (GR) -->
 <div id="registerGrnModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-indigo-600">post_add</span>
                 Inbound Material Registration (GRN)
-                Inbound Material Registration (GR)
             </h3>
             <button type="button" onclick="document.getElementById('registerGrnModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
                 <span class="material-symbols-outlined">close</span>
@@ -202,8 +195,6 @@
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">IQA GRN Number *</label>
                 <input type="text" name="no_grn_iqa" required value="GRN-{{ date('Ym') }}-{{ str_pad(rand(10, 999), 3, '0', STR_PAD_LEFT) }}" 
-                <label class="block text-xs font-bold text-slate-700 mb-1">IQA GR Number *</label>
-                <input type="text" name="no_grn_iqa" required value="GR-{{ date('Ym') }}-{{ str_pad(rand(10, 999), 3, '0', STR_PAD_LEFT) }}" 
                     class="w-full text-xs font-mono rounded-xl border-slate-200">
             </div>
 

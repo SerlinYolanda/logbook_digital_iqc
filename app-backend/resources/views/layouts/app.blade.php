@@ -210,7 +210,6 @@
 
             <a href="{{ route('receivings.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('receivings.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
                 <span class="material-symbols-outlined icon-sm">conveyor_belt</span> Inbound GRN Queue
-                <span class="material-symbols-outlined icon-sm">conveyor_belt</span> Inbound GR Queue
                 @if($waitingGrnCount > 0)
                     <span class="ml-auto bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
                         {{ $waitingGrnCount }}
@@ -269,7 +268,7 @@
                 @php
                     $currentPageLabel = match(true) {
                         request()->routeIs('dashboard*') => 'Executive Overview',
-                        request()->routeIs('receivings*') => 'Material Inbound (GR)',
+                        request()->routeIs('receivings*') => 'Material Inbound (GRN)',
                         request()->routeIs('logbooks*') => 'Inspection Records',
                         request()->routeIs('reports*') => 'Quality Reports',
                         request()->routeIs('supervisor*') => 'MRB Review & Decisions',
