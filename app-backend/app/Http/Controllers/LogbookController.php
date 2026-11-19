@@ -620,6 +620,18 @@ class LogbookController extends Controller
             ]
         );
 
+        // Optionally record defect non-conformance if defect category provided
+        if ($request->filled('defect_category_id')) {
+            Defect::create([
+                'logbook_id'         => $logbook->id,
+                'defect_category_id' => $request->defect_category_id,
+                'qty_defect'         => $request->input('qty_defect', 1),
+                'tingkat_keparahan'  => $request->input('tingkat_keparahan', 'major'),
+                'deskripsi'          => $validated['kronologi_masalah'],
+                'foto_bukti'         => $docPath,
+            ]);
+        }
+
         // Sets status to menunggu_penetapan (pending Supervisor MRB)
         $logbook->update(['status' => 'menunggu_penetapan']);
 

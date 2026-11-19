@@ -301,22 +301,13 @@
                 <p class="text-xs text-slate-500 mt-0.5">Physical non-conformance defect logs, sample photo evidence, and special track (NEST) incident escalations.</p>
             </div>
 
-            @if(auth()->user()->isInspector() && in_array($logbook->status, ['draft', 'menunggu_penetapan', 'perlu_revisi']))
-            <div class="flex items-center gap-2 flex-wrap">
-                <button type="button" onclick="document.getElementById('addDefectModal').classList.remove('hidden')"
-                    class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
-                    <span class="material-symbols-outlined text-[16px]">add_a_photo</span>
-                    <span>+ Record Defect & Photo</span>
-                </button>
-
-                @if(!$logbook->nestProcess)
-                <button type="button" onclick="document.getElementById('nestModal').classList.remove('hidden')"
-                    class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs" title="Escalate special anomaly to Supervisor MRB">
-                    <span class="material-symbols-outlined text-[16px]">warning</span>
-                    <span>+ Escalate via NEST</span>
-                </button>
-                @endif
-            </div>
+            <!-- Single Action Button: NEST Process -->
+            @if(auth()->user()->isInspector() && in_array($logbook->status, ['draft', 'menunggu_penetapan', 'perlu_revisi']) && !$logbook->nestProcess)
+            <button type="button" onclick="document.getElementById('nestModal').classList.remove('hidden')"
+                class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">warning</span>
+                <span>+ Submit NEST Process</span>
+            </button>
             @endif
         </div>
 
@@ -564,15 +555,40 @@
         <form action="{{ route('logbooks.nest.store', $logbook->id) }}" method="POST" enctype="multipart/form-data" class="mt-4 space-y-4">
             @csrf
             <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Defect Category (Optional if physical defect exists)</label>
+                <select name="defect_category_id" class="w-full text-xs rounded-xl border-slate-200">
+                    <option value="">No specific physical defect (Process / Anomaly only)</option>
+                    @foreach($defectCategories as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->kode_defect }} - {{ $cat->nama_defect }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Defect Qty (pcs)</label>
+                    <input type="number" name="qty_defect" min="1" value="1" class="w-full text-xs rounded-xl border-slate-200 font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Severity Level</label>
+                    <select name="tingkat_keparahan" class="w-full text-xs rounded-xl border-slate-200">
+                        <option value="minor">Minor</option>
+                        <option value="major" selected>Major</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Problem Chronology & Risk Analysis *</label>
-                <textarea name="kronologi_masalah" required rows="4" 
-                    placeholder="Provide details on the discovered anomaly and potential production line risk..." 
+                <textarea name="kronologi_masalah" required rows="3" 
+                    placeholder="Provide details on the discovered anomaly, defect location, and potential line risk..." 
                     class="w-full text-xs rounded-xl border-slate-200"></textarea>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Supporting Document / Evidence (PDF/Image Max 10MB)</label>
-                <input type="file" name="bukti_pendukung" class="w-full text-xs rounded-xl border-slate-200">
+                <label class="block text-xs font-bold text-slate-700 mb-1">Supporting Photo / Evidence Document (Max 10MB)</label>
+                <input type="file" name="bukti_pendukung" accept="image/*,.pdf,.doc,.docx" class="w-full text-xs rounded-xl border-slate-200">
             </div>
 
             <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-800">
