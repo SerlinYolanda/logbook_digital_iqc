@@ -113,19 +113,19 @@
             </div>
         </div>
 
-        <!-- KPI 2: Logbook Selesai & Pass Rate -->
+        <!-- KPI 2: Logbook Selesai & Accepted Lots -->
         <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition">
             <div class="flex items-center justify-between text-slate-400">
                 <span class="text-xs font-bold uppercase tracking-wider">Quality Pass Rate</span>
                 <span class="material-symbols-outlined text-emerald-600">verified</span>
             </div>
             <div class="mt-3 flex items-baseline gap-2">
-                <span class="text-3xl font-black text-emerald-600">{{ $passRate }}%</span>
-                <span class="text-xs text-slate-500 font-semibold">Inspection Yield</span>
+                <span class="text-3xl font-black text-emerald-600">{{ $acceptedCount }}</span>
+                <span class="text-xs text-slate-500 font-semibold">Lots Accepted</span>
             </div>
             <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-500">Accepted: <b class="text-emerald-700">{{ $acceptedCount }}</b></span>
-                <span class="text-slate-500">Total Lots: <b class="text-slate-800">{{ $totalLogbooks }}</b></span>
+                <span class="text-slate-500">Pass Rate: <b class="text-emerald-700">{{ $passRate }}%</b></span>
+                <span class="text-slate-500">Total Inspected: <b class="text-slate-800">{{ $totalLogbooks }}</b></span>
             </div>
         </div>
 
