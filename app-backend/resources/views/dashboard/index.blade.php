@@ -292,12 +292,21 @@
                         <p class="text-xs text-slate-500">Real-time distribution of all lots across the IQC inspection pipeline.</p>
                     </div>
 
-                    <div class="mt-4 relative h-48 w-full flex items-center justify-center">
+                    <div class="mt-4 relative h-52 w-full flex items-center justify-center">
                         <canvas id="statusDonutChart"></canvas>
-                        <!-- Center Counter Badge in Donut -->
-                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                            <span class="text-2xl font-black text-slate-900 font-mono tracking-tight leading-none">{{ $totalInbound }}</span>
-                            <span class="text-[9px] font-extrabold uppercase text-slate-400 tracking-wider mt-1">Total Lots</span>
+                        <!-- Center Dynamic Gauge Card in Donut -->
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="w-24 h-24 rounded-full bg-gradient-to-b from-slate-50 via-white to-slate-100/90 border border-slate-200/80 shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex flex-col items-center justify-center p-2 text-center relative">
+                                <div class="flex items-center gap-1 mb-0.5">
+                                    <span class="relative flex h-2 w-2">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                    </span>
+                                    <span class="text-[9px] font-black uppercase text-slate-500 tracking-wider">Live</span>
+                                </div>
+                                <span class="text-2xl font-black text-slate-900 font-mono tracking-tight leading-none">{{ $totalInbound }}</span>
+                                <span class="text-[9px] font-bold uppercase text-slate-400 tracking-wider mt-1">Total Lots</span>
+                            </div>
                         </div>
                     </div>
 
@@ -308,7 +317,7 @@
                                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Accepted / Released
                             </span>
                             <div class="flex items-center gap-1.5">
-                                <span class="font-bold font-mono text-emerald-800">{{ $statusBreakdown['released'] }} Lots</span>
+                                <span class="font-bold font-mono text-emerald-800">{{ $statusBreakdown['released'] }} {{ $statusBreakdown['released'] == 1 ? 'Lot' : 'Lots' }}</span>
                                 <span class="text-[10px] text-emerald-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['released'] / $totalInbound) * 100, 1) : 0 }}%)</span>
                             </div>
                         </div>
@@ -317,7 +326,7 @@
                                 <span class="w-2 h-2 rounded-full bg-blue-500"></span> Under Inspection (WIP)
                             </span>
                             <div class="flex items-center gap-1.5">
-                                <span class="font-bold font-mono text-blue-800">{{ $statusBreakdown['in_inspection'] }} Lots</span>
+                                <span class="font-bold font-mono text-blue-800">{{ $statusBreakdown['in_inspection'] }} {{ $statusBreakdown['in_inspection'] == 1 ? 'Lot' : 'Lots' }}</span>
                                 <span class="text-[10px] text-blue-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['in_inspection'] / $totalInbound) * 100, 1) : 0 }}%)</span>
                             </div>
                         </div>
@@ -326,7 +335,7 @@
                                 <span class="w-2 h-2 rounded-full bg-amber-500"></span> Waiting in Queue
                             </span>
                             <div class="flex items-center gap-1.5">
-                                <span class="font-bold font-mono text-amber-800">{{ $statusBreakdown['waiting'] }} Lots</span>
+                                <span class="font-bold font-mono text-amber-800">{{ $statusBreakdown['waiting'] }} {{ $statusBreakdown['waiting'] == 1 ? 'Lot' : 'Lots' }}</span>
                                 <span class="text-[10px] text-amber-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['waiting'] / $totalInbound) * 100, 1) : 0 }}%)</span>
                             </div>
                         </div>
@@ -335,7 +344,7 @@
                                 <span class="w-2 h-2 rounded-full bg-orange-500"></span> Pending MRB Review
                             </span>
                             <div class="flex items-center gap-1.5">
-                                <span class="font-bold font-mono text-orange-800">{{ $statusBreakdown['mrb_hold'] }} Lots</span>
+                                <span class="font-bold font-mono text-orange-800">{{ $statusBreakdown['mrb_hold'] }} {{ $statusBreakdown['mrb_hold'] == 1 ? 'Lot' : 'Lots' }}</span>
                                 <span class="text-[10px] text-orange-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['mrb_hold'] / $totalInbound) * 100, 1) : 0 }}%)</span>
                             </div>
                         </div>
@@ -344,7 +353,7 @@
                                 <span class="w-2 h-2 rounded-full bg-rose-500"></span> Rejected / RTV / Scrap
                             </span>
                             <div class="flex items-center gap-1.5">
-                                <span class="font-bold font-mono text-rose-800">{{ $statusBreakdown['rejected'] }} Lots</span>
+                                <span class="font-bold font-mono text-rose-800">{{ $statusBreakdown['rejected'] }} {{ $statusBreakdown['rejected'] == 1 ? 'Lot' : 'Lots' }}</span>
                                 <span class="text-[10px] text-rose-600 font-semibold">({{ $totalInbound > 0 ? round(($statusBreakdown['rejected'] / $totalInbound) * 100, 1) : 0 }}%)</span>
                             </div>
                         </div>
@@ -809,13 +818,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     ],
                     borderWidth: 2,
                     borderColor: '#ffffff',
-                    hoverOffset: 4
+                    borderRadius: 6,
+                    spacing: 4,
+                    hoverOffset: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '68%',
+                cutout: '72%',
                 plugins: {
                     legend: { display: false },
                     tooltip: {
