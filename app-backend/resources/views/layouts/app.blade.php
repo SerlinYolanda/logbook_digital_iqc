@@ -260,15 +260,30 @@
     <div class="flex-1 flex flex-col h-full overflow-hidden w-full">
         <!-- New Top Header based on mockup -->
         <header class="h-16 border-b border-slate-200 bg-white px-6 flex items-center justify-between shrink-0 hidden md:flex">
-            <div class="flex items-center gap-4 text-sm font-semibold text-slate-900">
+            <div class="flex items-center gap-3 text-sm font-semibold text-slate-900">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-indigo-600 icon-md">memory</span>
                     <span>IQC Digital Logbook</span>
                 </div>
                 <span class="text-slate-300">/</span>
-                <div class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-lg text-xs font-bold border border-indigo-100 flex items-center gap-1.5">
+                @php
+                    $currentPageLabel = match(true) {
+                        request()->routeIs('dashboard*') => 'Executive Overview',
+                        request()->routeIs('receivings*') => 'Material Inbound (GR)',
+                        request()->routeIs('logbooks*') => 'Inspection Records',
+                        request()->routeIs('reports*') => 'Quality Reports',
+                        request()->routeIs('supervisor*') => 'MRB Review & Decisions',
+                        request()->routeIs('master-data*') => 'Master Catalog',
+                        request()->routeIs('traceability*') => 'Traceability',
+                        request()->routeIs('admin.users*') => 'User Accounts',
+                        request()->routeIs('admin.audit-trails*') => 'Audit Trails',
+                        request()->routeIs('profile*') => 'My Profile',
+                        default => 'Portal',
+                    };
+                @endphp
+                <div class="bg-indigo-50/80 text-indigo-700 px-3 py-1 rounded-lg text-xs font-bold border border-indigo-100 flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }}"></span>
-                    {{ $commLabel }}
+                    {{ $currentPageLabel }}
                 </div>
             </div>
             
