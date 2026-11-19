@@ -35,59 +35,116 @@
     </div>
 
     <!-- Filter Bar -->
-    <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs no-print">
-        <form method="GET" action="{{ route('reports.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 text-xs">
-            <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Start Date:</label>
-                <input type="date" name="start_date" value="{{ $startDate }}" class="w-full text-xs font-mono rounded-xl border-slate-200 py-2">
+    <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs no-print space-y-3">
+        <form id="reportFilterForm" method="GET" action="{{ route('reports.index') }}" class="space-y-3 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Start Date:</label>
+                    <input type="date" name="start_date" value="{{ $startDate }}" onchange="document.getElementById('reportFilterForm').submit()" class="w-full text-xs font-mono rounded-xl border-slate-200 py-2 focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">End Date:</label>
+                    <input type="date" name="end_date" value="{{ $endDate }}" onchange="document.getElementById('reportFilterForm').submit()" class="w-full text-xs font-mono rounded-xl border-slate-200 py-2 focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Decision Status:</label>
+                    <select name="status" onchange="document.getElementById('reportFilterForm').submit()" class="w-full text-xs font-semibold rounded-xl border-slate-200 py-2 focus:ring-2 focus:ring-indigo-500 bg-white cursor-pointer">
+                        <option value="">All Statuses</option>
+                        <option value="accept" {{ $status === 'accept' ? 'selected' : '' }}>Accept / Passed</option>
+                        <option value="return_to_vendor" {{ $status === 'return_to_vendor' ? 'selected' : '' }}>Return to Vendor (RTV)</option>
+                        <option value="scrap" {{ $status === 'scrap' ? 'selected' : '' }}>Scrap</option>
+                        <option value="rework" {{ $status === 'rework' ? 'selected' : '' }}>Rework</option>
+                        <option value="menunggu_penetapan" {{ $status === 'menunggu_penetapan' ? 'selected' : '' }}>Pending MRB</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Commodity:</label>
+                    <select name="komoditas" onchange="document.getElementById('reportFilterForm').submit()" class="w-full text-xs font-semibold rounded-xl border-slate-200 py-2 focus:ring-2 focus:ring-indigo-500 bg-white cursor-pointer">
+                        <option value="">All Commodities</option>
+                        <option value="ee_part" {{ $komoditas === 'ee_part' ? 'selected' : '' }}>EE Part</option>
+                        <option value="automotive" {{ $komoditas === 'automotive' ? 'selected' : '' }}>Automotive</option>
+                        <option value="wire_harness" {{ $komoditas === 'wire_harness' ? 'selected' : '' }}>Wire Harness</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Supplier / Vendor:</label>
+                    <select name="supplier_id" onchange="document.getElementById('reportFilterForm').submit()" class="w-full text-xs font-semibold rounded-xl border-slate-200 py-2 focus:ring-2 focus:ring-indigo-500 bg-white cursor-pointer">
+                        <option value="">All Suppliers</option>
+                        @foreach($suppliers as $s)
+                            <option value="{{ $s->id }}" {{ $supplierId == $s->id ? 'selected' : '' }}>{{ $s->nama_supplier }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
-            <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">End Date:</label>
-                <input type="date" name="end_date" value="{{ $endDate }}" class="w-full text-xs font-mono rounded-xl border-slate-200 py-2">
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Decision Status:</label>
-                <select name="status" class="w-full text-xs font-semibold rounded-xl border-slate-200 py-2">
-                    <option value="">All Statuses</option>
-                    <option value="accept" {{ $status === 'accept' ? 'selected' : '' }}>Accept / Passed</option>
-                    <option value="return_to_vendor" {{ $status === 'return_to_vendor' ? 'selected' : '' }}>Return to Vendor (RTV)</option>
-                    <option value="scrap" {{ $status === 'scrap' ? 'selected' : '' }}>Scrap</option>
-                    <option value="rework" {{ $status === 'rework' ? 'selected' : '' }}>Rework</option>
-                    <option value="menunggu_penetapan" {{ $status === 'menunggu_penetapan' ? 'selected' : '' }}>Pending MRB</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Commodity:</label>
-                <select name="komoditas" class="w-full text-xs font-semibold rounded-xl border-slate-200 py-2">
-                    <option value="">All Commodities</option>
-                    <option value="ee_part" {{ $komoditas === 'ee_part' ? 'selected' : '' }}>EE Part</option>
-                    <option value="automotive" {{ $komoditas === 'automotive' ? 'selected' : '' }}>Automotive</option>
-                    <option value="wire_harness" {{ $komoditas === 'wire_harness' ? 'selected' : '' }}>Wire Harness</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Supplier / Vendor:</label>
-                <select name="supplier_id" class="w-full text-xs font-semibold rounded-xl border-slate-200 py-2">
-                    <option value="">All Suppliers</option>
-                    @foreach($suppliers as $s)
-                        <option value="{{ $s->id }}" {{ $supplierId == $s->id ? 'selected' : '' }}>{{ $s->nama_supplier }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="flex items-end gap-2">
-                <button type="submit" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex-1 transition">
-                    Apply Filter
-                </button>
-                <a href="{{ route('reports.index') }}" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">
-                    Reset
-                </a>
+            <div class="flex items-center justify-between gap-3 pt-1 flex-wrap">
+                <div class="relative w-full sm:w-80">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[16px]">search</span>
+                    <input type="text" name="search" value="{{ $search ?? request('search') }}" placeholder="Search by GR, Lot, Part, PO, Inspector..."
+                        class="w-full text-xs rounded-xl border-slate-200 pl-8 pr-3 py-2 focus:ring-2 focus:ring-indigo-500 transition">
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-xs flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[15px]">filter_alt</span>
+                        <span>Apply Filter</span>
+                    </button>
+                    <a href="{{ route('reports.index') }}" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition border border-slate-200 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[15px]">restart_alt</span>
+                        <span>Reset</span>
+                    </a>
+                </div>
             </div>
         </form>
+
+        <!-- Active Filter Indicator Bar -->
+        @if(request()->hasAny(['search', 'status', 'komoditas', 'supplier_id', 'start_date', 'end_date']))
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 text-xs">
+            <span class="text-slate-400 font-bold uppercase text-[10px] flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">tune</span>
+                Active Filter Tags:
+            </span>
+
+            @if(!empty($status))
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 text-[11px] font-semibold border border-indigo-200">
+                    <span>Status: <strong>{{ ucwords(str_replace('_', ' ', $status)) }}</strong></span>
+                    <a href="{{ route('reports.index', request()->except('status')) }}" class="text-indigo-400 hover:text-indigo-700 font-bold ml-1">&times;</a>
+                </span>
+            @endif
+
+            @if(!empty($komoditas))
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 text-[11px] font-semibold border border-indigo-200">
+                    <span>Commodity: <strong>{{ ucwords(str_replace('_', ' ', $komoditas)) }}</strong></span>
+                    <a href="{{ route('reports.index', request()->except('komoditas')) }}" class="text-indigo-400 hover:text-indigo-700 font-bold ml-1">&times;</a>
+                </span>
+            @endif
+
+            @if(!empty($supplierId) && isset($suppliers))
+                @php $activeSup = $suppliers->firstWhere('id', $supplierId); @endphp
+                @if($activeSup)
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 text-[11px] font-semibold border border-indigo-200">
+                    <span>Supplier: <strong>{{ $activeSup->nama_supplier }}</strong></span>
+                    <a href="{{ route('reports.index', request()->except('supplier_id')) }}" class="text-indigo-400 hover:text-indigo-700 font-bold ml-1">&times;</a>
+                </span>
+                @endif
+            @endif
+
+            @if(!empty($search))
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 text-[11px] font-semibold border border-indigo-200">
+                    <span>Search: "<strong>{{ $search }}</strong>"</span>
+                    <a href="{{ route('reports.index', request()->except('search')) }}" class="text-indigo-400 hover:text-indigo-700 font-bold ml-1">&times;</a>
+                </span>
+            @endif
+
+            <a href="{{ route('reports.index') }}" class="text-[11px] text-rose-600 hover:text-rose-800 font-bold ml-auto flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-[13px]">clear_all</span>
+                Clear All
+            </a>
+        </div>
+        @endif
     </div>
 
     <!-- Official Report Document Paper (Printable) -->
@@ -178,7 +235,6 @@
                     <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[11px]">
                         <tr>
                             <th class="py-2.5 px-3">No</th>
-                            <th class="py-2.5 px-3">GRN & Lot No</th>
                             <th class="py-2.5 px-3">GR & Lot No</th>
                             <th class="py-2.5 px-3">Component / Part</th>
                             <th class="py-2.5 px-3">Commodity</th>

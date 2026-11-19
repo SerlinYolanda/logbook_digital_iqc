@@ -18,11 +18,12 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
-        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
-        $endDate   = $request->input('end_date', Carbon::now()->toDateString());
+        $startDate = $request->filled('start_date') ? $request->start_date : Carbon::now()->startOfMonth()->toDateString();
+        $endDate   = $request->filled('end_date')   ? $request->end_date   : Carbon::now()->toDateString();
         $status    = $request->input('status');
         $komoditas = $request->input('komoditas');
         $supplierId = $request->input('supplier_id');
+        $search    = $request->input('search');
 
         $query = Logbook::with([
             'receiving.supplier',
@@ -30,9 +31,14 @@ class ReportController extends Controller
             'inspector',
             'defects.defectCategory',
             'latestMrbDisposition.supervisor'
-        ])
-        ->whereDate('tanggal_inspeksi', '>=', $startDate)
-        ->whereDate('tanggal_inspeksi', '<=', $endDate);
+        ]);
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('tanggal_inspeksi', '>=', $startDate);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('tanggal_inspeksi', '<=', $endDate);
+        }
 
         if (!empty($status)) {
             $query->where('status', $status);
@@ -47,6 +53,20 @@ class ReportController extends Controller
         if (!empty($supplierId)) {
             $query->whereHas('receiving', function ($q) use ($supplierId) {
                 $q->where('supplier_id', $supplierId);
+            });
+        }
+
+        if (!empty($search)) {
+            $term = '%' . $search . '%';
+            $query->where(function ($q) use ($term) {
+                $q->whereHas('receiving', function ($rq) use ($term) {
+                    $rq->where('no_grn_iqa', 'like', $term)
+                       ->orWhere('no_lot', 'like', $term)
+                       ->orWhere('no_po', 'like', $term)
+                       ->orWhereHas('part', fn($pq) => $pq->where('kode_part', 'like', $term)->orWhere('nama_part', 'like', $term))
+                       ->orWhereHas('supplier', fn($sq) => $sq->where('nama_supplier', 'like', $term));
+                })
+                ->orWhereHas('inspector', fn($iq) => $iq->where('name', 'like', $term));
             });
         }
 
@@ -88,7 +108,8 @@ class ReportController extends Controller
             'endDate',
             'status',
             'komoditas',
-            'supplierId'
+            'supplierId',
+            'search'
         ));
     }
 
@@ -97,11 +118,12 @@ class ReportController extends Controller
      */
     public function exportExcel(Request $request)
     {
-        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
-        $endDate   = $request->input('end_date', Carbon::now()->toDateString());
+        $startDate = $request->filled('start_date') ? $request->start_date : Carbon::now()->startOfMonth()->toDateString();
+        $endDate   = $request->filled('end_date')   ? $request->end_date   : Carbon::now()->toDateString();
         $status    = $request->input('status');
         $komoditas = $request->input('komoditas');
         $supplierId = $request->input('supplier_id');
+        $search    = $request->input('search');
 
         $query = Logbook::with([
             'receiving.supplier',
@@ -109,9 +131,14 @@ class ReportController extends Controller
             'inspector',
             'defects.defectCategory',
             'latestMrbDisposition.supervisor'
-        ])
-        ->whereDate('tanggal_inspeksi', '>=', $startDate)
-        ->whereDate('tanggal_inspeksi', '<=', $endDate);
+        ]);
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('tanggal_inspeksi', '>=', $startDate);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('tanggal_inspeksi', '<=', $endDate);
+        }
 
         if (!empty($status)) {
             $query->where('status', $status);
@@ -124,6 +151,19 @@ class ReportController extends Controller
         if (!empty($supplierId)) {
             $query->whereHas('receiving', function ($q) use ($supplierId) {
                 $q->where('supplier_id', $supplierId);
+            });
+        }
+        if (!empty($search)) {
+            $term = '%' . $search . '%';
+            $query->where(function ($q) use ($term) {
+                $q->whereHas('receiving', function ($rq) use ($term) {
+                    $rq->where('no_grn_iqa', 'like', $term)
+                       ->orWhere('no_lot', 'like', $term)
+                       ->orWhere('no_po', 'like', $term)
+                       ->orWhereHas('part', fn($pq) => $pq->where('kode_part', 'like', $term)->orWhere('nama_part', 'like', $term))
+                       ->orWhereHas('supplier', fn($sq) => $sq->where('nama_supplier', 'like', $term));
+                })
+                ->orWhereHas('inspector', fn($iq) => $iq->where('name', 'like', $term));
             });
         }
 
