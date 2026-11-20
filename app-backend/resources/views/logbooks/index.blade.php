@@ -30,96 +30,79 @@
         </div>
     </div>
 
-    <!-- 2. Direct Inspection Bar: Quick GR / Lot Lookup -->
+    <!-- 2. Direct Inspection Bar: Quick GRN / Lot Lookup -->
     @if(auth()->user()->isInspector() || auth()->user()->isAdmin())
-    <div class="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-6 sm:p-8 text-white shadow-xl overflow-hidden border border-indigo-500/30">
-        <!-- Background Glow Decor -->
-        <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div class="space-y-2 flex-1">
-                <div class="flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-300">Fast Inbound Quality Gate &bull; Poka-Yoke Validated</span>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="w-13 h-13 rounded-2xl bg-blue-600/30 text-indigo-300 border border-indigo-400/30 flex items-center justify-center shadow-inner shrink-0">
-                        <span class="material-symbols-outlined text-[28px]">qr_code_scanner</span>
-                    </div>
-                    <div>
-                        <h2 class="text-lg sm:text-xl font-black tracking-tight text-white">
-                            Scan GR or Lot to Directly Inspect
-                        </h2>
-                        <p class="text-xs sm:text-sm text-slate-300 mt-0.5">
-                            Type or scan any inbound GR barcode (e.g. <span class="font-mono text-indigo-200 font-bold bg-white/10 px-1.5 py-0.5 rounded">GR-202611-0105</span> or <span class="font-mono text-indigo-200 font-bold bg-white/10 px-1.5 py-0.5 rounded">0105</span>) or Lot Number to jump straight into active testing.
-                        </p>
-                    </div>
-                </div>
+    <div class="bg-slate-900 rounded-xl p-5 text-white border border-slate-800 shadow-md flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                <span class="material-symbols-outlined text-[24px]">qr_code_scanner</span>
             </div>
-
-            <!-- Direct Inspect Form: Leads to GR preview before inspect -->
-            <form action="{{ route('logbooks.create') }}" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto shrink-0">
-                <div class="relative w-full sm:w-80 lg:w-96">
-                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">barcode_scanner</span>
-                    <input type="text" name="search" required autocomplete="off"
-                        placeholder="Scan barcode or type GR / Lot No..." 
-                        class="w-full pl-11 pr-4 py-4 rounded-2xl bg-white text-slate-900 placeholder:text-slate-400 font-mono text-sm font-bold border-0 focus:ring-4 focus:ring-indigo-400 shadow-inner transition">
-                </div>
-                <button type="submit" 
-                    class="px-7 py-4 rounded-2xl bg-indigo-500 hover:bg-blue-600 text-white font-black text-sm shrink-0 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 cursor-pointer">
-                    <span class="material-symbols-outlined text-[20px]">search</span>
-                    <span>Find GR</span>
-                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-                </button>
-            </form>
+            <div>
+                <h3 class="text-sm font-bold text-white tracking-wide uppercase">Quick Lot Barcode Scanner</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Scan physical barcode or enter IQA GRN / Lot number to directly open inspection sheet.</p>
+            </div>
         </div>
+
+        <form action="{{ route('logbooks.create') }}" method="GET" class="flex items-center gap-3 w-full lg:w-auto lg:min-w-[500px]">
+            <div class="relative flex-1">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-[20px]">barcode_scanner</span>
+                <input type="text" name="search" required autocomplete="off"
+                    placeholder="Scan barcode or type GRN / Lot No..." 
+                    class="w-full pl-11 pr-4 py-3 text-sm font-mono rounded-lg bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+            <button type="submit" 
+                class="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition shrink-0 flex items-center gap-2 shadow-xs cursor-pointer">
+                <span>Find Lot</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+        </form>
     </div>
     @endif
 
-    <!-- 3. Logbook Running Lifecycle Stage Pipeline (Visual Guide) -->
-    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-5 text-white shadow-md relative overflow-hidden">
-        <div class="flex items-center justify-between gap-4 flex-wrap pb-3 border-b border-indigo-900/60 text-xs">
-            <span class="font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-[16px]">alt_route</span>
-                Running Logbook Inspection Lifecycle (SOP Flow)
+    <!-- 3. Logbook Inspection Lifecycle Flow (Clean Neutral Enterprise) -->
+    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between gap-4 flex-wrap pb-3 border-b border-slate-100 text-xs">
+            <span class="font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
+                <span class="material-symbols-outlined text-[16px] text-slate-400">alt_route</span>
+                Inspection Lifecycle (SOP Flow)
             </span>
             <span class="text-[11px] text-slate-400">Standardized ISO 9001 & MIL-STD-105E Quality Gate</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mt-4 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mt-3.5 text-xs">
             <!-- Stage 1 -->
-            <div class="bg-white/5 rounded-2xl p-3 border border-white/10 flex items-start gap-3">
-                <div class="w-7 h-7 rounded-xl bg-blue-600/60 text-white flex items-center justify-center font-bold text-xs shrink-0">1</div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200/80 flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-md bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">1</div>
                 <div>
-                    <div class="font-bold text-slate-200">Inbound & FIFO Queue</div>
-                    <div class="text-[11px] text-slate-400 mt-0.5">Logistics registers GR. Queue aging tracked (Normal &lt;12h, Priority &lt;24h, Overdue).</div>
+                    <div class="font-semibold text-slate-800">Inbound & Queue</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">Dock arrival registration and FIFO aging tracking.</div>
                 </div>
             </div>
 
             <!-- Stage 2 -->
-            <div class="bg-white/5 rounded-2xl p-3 border border-white/10 flex items-start gap-3">
-                <div class="w-7 h-7 rounded-xl bg-blue-600/60 text-white flex items-center justify-center font-bold text-xs shrink-0">2</div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200/80 flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-md bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">2</div>
                 <div>
-                    <div class="font-bold text-slate-200">3-Point Digital Inspection</div>
-                    <div class="text-[11px] text-slate-400 mt-0.5">Visual packaging gate, expiry/date code verify, and sample measurement tolerance check.</div>
+                    <div class="font-semibold text-slate-800">Quality Inspection</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">Visual packaging check and sample measurement testing.</div>
                 </div>
             </div>
 
             <!-- Stage 3 -->
-            <div class="bg-white/5 rounded-2xl p-3 border border-white/10 flex items-start gap-3">
-                <div class="w-7 h-7 rounded-xl bg-amber-600/60 text-white flex items-center justify-center font-bold text-xs shrink-0">3</div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200/80 flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-md bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">3</div>
                 <div>
-                    <div class="font-bold text-slate-200">MRB Hold (If Defect/Out-of-Spec)</div>
-                    <div class="text-[11px] text-slate-400 mt-0.5">Non-conformance held for Supervisor evaluation: Accept, RTV, Concession, or Revise.</div>
+                    <div class="font-semibold text-slate-800">MRB Disposition</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">Non-conformance review: Accept, RTV, Rework, or Scrap.</div>
                 </div>
             </div>
 
             <!-- Stage 4 -->
-            <div class="bg-white/5 rounded-2xl p-3 border border-white/10 flex items-start gap-3">
-                <div class="w-7 h-7 rounded-xl bg-emerald-600/60 text-white flex items-center justify-center font-bold text-xs shrink-0">4</div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200/80 flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-md bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">4</div>
                 <div>
-                    <div class="font-bold text-slate-200">Release & Warehouse Transfer</div>
-                    <div class="text-[11px] text-slate-400 mt-0.5">Accepted lot cleared for production line; rejected lot quarantined for Return to Vendor.</div>
+                    <div class="font-semibold text-slate-800">Release / Transfer</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">Accepted lot cleared for production line or quarantine.</div>
                 </div>
             </div>
         </div>
@@ -129,55 +112,55 @@
     <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
         <!-- Tab All -->
         <a href="{{ route('logbooks.index', ['folder' => 'all']) }}" 
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition shrink-0 border
-            {{ $activeFolder === 'all' ? 'bg-blue-600 text-white border-indigo-600 shadow-sm shadow-indigo-500/20' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition shrink-0 border
+            {{ $activeFolder === 'all' ? 'bg-blue-600 text-white border-blue-600 shadow-xs' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
             <span class="material-symbols-outlined text-[16px]">folder</span>
             <span>All Archives</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] {{ $activeFolder === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-mono {{ $activeFolder === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">
                 {{ $totalLogbooks }}
             </span>
         </a>
 
         <!-- Tab EE Part -->
         <a href="{{ route('logbooks.index', ['folder' => 'ee_part']) }}" 
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition shrink-0 border
-            {{ $activeFolder === 'ee_part' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm shadow-emerald-500/20' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition shrink-0 border
+            {{ $activeFolder === 'ee_part' ? 'bg-blue-600 text-white border-blue-600 shadow-xs' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
             <span class="material-symbols-outlined text-[16px]">memory</span>
             <span>EE Part Archive</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] {{ $activeFolder === 'ee_part' ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-700' }}">
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-mono {{ $activeFolder === 'ee_part' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">
                 {{ $eeCount }}
             </span>
         </a>
 
         <!-- Tab Automotive -->
         <a href="{{ route('logbooks.index', ['folder' => 'automotive']) }}" 
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition shrink-0 border
-            {{ $activeFolder === 'automotive' ? 'bg-teal-600 text-white border-teal-600 shadow-sm shadow-teal-500/20' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition shrink-0 border
+            {{ $activeFolder === 'automotive' ? 'bg-blue-600 text-white border-blue-600 shadow-xs' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
             <span class="material-symbols-outlined text-[16px]">directions_car</span>
             <span>Automotive Archive</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] {{ $activeFolder === 'automotive' ? 'bg-white/20 text-white' : 'bg-teal-50 text-teal-700' }}">
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-mono {{ $activeFolder === 'automotive' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">
                 {{ $autoCount }}
             </span>
         </a>
 
         <!-- Tab Wire Harness -->
         <a href="{{ route('logbooks.index', ['folder' => 'wire_harness']) }}" 
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition shrink-0 border
-            {{ $activeFolder === 'wire_harness' ? 'bg-purple-600 text-white border-purple-600 shadow-sm shadow-purple-500/20' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition shrink-0 border
+            {{ $activeFolder === 'wire_harness' ? 'bg-blue-600 text-white border-blue-600 shadow-xs' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
             <span class="material-symbols-outlined text-[16px]">cable</span>
             <span>Wire Harness Archive</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] {{ $activeFolder === 'wire_harness' ? 'bg-white/20 text-white' : 'bg-purple-50 text-purple-700' }}">
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-mono {{ $activeFolder === 'wire_harness' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">
                 {{ $whCount }}
             </span>
         </a>
 
         <!-- Tab Held / MRB Review -->
         <a href="{{ route('logbooks.index', ['folder' => 'mrb_hold']) }}" 
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition shrink-0 border
-            {{ $activeFolder === 'mrb_hold' ? 'bg-amber-600 text-white border-amber-600 shadow-sm shadow-amber-500/20' : 'bg-white hover:bg-slate-50 text-amber-700 border-amber-200' }}">
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition shrink-0 border
+            {{ $activeFolder === 'mrb_hold' ? 'bg-blue-600 text-white border-blue-600 shadow-xs' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
             <span class="material-symbols-outlined text-[16px]">warning</span>
             <span>Held / MRB Review</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] {{ $activeFolder === 'mrb_hold' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-800' }} {{ $mrbHoldCount > 0 ? 'animate-pulse' : '' }}">
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-mono {{ $activeFolder === 'mrb_hold' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-800' }}">
                 {{ $mrbHoldCount }}
             </span>
         </a>
@@ -185,29 +168,29 @@
 
     <!-- 4. KPI Counters for Statuses -->
     <div class="grid grid-cols-2 sm:grid-cols-6 gap-3 text-center">
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
-            <span class="text-[10px] font-bold uppercase text-slate-400">Total Records</span>
-            <div class="text-xl font-black text-slate-800 mt-1">{{ $totalLogbooks }}</div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Records</span>
+            <div class="text-xl font-bold text-slate-900 mt-1 font-mono">{{ $totalLogbooks }}</div>
         </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
-            <span class="text-[10px] font-bold uppercase text-slate-500">Draft</span>
-            <div class="text-xl font-black text-slate-700 mt-1">{{ $draftCount }}</div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Draft</span>
+            <div class="text-xl font-bold text-slate-700 mt-1 font-mono">{{ $draftCount }}</div>
         </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-amber-200 shadow-xs bg-amber-50/30">
-            <span class="text-[10px] font-bold uppercase text-amber-700">Pending MRB</span>
-            <div class="text-xl font-black text-amber-600 mt-1">{{ $waitingMrbCount }}</div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600">Pending MRB</span>
+            <div class="text-xl font-bold text-amber-600 mt-1 font-mono">{{ $waitingMrbCount }}</div>
         </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-orange-200 shadow-xs bg-orange-50/30">
-            <span class="text-[10px] font-bold uppercase text-orange-700">Needs Revision</span>
-            <div class="text-xl font-black text-orange-600 mt-1 {{ $revisionCount > 0 ? 'animate-pulse' : '' }}">{{ $revisionCount }}</div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600">Needs Revision</span>
+            <div class="text-xl font-bold text-orange-600 mt-1 font-mono">{{ $revisionCount }}</div>
         </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-emerald-200 shadow-xs bg-emerald-50/30">
-            <span class="text-[10px] font-bold uppercase text-emerald-700">Accepted</span>
-            <div class="text-xl font-black text-emerald-600 mt-1">{{ $acceptedCount }}</div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Accepted</span>
+            <div class="text-xl font-bold text-emerald-600 mt-1 font-mono">{{ $acceptedCount }}</div>
         </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-rose-200 shadow-xs bg-rose-50/30">
-            <span class="text-[10px] font-bold uppercase text-rose-700">RTV / Scrap</span>
-            <div class="text-xl font-black text-rose-600 mt-1">{{ $rejectedCount }}</div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600">RTV / Scrap</span>
+            <div class="text-xl font-bold text-rose-600 mt-1 font-mono">{{ $rejectedCount }}</div>
         </div>
     </div>
 
