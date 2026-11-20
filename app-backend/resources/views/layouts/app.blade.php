@@ -306,13 +306,7 @@
                         </div>
                         <div>
                             <div class="text-xs font-bold text-slate-800 leading-tight">{{ $uName }}</div>
-                            <div class="text-[10px] text-slate-400 font-mono">Shift {{ auth()->user()->shift ?? '1' }}</div>
-                        </div>
-                    </div>
-                            <div class="text-xs font-bold text-slate-900 group-hover:text-indigo-600 transition">{{ ucfirst(auth()->user()->role ?? 'User') }} — {{ auth()->user()->name ?? 'User' }}</div>
-                            <div class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1.5 mt-0.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> NIK: {{ auth()->user()->nik ?? '-' }} • Online
-                            </div>
+                            <div class="text-[10px] text-slate-400 font-mono">Shift {{ auth()->user()->shift ?? '1' }} • {{ auth()->user()->nik ?? '-' }}</div>
                         </div>
                     </div>
                     
