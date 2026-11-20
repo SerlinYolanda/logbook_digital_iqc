@@ -4,9 +4,9 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">fact_check</span>
             </div>
             <div>
@@ -33,7 +33,7 @@
 
     <!-- Alert Banner if Logbook is Under Revision -->
     @if($logbook->status === 'perlu_revisi')
-    <div class="p-5 rounded-3xl bg-amber-50 border border-amber-300 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div class="p-5 rounded-xl bg-amber-50 border border-amber-300 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div class="flex items-start gap-3">
             <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 mt-0.5">
                 <span class="material-symbols-outlined text-[22px]">edit_note</span>
@@ -54,9 +54,9 @@
     @endif
 
     <!-- Material & Inspection Overview Card -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-[16px]">info</span>
                 Material Data & Standard Specifications
             </span>
@@ -109,9 +109,9 @@
     <!-- Visual & Shelf-Life Verification Results -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Visual & Packaging Checklist Results -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-[16px]">visibility</span>
                     Visual & Packaging Verification
                 </span>
@@ -165,9 +165,9 @@
         </div>
 
         <!-- Shelf-Life & Expiry Verification Results -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-[16px]">event_available</span>
                     Shelf-Life & Expiration Status
                 </span>
@@ -220,10 +220,10 @@
     </div>
 
     <!-- Parameter Measurements Results Table -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <div class="flex items-center justify-between">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                <span class="material-symbols-outlined text-indigo-600">straighten</span>
+                <span class="material-symbols-outlined text-blue-600">straighten</span>
                 Sample Measurements vs Nominal Tolerances
             </h3>
         </div>
@@ -254,7 +254,7 @@
                         <td class="py-3 px-3 text-center font-mono font-bold text-slate-700">{{ $param->nominal !== null ? number_format($param->nominal, 2) : '-' }}</td>
                         <td class="py-3 px-3 text-center font-mono text-slate-500">{{ $param->batas_min !== null ? number_format($param->batas_min, 2) : '-' }}</td>
                         <td class="py-3 px-3 text-center font-mono text-slate-500">{{ $param->batas_max !== null ? number_format($param->batas_max, 2) : '-' }}</td>
-                        <td class="py-3 px-3 text-center font-mono text-indigo-600 font-bold">{{ $param->satuan }}</td>
+                        <td class="py-3 px-3 text-center font-mono text-blue-600 font-bold">{{ $param->satuan }}</td>
                         @for($s = 1; $s <= $logbook->qty_sampel; $s++)
                             @php $m = $paramMeasurements->where('sample_number', $s)->first(); @endphp
                             <td class="py-3 px-3 text-center font-mono">
@@ -287,7 +287,7 @@
     </div>
 
     <!-- Section: Quality Non-Conformance, Defects & NEST Escalation -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-5">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-5">
         <!-- Section Header with Inspector Quick Actions -->
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-3">
             <div>
@@ -328,7 +328,7 @@
             </div>
             @if($logbook->nestProcess->bukti_pendukung)
             <div class="text-xs pt-0.5">
-                <a href="{{ asset('storage/' . $logbook->nestProcess->bukti_pendukung) }}" target="_blank" class="inline-flex items-center gap-1 text-indigo-600 hover:underline font-bold">
+                <a href="{{ asset('storage/' . $logbook->nestProcess->bukti_pendukung) }}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 hover:underline font-bold">
                     <span class="material-symbols-outlined text-[16px]">attachment</span>
                     <span>Open Supporting Evidence Document</span>
                 </a>
@@ -407,7 +407,7 @@
 
                 <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between">
                     @if($defect->foto_bukti)
-                        <a href="{{ asset('storage/' . $defect->foto_bukti) }}" target="_blank" class="inline-flex items-center gap-1 text-xs text-indigo-600 hover:underline font-bold">
+                        <a href="{{ asset('storage/' . $defect->foto_bukti) }}" target="_blank" class="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline font-bold">
                             <span class="material-symbols-outlined text-[14px]">image</span>
                             <span>View Photo Evidence</span>
                         </a>
@@ -442,7 +442,7 @@
     </div>
 
     <!-- Section: Supervisor MRB Dispositions History -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span class="material-symbols-outlined text-purple-600">gavel</span>
             Material Review Board (MRB) Dispositions
@@ -453,7 +453,7 @@
             <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2">
                 <div class="flex justify-between items-center text-xs">
                     <span class="font-bold text-slate-800">
-                        Disposition: <span class="text-indigo-600 font-black">{{ $disp->decision_label }}</span>
+                        Disposition: <span class="text-blue-600 font-black">{{ $disp->decision_label }}</span>
                     </span>
                     <span class="text-slate-400 font-mono">{{ $disp->diputuskan_pada ? $disp->diputuskan_pada->format('d/m/Y H:i') : '-' }}</span>
                 </div>
@@ -477,7 +477,7 @@
 
 <!-- Modal Record Defect -->
 <div id="addDefectModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-600">bug_report</span>
@@ -539,7 +539,7 @@
 
 <!-- Modal Submit NEST Escalation -->
 <div id="nestModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber-600">track_changes</span>

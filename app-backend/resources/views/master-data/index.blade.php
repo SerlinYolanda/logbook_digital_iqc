@@ -4,9 +4,9 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">database</span>
             </div>
             <div>
@@ -17,17 +17,17 @@
 
         <div class="flex items-center gap-2">
             @if($tab === 'parts')
-            <button type="button" onclick="document.getElementById('addPartModal').classList.remove('hidden')" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-500/20 transition flex items-center gap-1.5 cursor-pointer">
+            <button type="button" onclick="document.getElementById('addPartModal').classList.remove('hidden')" class="px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>+ Add Master Part</span>
             </button>
             @elseif($tab === 'suppliers')
-            <button type="button" onclick="document.getElementById('addSupplierModal').classList.remove('hidden')" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-500/20 transition flex items-center gap-1.5 cursor-pointer">
+            <button type="button" onclick="document.getElementById('addSupplierModal').classList.remove('hidden')" class="px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>+ Add Supplier</span>
             </button>
             @else
-            <button type="button" onclick="document.getElementById('addDefectCategoryModal').classList.remove('hidden')" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-500/20 transition flex items-center gap-1.5 cursor-pointer">
+            <button type="button" onclick="document.getElementById('addDefectCategoryModal').classList.remove('hidden')" class="px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>+ Add Defect Category</span>
             </button>
@@ -39,19 +39,19 @@
     <div class="flex items-center gap-2 border-b border-slate-200">
         <a href="{{ route('master-data.index', ['tab' => 'parts']) }}" 
             class="px-5 py-3 text-xs font-bold transition border-b-2 flex items-center gap-2
-            {{ $tab === 'parts' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
+            {{ $tab === 'parts' ? 'border-indigo-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
             <span class="material-symbols-outlined text-[18px]">category</span>
             <span>Master Parts & Parameters ({{ $parts->total() }})</span>
         </a>
         <a href="{{ route('master-data.index', ['tab' => 'suppliers']) }}" 
             class="px-5 py-3 text-xs font-bold transition border-b-2 flex items-center gap-2
-            {{ $tab === 'suppliers' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
+            {{ $tab === 'suppliers' ? 'border-indigo-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
             <span class="material-symbols-outlined text-[18px]">store</span>
             <span>Master Suppliers & Vendors ({{ $suppliers->total() }})</span>
         </a>
         <a href="{{ route('master-data.index', ['tab' => 'defects']) }}" 
             class="px-5 py-3 text-xs font-bold transition border-b-2 flex items-center gap-2
-            {{ $tab === 'defects' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
+            {{ $tab === 'defects' ? 'border-indigo-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
             <span class="material-symbols-outlined text-[18px]">bug_report</span>
             <span>Defect Categories Taxonomy ({{ $defectCategories->total() }})</span>
         </a>
@@ -59,7 +59,7 @@
 
     <!-- TAB 1: PARTS & PARAMETERS -->
     @if($tab === 'parts')
-    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
@@ -76,7 +76,7 @@
                 <tbody class="divide-y divide-slate-100">
                     @forelse($parts as $part)
                     <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono font-bold text-indigo-600">
+                        <td class="py-3.5 px-4 font-mono font-bold text-blue-600">
                             {{ $part->kode_part }}
                         </td>
                         <td class="py-3.5 px-4">
@@ -108,7 +108,7 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <button type="button" onclick="openAddParamModal({{ $part->id }}, '{{ $part->kode_part }}')" class="mt-1 text-[10px] font-bold text-indigo-600 hover:underline cursor-pointer">
+                            <button type="button" onclick="openAddParamModal({{ $part->id }}, '{{ $part->kode_part }}')" class="mt-1 text-[10px] font-bold text-blue-600 hover:underline cursor-pointer">
                                 + Add Parameter
                             </button>
                         </td>
@@ -116,7 +116,7 @@
                             {{ $part->receivings_count }} Lots
                         </td>
                         <td class="py-3.5 px-4 text-right">
-                            <button type="button" onclick="openEditPartModal({{ json_encode($part) }})" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 transition cursor-pointer" title="Edit Part">
+                            <button type="button" onclick="openEditPartModal({{ json_encode($part) }})" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 transition cursor-pointer" title="Edit Part">
                                 <span class="material-symbols-outlined text-[16px]">edit</span>
                             </button>
                         </td>
@@ -137,7 +137,7 @@
 
     <!-- TAB 2: SUPPLIERS -->
     @if($tab === 'suppliers')
-    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
@@ -154,7 +154,7 @@
                 <tbody class="divide-y divide-slate-100">
                     @forelse($suppliers as $sup)
                     <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono font-bold text-indigo-600">
+                        <td class="py-3.5 px-4 font-mono font-bold text-blue-600">
                             {{ $sup->kode_supplier }}
                         </td>
                         <td class="py-3.5 px-4 font-bold text-slate-800">
@@ -176,7 +176,7 @@
                             {{ $sup->receivings_count }} Lots
                         </td>
                         <td class="py-3.5 px-4 text-right">
-                            <button type="button" onclick="openEditSupplierModal({{ json_encode($sup) }})" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 transition cursor-pointer" title="Edit Supplier">
+                            <button type="button" onclick="openEditSupplierModal({{ json_encode($sup) }})" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 transition cursor-pointer" title="Edit Supplier">
                                 <span class="material-symbols-outlined text-[16px]">edit</span>
                             </button>
                         </td>
@@ -197,7 +197,7 @@
 
     <!-- TAB 3: DEFECT CATEGORIES -->
     @if($tab === 'defects')
-    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
@@ -225,7 +225,7 @@
                             {{ $cat->defects_count }} Occurrences
                         </td>
                         <td class="py-3.5 px-4 text-right">
-                            <button type="button" onclick="openEditDefectModal({{ json_encode($cat) }})" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 transition cursor-pointer" title="Edit Category">
+                            <button type="button" onclick="openEditDefectModal({{ json_encode($cat) }})" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 transition cursor-pointer" title="Edit Category">
                                 <span class="material-symbols-outlined text-[16px]">edit</span>
                             </button>
                         </td>
@@ -248,7 +248,7 @@
 
 <!-- Modal Tambah Part -->
 <div id="addPartModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900">Add New Master Part</h3>
             <button type="button" onclick="document.getElementById('addPartModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
@@ -289,7 +289,7 @@
             </div>
             <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
                 <button type="button" onclick="document.getElementById('addPartModal').classList.add('hidden')" class="px-4 py-2 rounded-xl text-slate-600 text-xs font-bold hover:bg-slate-100 cursor-pointer">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer">Save Part</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer">Save Part</button>
             </div>
         </form>
     </div>
@@ -297,9 +297,9 @@
 
 <!-- Modal Tambah Parameter Uji -->
 <div id="addParamModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 class="text-base font-bold text-slate-900">Add Parameter: <span id="addParamPartCode" class="font-mono text-indigo-600"></span></h3>
+            <h3 class="text-base font-bold text-slate-900">Add Parameter: <span id="addParamPartCode" class="font-mono text-blue-600"></span></h3>
             <button type="button" onclick="document.getElementById('addParamModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
                 <span class="material-symbols-outlined">close</span>
             </button>
@@ -330,7 +330,7 @@
             </div>
             <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
                 <button type="button" onclick="document.getElementById('addParamModal').classList.add('hidden')" class="px-4 py-2 rounded-xl text-slate-600 text-xs font-bold hover:bg-slate-100 cursor-pointer">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer">Save Parameter</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer">Save Parameter</button>
             </div>
         </form>
     </div>
@@ -338,7 +338,7 @@
 
 <!-- Modal Tambah Supplier -->
 <div id="addSupplierModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900">Add New Supplier Partner</h3>
             <button type="button" onclick="document.getElementById('addSupplierModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
@@ -371,7 +371,7 @@
             </div>
             <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
                 <button type="button" onclick="document.getElementById('addSupplierModal').classList.add('hidden')" class="px-4 py-2 rounded-xl text-slate-600 text-xs font-bold hover:bg-slate-100 cursor-pointer">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer">Save Supplier</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer">Save Supplier</button>
             </div>
         </form>
     </div>
@@ -379,7 +379,7 @@
 
 <!-- Modal Tambah Kategori Defect -->
 <div id="addDefectCategoryModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900">Add New Defect Category</h3>
             <button type="button" onclick="document.getElementById('addDefectCategoryModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
@@ -402,7 +402,7 @@
             </div>
             <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
                 <button type="button" onclick="document.getElementById('addDefectCategoryModal').classList.add('hidden')" class="px-4 py-2 rounded-xl text-slate-600 text-xs font-bold hover:bg-slate-100 cursor-pointer">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer">Save Category</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer">Save Category</button>
             </div>
         </form>
     </div>

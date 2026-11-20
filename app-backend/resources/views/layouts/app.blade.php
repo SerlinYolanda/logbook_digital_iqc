@@ -110,14 +110,14 @@
 <body class="h-full flex font-sans bg-slate-50 text-slate-800 overflow-hidden">
 
     <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col z-30 shrink-0 h-full hidden md:flex">
-        <div class="h-16 flex items-center px-4 border-b border-slate-800 shrink-0">
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col z-30 shrink-0 h-full hidden md:flex border-r border-slate-800">
+        <div class="h-14 flex items-center px-4 border-b border-slate-800 shrink-0">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-3 w-full">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shrink-0">
-                    <span class="material-symbols-outlined text-white icon-xl">memory</span>
+                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white text-xs tracking-wider shadow-sm shrink-0">
+                    IQC
                 </div>
                 <div class="overflow-hidden">
-                    <div class="font-bold text-sm tracking-tight text-white truncate">LOGBOOK DIGITAL IQC</div>
+                    <div class="font-bold text-xs tracking-wider text-white uppercase">LOGBOOK DIGITAL IQC</div>
                     @php
                         $user = auth()->user();
                         $role = $user->role ?? 'inspector_ee';
@@ -140,7 +140,7 @@
                             default => 'bg-indigo-400',
                         };
                     @endphp
-                    <div class="text-[9px] text-slate-300 font-bold tracking-wider truncate flex items-center gap-1.5 mt-0.5 uppercase">
+                    <div class="text-[9px] text-slate-400 font-semibold tracking-wider truncate flex items-center gap-1.5 mt-0.5">
                         <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }}"></span> {{ $commLabel }}
                     </div>
                 </div>
@@ -153,98 +153,88 @@
             $myRevisionCount = $user && $user->isInspector() ? \App\Models\Logbook::where('inspector_id', $user->id)->where('status', 'perlu_revisi')->count() : 0;
         @endphp
 
-        <nav class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 flex flex-col gap-1.5">
-            <div class="px-3 py-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Main Navigation</div>
+        <nav class="flex-1 overflow-y-auto custom-scrollbar py-3 px-3 flex flex-col gap-1">
+            <div class="px-3 pt-2 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Main Navigation</div>
             
             {{-- Dashboard: visible to ALL roles --}}
-            <a href="{{ route('dashboard') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">dashboard</span> Dashboard
-                @if(request()->routeIs('dashboard')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            <a href="{{ route('dashboard') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">dashboard</span> Dashboard
             </a>
 
             {{-- 1. INSPECTOR IQC MENUS --}}
             @if($user && ($user->isInspector() || $user->isSupervisor()))
-            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Quality Inspection</div>
+            <div class="px-3 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Quality Inspection</div>
 
             @if($user->isInspector())
-            <a href="{{ route('logbooks.create') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('logbooks.create') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">assignment</span> Inspection Logbook
-                @if(request()->routeIs('logbooks.create')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            <a href="{{ route('logbooks.create') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('logbooks.create') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">assignment</span> Inspection Logbook
             </a>
             @endif
 
-            <a href="{{ route('logbooks.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('logbooks.index', 'logbooks.show', 'logbooks.edit') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">history_edu</span> Logbook History
+            <a href="{{ route('logbooks.index') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('logbooks.index', 'logbooks.show', 'logbooks.edit') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">history_edu</span> Logbook History
                 @if($myRevisionCount > 0)
-                    <span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-bounce">
+                    <span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-2 py-0.2 rounded-full">
                         {{ $myRevisionCount }} Revisions
                     </span>
                 @endif
-                @if(request()->routeIs('logbooks.index')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
             @endif
 
             {{-- 2. SUPERVISOR IQC MENUS --}}
             @if($user && $user->isSupervisor())
-            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Supervision & MRB</div>
+            <div class="px-3 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Supervision & MRB</div>
 
-            <a href="{{ route('supervisor.mrb.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('supervisor.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">gavel</span> MRB Disposition
+            <a href="{{ route('supervisor.mrb.index') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('supervisor.*') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">gavel</span> MRB Disposition
                 @if($pendingMrbCount > 0)
-                    <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs animate-pulse">
+                    <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-2 py-0.2 rounded-full">
                         {{ $pendingMrbCount }}
                     </span>
                 @endif
-                @if(request()->routeIs('supervisor.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
 
-            <a href="{{ route('reports.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('reports.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">bar_chart</span> Summary Reports
-                @if(request()->routeIs('reports.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            <a href="{{ route('reports.index') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('reports.*') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">bar_chart</span> Summary Reports
             </a>
             @endif
 
             {{-- 3. MASTER DATA / LOGISTIK MENUS --}}
             @if($user && ($user->isMasterData() || $user->isAdmin()))
-            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Logistics & Master Data</div>
+            <div class="px-3 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Logistics & Master Data</div>
 
-            <a href="{{ route('receivings.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('receivings.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">conveyor_belt</span> Inbound GRN Queue
+            <a href="{{ route('receivings.index') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('receivings.*') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">conveyor_belt</span> Inbound GRN Queue
                 @if($waitingGrnCount > 0)
-                    <span class="ml-auto bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                    <span class="ml-auto bg-blue-500 text-white text-[10px] font-bold px-2 py-0.2 rounded-full">
                         {{ $waitingGrnCount }}
                     </span>
                 @endif
-                @if(request()->routeIs('receivings.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
             </a>
 
-            <a href="{{ route('master-data.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('master-data.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">database</span> Master Data
-                @if(request()->routeIs('master-data.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            <a href="{{ route('master-data.index') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('master-data.*') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">database</span> Master Data
             </a>
             @endif
 
             {{-- 4. TRACEABILITY (Inspector, Supervisor, Logistik) --}}
             @if($user && ($user->isInspector() || $user->isSupervisor() || $user->isMasterData()))
-            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Quality Traceability</div>
-            <a href="{{ route('traceability.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('traceability.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">search_check</span> Material Traceability
-                @if(request()->routeIs('traceability.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            <div class="px-3 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Quality Traceability</div>
+            <a href="{{ route('traceability.index') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('traceability.*') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">search_check</span> Material Traceability
             </a>
             @endif
 
             {{-- 5. ADMIN SISTEM MENUS --}}
             @if($user && $user->isAdmin())
-            <div class="px-3 py-2 mt-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase">System & Security</div>
+            <div class="px-3 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">System & Security</div>
 
-            <a href="{{ route('admin.users.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('admin.users.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">manage_accounts</span> User Accounts
-                @if(request()->routeIs('admin.users.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            <a href="{{ route('admin.users.index') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('admin.users.*') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">manage_accounts</span> User Accounts
             </a>
 
-            <a href="{{ route('admin.audit-trails.index') }}" class="px-3.5 py-2.5 text-sm rounded-xl transition-all duration-200 flex items-center gap-3 {{ request()->routeIs('admin.audit-trails.*') ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-600/30 font-semibold relative' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium' }}">
-                <span class="material-symbols-outlined icon-sm">security</span> Audit Trail
-                @if(request()->routeIs('admin.audit-trails.*')) <span class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span> @endif
+            <a href="{{ route('admin.audit-trails.index') }}" class="px-3 py-2 text-xs rounded-lg transition flex items-center gap-2.5 {{ request()->routeIs('admin.audit-trails.*') ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' }}">
+                <span class="material-symbols-outlined text-[18px]">security</span> Audit Trail
             </a>
             @endif
         </nav>
@@ -257,13 +247,10 @@
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col h-full overflow-hidden w-full">
-        <!-- New Top Header based on mockup -->
-        <header class="h-16 border-b border-slate-200 bg-white px-6 flex items-center justify-between shrink-0 hidden md:flex">
-            <div class="flex items-center gap-3 text-sm font-semibold text-slate-900">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-indigo-600 icon-md">memory</span>
-                    <span>IQC Digital Logbook</span>
-                </div>
+        <!-- Top Header: Clean Corporate Navigation -->
+        <header class="h-14 border-b border-slate-200 bg-white px-6 flex items-center justify-between shrink-0 hidden md:flex">
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+                <span class="font-medium text-slate-400">Portal</span>
                 <span class="text-slate-300">/</span>
                 @php
                     $currentPageLabel = match(true) {
@@ -280,36 +267,36 @@
                         default => 'Portal',
                     };
                 @endphp
-                <div class="bg-indigo-50/80 text-indigo-700 px-3 py-1 rounded-lg text-xs font-bold border border-indigo-100 flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }}"></span>
-                    {{ $currentPageLabel }}
-                </div>
+                <span class="font-bold text-slate-900">{{ $currentPageLabel }}</span>
             </div>
             
-            <div class="flex items-center gap-6">
+            <div class="flex items-center gap-5">
                 <!-- Date -->
-                <div class="flex items-center gap-2 text-slate-500">
-                    <span class="material-symbols-outlined icon-sm">calendar_today</span>
-                    <span class="text-xs font-semibold">{{ now()->translatedFormat('d F Y') }}</span>
+                <div class="flex items-center gap-1.5 text-slate-500 text-xs font-medium">
+                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                    <span>{{ now()->translatedFormat('d F Y') }}</span>
                 </div>
 
+                <span class="h-4 w-px bg-slate-200"></span>
+
                 <!-- Active Role Badge -->
-                <div class="flex items-center gap-2 text-xs border border-indigo-100/80 rounded-xl bg-indigo-50/60 px-3 py-1.5 shadow-xs">
-                    <span class="w-2 h-2 rounded-full {{ $dotColor }} animate-pulse"></span>
-                    <span class="font-medium text-slate-500">Role:</span>
-                    <span class="font-bold text-indigo-700">{{ auth()->user()->role_label ?? 'Inspector' }}</span>
+                <div class="flex items-center gap-1.5 text-xs text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }}"></span>
+                    <span>{{ auth()->user()->role_label ?? 'Inspector' }}</span>
                 </div>
+
                 <!-- Notif -->
-                <div class="relative cursor-pointer p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition">
-                    <span class="material-symbols-outlined icon-md">notifications</span>
+                <div class="relative cursor-pointer p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition">
+                    <span class="material-symbols-outlined text-[20px]">notifications</span>
                     @if($pendingMrbCount > 0)
-                        <span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-white animate-pulse"></span>
+                        <span class="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-rose-500"></span>
                     @endif
                 </div>
+
                 <!-- Profile Dropdown -->
-                <div class="relative group cursor-pointer pl-4 border-l border-slate-200/80">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-500 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-indigo-600/20 group-hover:scale-105 transition-transform">
+                <div class="relative group cursor-pointer pl-3 border-l border-slate-200">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-slate-800 text-white flex items-center justify-center text-xs font-bold shrink-0">
                             @php
                                 $uName = auth()->user()->name ?? 'User';
                                 $uWords = explode(' ', trim($uName));
@@ -318,6 +305,10 @@
                             {{ $uInitials }}
                         </div>
                         <div>
+                            <div class="text-xs font-bold text-slate-800 leading-tight">{{ $uName }}</div>
+                            <div class="text-[10px] text-slate-400 font-mono">Shift {{ auth()->user()->shift ?? '1' }}</div>
+                        </div>
+                    </div>
                             <div class="text-xs font-bold text-slate-900 group-hover:text-indigo-600 transition">{{ ucfirst(auth()->user()->role ?? 'User') }} — {{ auth()->user()->name ?? 'User' }}</div>
                             <div class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1.5 mt-0.5">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> NIK: {{ auth()->user()->nik ?? '-' }} • Online

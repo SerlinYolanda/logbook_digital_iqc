@@ -4,7 +4,7 @@
 <div class="max-w-4xl mx-auto space-y-6">
 
     <!-- Main Profile Card -->
-    <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-200">
+    <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200">
         <!-- Cover Banner -->
         <div class="h-32 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 w-full relative">
             <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 16px 16px;"></div>
@@ -18,8 +18,8 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-5">
                     <!-- Avatar Badge (Negative margin ONLY on the avatar itself) -->
-                    <div class="-mt-16 w-24 h-24 rounded-3xl bg-white p-1.5 shadow-xl border-2 border-white ring-1 ring-slate-200/80 shrink-0">
-                        <div class="w-full h-full bg-gradient-to-tr from-indigo-600 to-blue-500 rounded-2xl text-white flex items-center justify-center text-3xl font-black tracking-tight shadow-inner">
+                    <div class="-mt-16 w-24 h-24 rounded-xl bg-white p-1.5 shadow-xl border-2 border-white ring-1 ring-slate-200/80 shrink-0">
+                        <div class="w-full h-full bg-blue-600 rounded-2xl text-white flex items-center justify-center text-3xl font-black tracking-tight shadow-inner">
                             @php
                                 $name = auth()->user()->name ?? 'User';
                                 $words = explode(' ', trim($name));
@@ -74,7 +74,7 @@
                 <div class="p-3.5 bg-white rounded-xl border border-slate-200/60 shadow-xs">
                     <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">POSITION / ROLE</label>
                     <div class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-indigo-600 text-[18px]">badge</span> 
+                        <span class="material-symbols-outlined text-blue-600 text-[18px]">badge</span> 
                         <span>{{ ucfirst(auth()->user()->role ?? 'Inspector') }}</span>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
             <!-- Recent Activity Container -->
             <div class="mt-6 border border-slate-200 rounded-2xl p-5 bg-white shadow-xs">
                 <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-indigo-600 text-[18px]">history</span>
+                    <span class="material-symbols-outlined text-blue-600 text-[18px]">history</span>
                     <span>Recent System & Audit Activity</span>
                 </h3>
                 <div class="space-y-3.5">
@@ -116,7 +116,7 @@
                     </div>
                     <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50 border border-slate-100">
                         <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 mt-0.5">
-                            <span class="material-symbols-outlined text-indigo-600 text-[16px]">fact_check</span>
+                            <span class="material-symbols-outlined text-blue-600 text-[16px]">fact_check</span>
                         </div>
                         <div>
                             <p class="text-xs font-bold text-slate-800 leading-tight">IQC Quality Authorization Status</p>

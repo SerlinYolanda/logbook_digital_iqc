@@ -4,9 +4,9 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">manage_accounts</span>
             </div>
             <div>
@@ -16,7 +16,7 @@
         </div>
 
         <button type="button" onclick="document.getElementById('addUserModal').classList.remove('hidden')"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition cursor-pointer">
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition cursor-pointer">
             <span class="material-symbols-outlined text-[18px]">person_add</span>
             <span>+ Create New Account</span>
         </button>
@@ -34,7 +34,7 @@
         </div>
         <div class="bg-white p-3.5 rounded-2xl border border-indigo-200 bg-indigo-50/30">
             <span class="text-[10px] font-bold uppercase text-indigo-700">Admin</span>
-            <div class="text-xl font-black text-indigo-600 mt-1">{{ $rolesCount['admin'] }}</div>
+            <div class="text-xl font-black text-blue-600 mt-1">{{ $rolesCount['admin'] }}</div>
         </div>
         <div class="bg-white p-3.5 rounded-2xl border border-blue-200 bg-blue-50/30">
             <span class="text-[10px] font-bold uppercase text-blue-700">Logistics</span>
@@ -55,7 +55,7 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs">
+    <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-xs">
         <form method="GET" action="{{ route('admin.users.index') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
             <div>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search Name, NIK, Employee ID, Email..." 
@@ -91,7 +91,7 @@
     </div>
 
     <!-- Users Table -->
-    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
@@ -135,7 +135,7 @@
                             </span>
                         </td>
                         <td class="py-3.5 px-4 text-right space-x-1 whitespace-nowrap">
-                            <button type="button" onclick="openEditUserModal({{ json_encode($u) }})" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 transition cursor-pointer" title="Edit Account">
+                            <button type="button" onclick="openEditUserModal({{ json_encode($u) }})" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 transition cursor-pointer" title="Edit Account">
                                 <span class="material-symbols-outlined text-[16px]">edit</span>
                             </button>
 
@@ -166,10 +166,10 @@
 
 <!-- Modal Buat Akun Baru -->
 <div id="addUserModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                <span class="material-symbols-outlined text-indigo-600">person_add</span>
+                <span class="material-symbols-outlined text-blue-600">person_add</span>
                 Create New User Account
             </h3>
             <button type="button" onclick="document.getElementById('addUserModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
@@ -229,7 +229,7 @@
 
             <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
                 <button type="button" onclick="document.getElementById('addUserModal').classList.add('hidden')" class="px-4 py-2 rounded-xl text-slate-600 text-xs font-bold hover:bg-slate-100 cursor-pointer">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer">Save Account</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer">Save Account</button>
             </div>
         </form>
     </div>
@@ -237,9 +237,9 @@
 
 <!-- Modal Edit Akun -->
 <div id="editUserModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 class="text-base font-bold text-slate-900">Update User Account: <span id="editUserNik" class="font-mono text-indigo-600"></span></h3>
+            <h3 class="text-base font-bold text-slate-900">Update User Account: <span id="editUserNik" class="font-mono text-blue-600"></span></h3>
             <button type="button" onclick="document.getElementById('editUserModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
                 <span class="material-symbols-outlined">close</span>
             </button>
@@ -301,7 +301,7 @@
 
             <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
                 <button type="button" onclick="document.getElementById('editUserModal').classList.add('hidden')" class="px-4 py-2 rounded-xl text-slate-600 text-xs font-bold hover:bg-slate-100 cursor-pointer">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer">Save Changes</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer">Save Changes</button>
             </div>
         </form>
     </div>

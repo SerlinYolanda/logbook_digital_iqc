@@ -4,9 +4,9 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- 1. Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-500 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">folder_managed</span>
             </div>
             <div>
@@ -22,7 +22,7 @@
 
         <div class="flex items-center gap-3">
             @if(auth()->user()->isInspector())
-            <a href="{{ route('logbooks.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition">
+            <a href="{{ route('logbooks.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>Record New Logbook</span>
             </a>
@@ -32,7 +32,7 @@
 
     <!-- 2. Direct Inspection Bar: Quick GR / Lot Lookup -->
     @if(auth()->user()->isInspector() || auth()->user()->isAdmin())
-    <div class="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl overflow-hidden border border-indigo-500/30">
+    <div class="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-6 sm:p-8 text-white shadow-xl overflow-hidden border border-indigo-500/30">
         <!-- Background Glow Decor -->
         <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -43,7 +43,7 @@
                     <span class="text-xs font-bold uppercase tracking-wider text-indigo-300">Fast Inbound Quality Gate &bull; Poka-Yoke Validated</span>
                 </div>
                 <div class="flex items-center gap-4">
-                    <div class="w-13 h-13 rounded-2xl bg-indigo-600/30 text-indigo-300 border border-indigo-400/30 flex items-center justify-center shadow-inner shrink-0">
+                    <div class="w-13 h-13 rounded-2xl bg-blue-600/30 text-indigo-300 border border-indigo-400/30 flex items-center justify-center shadow-inner shrink-0">
                         <span class="material-symbols-outlined text-[28px]">qr_code_scanner</span>
                     </div>
                     <div>
@@ -66,7 +66,7 @@
                         class="w-full pl-11 pr-4 py-4 rounded-2xl bg-white text-slate-900 placeholder:text-slate-400 font-mono text-sm font-bold border-0 focus:ring-4 focus:ring-indigo-400 shadow-inner transition">
                 </div>
                 <button type="submit" 
-                    class="px-7 py-4 rounded-2xl bg-indigo-500 hover:bg-indigo-600 text-white font-black text-sm shrink-0 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 cursor-pointer">
+                    class="px-7 py-4 rounded-2xl bg-indigo-500 hover:bg-blue-600 text-white font-black text-sm shrink-0 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 cursor-pointer">
                     <span class="material-symbols-outlined text-[20px]">search</span>
                     <span>Find GR</span>
                     <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -77,7 +77,7 @@
     @endif
 
     <!-- 3. Logbook Running Lifecycle Stage Pipeline (Visual Guide) -->
-    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-5 text-white shadow-md relative overflow-hidden">
         <div class="flex items-center justify-between gap-4 flex-wrap pb-3 border-b border-indigo-900/60 text-xs">
             <span class="font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-[16px]">alt_route</span>
@@ -89,7 +89,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mt-4 text-xs">
             <!-- Stage 1 -->
             <div class="bg-white/5 rounded-2xl p-3 border border-white/10 flex items-start gap-3">
-                <div class="w-7 h-7 rounded-xl bg-indigo-600/60 text-white flex items-center justify-center font-bold text-xs shrink-0">1</div>
+                <div class="w-7 h-7 rounded-xl bg-blue-600/60 text-white flex items-center justify-center font-bold text-xs shrink-0">1</div>
                 <div>
                     <div class="font-bold text-slate-200">Inbound & FIFO Queue</div>
                     <div class="text-[11px] text-slate-400 mt-0.5">Logistics registers GR. Queue aging tracked (Normal &lt;12h, Priority &lt;24h, Overdue).</div>
@@ -130,7 +130,7 @@
         <!-- Tab All -->
         <a href="{{ route('logbooks.index', ['folder' => 'all']) }}" 
             class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition shrink-0 border
-            {{ $activeFolder === 'all' ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-500/20' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
+            {{ $activeFolder === 'all' ? 'bg-blue-600 text-white border-indigo-600 shadow-sm shadow-indigo-500/20' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}">
             <span class="material-symbols-outlined text-[16px]">folder</span>
             <span>All Archives</span>
             <span class="px-2 py-0.5 rounded-full text-[10px] {{ $activeFolder === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">
@@ -212,7 +212,7 @@
     </div>
 
     <!-- 5. Filters & Search Toolbar -->
-    <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs space-y-3">
+    <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-xs space-y-3">
         <form id="filterForm" method="GET" action="{{ route('logbooks.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
             <input type="hidden" name="folder" id="folderInput" value="{{ $activeFolder }}">
             
@@ -335,7 +335,7 @@
     </div>
 
     <!-- 6. Table of Logbooks (Redesigned & Neater) -->
-    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div class="px-5 py-3.5 bg-slate-50/50 border-b border-slate-200/80 flex items-center justify-between text-xs text-slate-500">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-[16px] text-slate-400">table_rows</span>
@@ -389,7 +389,7 @@
                         data-search="{{ $searchPayload }}">
                         <!-- GRN & Lot -->
                         <td class="py-3.5 px-4">
-                            <span class="font-mono font-bold text-indigo-600 text-sm block">{{ $rcv->no_grn_iqa ?? '-' }}</span>
+                            <span class="font-mono font-bold text-blue-600 text-sm block">{{ $rcv->no_grn_iqa ?? '-' }}</span>
                             <div class="text-[10px] text-slate-400 font-mono mt-0.5">Lot: <b class="text-slate-600">{{ $rcv->no_lot ?? '-' }}</b></div>
                             <div class="text-[10px] text-slate-400 font-mono">PO: {{ $rcv->no_po ?? '-' }}</div>
                             <div class="text-[10px] text-slate-500 flex items-center gap-1 mt-1 font-sans">

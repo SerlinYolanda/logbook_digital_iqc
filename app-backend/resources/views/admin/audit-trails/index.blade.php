@@ -4,9 +4,9 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">security</span>
             </div>
             <div>
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs">
+    <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-xs">
         <form method="GET" action="{{ route('admin.audit-trails.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Search Object / Details / IP:</label>
@@ -74,7 +74,7 @@
     </div>
 
     <!-- Audit Trails Table -->
-    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>

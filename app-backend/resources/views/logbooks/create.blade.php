@@ -4,9 +4,9 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">assignment</span>
             </div>
             <div>
@@ -33,13 +33,13 @@
     <div class="space-y-6">
 
         <!-- Prominent High-Visibility Quick Barcode Scanner Banner -->
-        <div class="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl overflow-hidden border border-indigo-500/30">
+        <div class="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-6 sm:p-8 text-white shadow-xl overflow-hidden border border-indigo-500/30">
             <!-- Background Glow Decor -->
             <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="relative z-10 space-y-4">
                 <div class="flex items-start gap-4">
-                    <div class="w-14 h-14 rounded-2xl bg-indigo-600/30 text-indigo-300 border border-indigo-400/30 flex items-center justify-center shadow-inner shrink-0">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-600/30 text-indigo-300 border border-indigo-400/30 flex items-center justify-center shadow-inner shrink-0">
                         <span class="material-symbols-outlined text-[30px]">qr_code_scanner</span>
                     </div>
                     <div>
@@ -71,7 +71,7 @@
                         @endif
                     </div>
                     <button type="submit" 
-                        class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-indigo-500 hover:bg-indigo-600 text-white font-black text-sm sm:text-base shrink-0 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 cursor-pointer">
+                        class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-indigo-500 hover:bg-blue-600 text-white font-black text-sm sm:text-base shrink-0 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 cursor-pointer">
                         <span class="material-symbols-outlined text-[20px]">search</span>
                         <span>Find GR</span>
                         <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -93,11 +93,11 @@
             <div class="h-px bg-slate-200 flex-1"></div>
         </div>
 
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between gap-4 flex-wrap pb-2 border-b border-slate-100">
                 <div>
                     @if(request('search'))
-                        <h3 class="text-base font-bold text-slate-900">Hasil Pencarian GRN / Lot: "<span class="font-mono text-indigo-600">{{ request('search') }}</span>"</h3>
+                        <h3 class="text-base font-bold text-slate-900">Hasil Pencarian GRN / Lot: "<span class="font-mono text-blue-600">{{ request('search') }}</span>"</h3>
                     @else
                         <h3 class="text-base font-bold text-slate-900">Antrean Inbound Tersedia ({{ auth()->user()->role_label }})</h3>
                     @endif
@@ -120,7 +120,7 @@
                 <div class="p-4 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition bg-slate-50/50 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-start gap-2">
-                            <span class="font-mono text-sm font-bold text-indigo-600 bg-white px-2 py-0.5 rounded border border-indigo-100">{{ $item->no_grn_iqa }}</span>
+                            <span class="font-mono text-sm font-bold text-blue-600 bg-white px-2 py-0.5 rounded border border-indigo-100">{{ $item->no_grn_iqa }}</span>
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold border {{ $item->aging_badge_class }}">
                                 {{ $item->aging_status }}
                             </span>
@@ -132,7 +132,7 @@
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-200 flex justify-between items-center">
                         <span class="text-[11px] font-semibold text-slate-500">{{ $item->part->komoditas_label }}</span>
-                        <a href="{{ route('logbooks.create', ['receiving_id' => $item->id]) }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs transition">
+                        <a href="{{ route('logbooks.create', ['receiving_id' => $item->id]) }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition">
                             <span class="material-symbols-outlined text-[15px]">play_arrow</span>
                             <span>Inspect This Lot &rarr;</span>
                         </a>
@@ -140,7 +140,7 @@
                 </div>
                 @empty
                 <div class="col-span-full py-16 text-center">
-                    <div class="w-16 h-16 rounded-3xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                    <div class="w-16 h-16 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
                         <span class="material-symbols-outlined text-[38px]">search_off</span>
                     </div>
                     <h3 class="text-base font-extrabold text-slate-800">
@@ -178,10 +178,10 @@
         <input type="hidden" name="action_type" id="actionTypeInput" value="submit">
 
         <!-- Material Details Card -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold font-mono">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-blue-600 flex items-center justify-center font-bold font-mono">
                         GR
                     </div>
                     <div>
@@ -230,15 +230,15 @@
         </div>
 
         <!-- 1. Visual & Packaging Inspection Gate -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-indigo-600">visibility</span>
+                    <span class="material-symbols-outlined text-blue-600">visibility</span>
                     Verifikasi Visual & Kemasan
                 </h3>
                 <div class="flex items-center gap-2 text-xs">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 text-slate-700 font-bold border border-slate-200">
-                        <span class="material-symbols-outlined text-[15px] text-indigo-600">verified</span>
+                        <span class="material-symbols-outlined text-[15px] text-blue-600">verified</span>
                         Standard: MIL-STD-105E Visual Level II
                     </span>
                 </div>
@@ -249,7 +249,7 @@
                 <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
-                            <span class="material-symbols-outlined text-indigo-600 text-[18px]">inventory_2</span>
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">inventory_2</span>
                             <span>Packaging & Labeling</span>
                         </div>
                         <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
@@ -274,7 +274,7 @@
                 <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
-                            <span class="material-symbols-outlined text-indigo-600 text-[18px]">shield</span>
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">shield</span>
                             <span>ESD & Moisture (HIC)</span>
                         </div>
                         <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
@@ -304,7 +304,7 @@
                 <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
-                            <span class="material-symbols-outlined text-indigo-600 text-[18px]">category</span>
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">category</span>
                             <span>Body Integrity</span>
                         </div>
                         <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
@@ -329,7 +329,7 @@
                 <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
-                            <span class="material-symbols-outlined text-indigo-600 text-[18px]">cable</span>
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">cable</span>
                             <span>Lead Pin & Solderability</span>
                         </div>
                         <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
@@ -361,10 +361,10 @@
         </div>
 
         <!-- 2. Shelf-Life & Expiration Date Code Verification -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-indigo-600">event_available</span>
+                    <span class="material-symbols-outlined text-blue-600">event_available</span>
                     Pemeriksaan Date Code & Masa Kedaluwarsa
                 </h3>
                 <div id="shelfLifeStatusBadge" class="hidden px-3 py-1 rounded-xl text-xs font-bold border">
@@ -412,10 +412,10 @@
         </div>
 
         <!-- 3. Sample Measurements Table -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2">
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-indigo-600">straighten</span>
+                    <span class="material-symbols-outlined text-blue-600">straighten</span>
                     Lembar Pengukuran Dimensi & Parameter
                 </h3>
                 <div class="flex items-center gap-2 text-xs">
@@ -457,7 +457,7 @@
                             <td class="py-3 px-3 text-center font-mono text-slate-500">
                                 {{ $param->batas_max !== null ? number_format($param->batas_max, 2) : '-' }}
                             </td>
-                            <td class="py-3 px-3 text-center font-mono text-indigo-600 font-bold">
+                            <td class="py-3 px-3 text-center font-mono text-blue-600 font-bold">
                                 {{ $param->satuan }}
                             </td>
                             @for($s = 1; $s <= 5; $s++)
@@ -492,7 +492,7 @@
         </div>
 
         <!-- Submission Action Buttons -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="text-xs text-slate-500">
                 Ensure all measurements are taken using ISO 9001 calibrated instruments.
             </div>
@@ -502,7 +502,7 @@
                     Save as Draft
                 </button>
                 <button type="button" onclick="submitAs('submit')" 
-                    class="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition flex-1 sm:flex-none">
+                    class="px-6 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition flex-1 sm:flex-none">
                     Submit Inspection Logbook &rarr;
                 </button>
             </div>

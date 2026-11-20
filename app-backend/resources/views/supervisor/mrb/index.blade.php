@@ -4,7 +4,7 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-md shadow-amber-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">gavel</span>
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Active Pending Review Queue -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber-600">pending_actions</span>
@@ -50,7 +50,7 @@
                     @php $rcv = $log->receiving; @endphp
                     <tr class="hover:bg-slate-50/80 transition">
                         <td class="py-3.5 px-4">
-                            <span class="font-mono font-bold text-indigo-600">{{ $rcv->no_grn_iqa ?? '-' }}</span>
+                            <span class="font-mono font-bold text-blue-600">{{ $rcv->no_grn_iqa ?? '-' }}</span>
                             <div class="text-[10px] text-slate-400 font-mono">Lot: {{ $rcv->no_lot ?? '-' }}</div>
                         </td>
                         <td class="py-3.5 px-4">
@@ -106,7 +106,7 @@
     </div>
 
     <!-- History of Recent MRB Decisions -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span class="material-symbols-outlined text-purple-600">history</span>
             Historical MRB Disposition Log
@@ -133,7 +133,7 @@
                             {{ $item->diputuskan_pada ? $item->diputuskan_pada->format('d/m/Y H:i') : '-' }}
                         </td>
                         <td class="py-3 px-4">
-                            <span class="font-mono font-bold text-indigo-600">{{ $rcv->no_grn_iqa ?? '-' }}</span>
+                            <span class="font-mono font-bold text-blue-600">{{ $rcv->no_grn_iqa ?? '-' }}</span>
                             <div class="text-[10px] text-slate-400 font-mono">Lot: {{ $rcv->no_lot ?? '-' }}</div>
                         </td>
                         <td class="py-3 px-4">

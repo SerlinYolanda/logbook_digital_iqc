@@ -4,9 +4,9 @@
 <div class="space-y-6 max-w-7xl mx-auto pb-12">
 
     <!-- Header & Action Bar -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs no-print">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200/80 shadow-xs no-print">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">bar_chart</span>
             </div>
             <div>
@@ -27,7 +27,7 @@
                 <span class="material-symbols-outlined text-[16px]">download</span>
                 <span>CSV</span>
             </a>
-            <button onclick="window.print()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-2xl transition flex items-center gap-1.5 shadow-md shadow-indigo-600/20 cursor-pointer">
+            <button onclick="window.print()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-2xl transition flex items-center gap-1.5 shadow-md shadow-indigo-600/20 cursor-pointer">
                 <span class="material-symbols-outlined text-[16px]">print</span>
                 <span>Print Sheet</span>
             </button>
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Filter Bar -->
-    <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs no-print space-y-3">
+    <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-xs no-print space-y-3">
         <form id="reportFilterForm" method="GET" action="{{ route('reports.index') }}" class="space-y-3 text-xs">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
                 <div>
@@ -148,7 +148,7 @@
     </div>
 
     <!-- Official Report Document Paper (Printable) -->
-    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
+    <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
 
         <!-- Printable Document ISO Header -->
         <div class="border-b-2 border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -215,7 +215,7 @@
                     <tbody class="divide-y divide-slate-100">
                         @foreach($defectsSummary as $def)
                         <tr>
-                            <td class="py-2 px-3 font-mono text-indigo-600 font-bold">{{ $def->defectCategory->kode_defect ?? '-' }}</td>
+                            <td class="py-2 px-3 font-mono text-blue-600 font-bold">{{ $def->defectCategory->kode_defect ?? '-' }}</td>
                             <td class="py-2 px-3 font-bold text-slate-800">{{ $def->defectCategory->nama_defect ?? '-' }}</td>
                             <td class="py-2 px-3 text-center font-mono font-bold">{{ $def->occurrences }} lot</td>
                             <td class="py-2 px-3 text-right font-mono font-bold text-rose-600">{{ number_format($def->total_qty) }} pcs</td>
@@ -255,7 +255,7 @@
                         <tr class="hover:bg-slate-50/50">
                             <td class="py-2 px-3 text-slate-400 font-mono">{{ $idx + 1 }}</td>
                             <td class="py-2 px-3 font-mono">
-                                <span class="font-bold text-indigo-600">{{ $rcv->no_grn_iqa ?? '-' }}</span>
+                                <span class="font-bold text-blue-600">{{ $rcv->no_grn_iqa ?? '-' }}</span>
                                 <div class="text-[10px] text-slate-400 font-normal">Lot: {{ $rcv->no_lot ?? '-' }}</div>
                             </td>
                             <td class="py-2 px-3">

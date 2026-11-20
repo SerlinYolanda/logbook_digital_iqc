@@ -4,7 +4,7 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-md shadow-amber-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">gavel</span>
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Material Summary Card -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
             <div>
                 <span class="text-slate-400">Component / Part:</span>
@@ -53,9 +53,9 @@
     </div>
 
     <!-- Parameter Measurements Table -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
-            <span class="material-symbols-outlined text-indigo-600">straighten</span>
+            <span class="material-symbols-outlined text-blue-600">straighten</span>
             Sample Measurements Verification vs Tolerance Limits
         </h3>
 
@@ -85,7 +85,7 @@
                         <td class="py-3 px-3 text-center font-mono text-slate-500">
                             {{ $param->batas_min !== null ? number_format($param->batas_min, 2) : '-' }} to {{ $param->batas_max !== null ? number_format($param->batas_max, 2) : '-' }}
                         </td>
-                        <td class="py-3 px-3 text-center font-mono text-indigo-600 font-bold">{{ $param->satuan }}</td>
+                        <td class="py-3 px-3 text-center font-mono text-blue-600 font-bold">{{ $param->satuan }}</td>
                         @for($s = 1; $s <= $logbook->qty_sampel; $s++)
                             @php $m = $paramMeasurements->where('sample_number', $s)->first(); @endphp
                             <td class="py-3 px-3 text-center font-mono">
@@ -116,7 +116,7 @@
     <!-- Defect & NEST Evidence Cards -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Defect Cards -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
                 <span class="material-symbols-outlined text-rose-600">bug_report</span>
                 Defect Findings ({{ $logbook->defects->count() }} items)
@@ -134,7 +134,7 @@
                     <div class="flex items-center justify-between pt-2 border-t border-slate-200/80 text-[11px]">
                         <span class="text-slate-500 font-mono">Defect Qty: <b>{{ $defect->qty_defect }} pcs</b></span>
                         @if($defect->foto_bukti)
-                            <a href="{{ asset('storage/' . $defect->foto_bukti) }}" target="_blank" class="text-indigo-600 font-bold hover:underline flex items-center gap-1">
+                            <a href="{{ asset('storage/' . $defect->foto_bukti) }}" target="_blank" class="text-blue-600 font-bold hover:underline flex items-center gap-1">
                                 <span class="material-symbols-outlined text-[14px]">image</span>
                                 <span>View Photo</span>
                             </a>
@@ -148,7 +148,7 @@
         </div>
 
         <!-- NEST Chronology Card -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
                 <span class="material-symbols-outlined text-amber-600">track_changes</span>
                 NEST Track Issue Chronology
@@ -164,7 +164,7 @@
                 </div>
                 @if($logbook->nestProcess->bukti_pendukung)
                 <div class="pt-1">
-                    <a href="{{ asset('storage/' . $logbook->nestProcess->bukti_pendukung) }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:underline font-bold">
+                    <a href="{{ asset('storage/' . $logbook->nestProcess->bukti_pendukung) }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:underline font-bold">
                         <span class="material-symbols-outlined text-[16px]">attachment</span>
                         <span>View NEST Supporting Evidence Document</span>
                     </a>
@@ -178,7 +178,7 @@
     </div>
 
     <!-- Official MRB Disposition Decision Form -->
-    <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl space-y-6">
+    <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-xl p-6 sm:p-8 text-white shadow-xl space-y-6">
         <div>
             <div class="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider">
                 <span class="material-symbols-outlined text-[18px]">verified</span>

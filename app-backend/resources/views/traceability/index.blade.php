@@ -4,9 +4,9 @@
 <div class="max-w-7xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">search_check</span>
             </div>
             <div>
@@ -17,8 +17,8 @@
     </div>
 
     <!-- Multi-criteria Search Form -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-        <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div class="flex items-center gap-2 text-blue-600 text-xs font-bold uppercase tracking-wider">
             <span class="material-symbols-outlined text-[16px]">filter_alt</span>
             <span>Quality History Traceability Filter</span>
         </div>
@@ -93,7 +93,7 @@
     </div>
 
     <!-- Traceability Results Table -->
-    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
@@ -115,7 +115,7 @@
                     @endphp
                     <tr class="hover:bg-slate-50/80 transition">
                         <td class="py-3.5 px-4">
-                            <span class="font-mono font-bold text-indigo-600 text-sm">Lot: {{ $item->no_lot }}</span>
+                            <span class="font-mono font-bold text-blue-600 text-sm">Lot: {{ $item->no_lot }}</span>
                             <div class="text-[10px] text-slate-400 font-mono">{{ $item->no_grn_iqa }} | PO: {{ $item->no_po }}</div>
                             <div class="text-[10px] text-slate-500 font-sans mt-0.5">
                                 <span class="text-slate-400">Masuk:</span> <b class="text-slate-700 font-mono">{{ $item->tanggal_terima ? $item->tanggal_terima->format('d/m/Y') : '-' }}</b>
@@ -161,7 +161,7 @@
                         </td>
                         <td class="py-3.5 px-4 text-right">
                             <a href="{{ route('traceability.show', $item->id) }}" 
-                                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white font-bold text-xs transition">
+                                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 hover:bg-blue-600 hover:text-white font-bold text-xs transition">
                                 <span class="material-symbols-outlined text-[14px]">timeline</span>
                                 <span>Track Journey</span>
                             </a>

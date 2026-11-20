@@ -4,9 +4,9 @@
 <div class="max-w-5xl mx-auto space-y-6 pb-12">
 
     <!-- Header Banner -->
-    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
                 <span class="material-symbols-outlined text-[26px]">timeline</span>
             </div>
             <div>
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Material Master Spec Header -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+    <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
             <div>
                 <span class="text-slate-400">Component / Part:</span>
@@ -53,9 +53,9 @@
     </div>
 
     <!-- Visual Stepper Timeline -->
-    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-8">
+    <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-8">
         <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-4 border-b border-slate-100">
-            <span class="material-symbols-outlined text-indigo-600">route</span>
+            <span class="material-symbols-outlined text-blue-600">route</span>
             Material Quality Lifecycle Journey
         </h3>
 
@@ -86,7 +86,7 @@
             @php $latestLog = $receiving->latest_logbook; @endphp
             <div class="relative">
                 <span class="absolute -left-[35px] sm:-left-[43px] top-0 w-8 h-8 rounded-full 
-                    {{ $latestLog ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center text-xs font-bold shadow-md">
+                    {{ $latestLog ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center text-xs font-bold shadow-md">
                     2
                 </span>
                 <div>
@@ -163,7 +163,7 @@
                     @if($disp)
                         <div class="mt-2 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1.5">
                             <div class="font-bold text-slate-900">
-                                Disposition: <span class="text-indigo-600 font-black text-sm">{{ $disp->decision_label }}</span>
+                                Disposition: <span class="text-blue-600 font-black text-sm">{{ $disp->decision_label }}</span>
                             </div>
                             <div class="text-slate-600 font-mono text-[11px] bg-white p-2.5 rounded-lg border border-slate-200">
                                 <b>Supervisor Justification:</b> {{ $disp->catatan }}
