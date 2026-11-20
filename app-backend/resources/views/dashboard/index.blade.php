@@ -32,19 +32,7 @@
                         Shift {{ $user->shift ?? '1' }}
                     </span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-500 mt-1 font-normal">
-                    Welcome back, <span class="font-bold text-slate-800">{{ $user->name }}</span>. 
-                    @if($user->isSupervisor())
-                        Monitor Pareto defect recapitulation, commodity pass rates, and evaluate MRB dispositions.
-                    @elseif($user->isMasterData())
-                        Manage inbound material (GRN) queues and component & supplier master data.
-                        Manage inbound material (GR) queues and component & supplier master data.
-                    @elseif($user->isAdmin())
-                        Manage user accounts and monitor system integrity via the Audit Trail.
-                    @else
-                        Perform lot barcode scanning with commodity Poka-Yoke validation and record sample measurements.
-                    @endif
-                </p>
+                <p class="text-sm text-slate-500 mt-0.5">Selamat datang, <span class="font-bold text-slate-800">{{ $user->name }}</span></p>
             </div>
         </div>
 
@@ -53,7 +41,6 @@
             <a href="{{ route('receivings.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition-all duration-200">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>Register GRN</span>
-                <span>Register GR</span>
             </a>
             @endif
 
@@ -86,7 +73,7 @@
             </div>
             <div>
                 <h4 class="text-sm font-bold text-amber-900">Attention: You have {{ count($myRevisionQueue) }} logbook(s) requiring revision!</h4>
-                <p class="text-xs text-amber-700 mt-0.5">The supervisor has requested revisions on your lot measurement. Please review and update immediately.</p>
+                <p class="text-xs text-amber-700 mt-0.5">Supervisor meminta revisi pada logbook ini. Harap segera perbaiki.</p>
             </div>
         </div>
         <a href="{{ route('logbooks.edit', $myRevisionQueue[0]->id) }}" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shrink-0">
@@ -246,8 +233,7 @@
                                     {{ $flowDates[0] ?? '' }} – {{ end($flowDates) ?? '' }}
                                 </span>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 mt-1">Material Flow & Throughput</h3>
-                            <p class="text-xs text-slate-500">Perbandingan harian barang masuk (inbound), rilis (released), dan antrean.</p>
+                        <h3 class="text-base font-bold text-slate-900 mt-1">Material Flow & Throughput</h3>
                         </div>
                         <div class="flex items-center gap-4 text-xs font-semibold shrink-0">
                             <span class="flex items-center gap-1.5 text-indigo-700">
@@ -301,7 +287,6 @@
                             </span>
                         </div>
                         <h3 class="text-base font-bold text-slate-900 mt-1.5">Inbound Status Breakdown</h3>
-                        <p class="text-xs text-slate-500">Real-time distribution of all lots across the IQC inspection pipeline.</p>
                     </div>
 
                     <div class="mt-4 relative h-52 w-full flex items-center justify-center">
@@ -391,8 +376,7 @@
                                     Periode: {{ now()->startOfMonth()->translatedFormat('d M') }} – {{ now()->translatedFormat('d M Y') }} (MTD)
                                 </span>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 mt-1.5">Defect Pareto Chart (80/20 Rule)</h3>
-                            <p class="text-xs text-slate-500">Defect frequency distribution and cumulative percentage.</p>
+                            <h3 class="text-base font-bold text-slate-900 mt-1.5">Defect Pareto Chart</h3>
                         </div>
                     </div>
 
@@ -421,8 +405,7 @@
                                     Periode: {{ $trendDates[0] ?? '' }} – {{ end($trendDates) ?? '' }} (7 Hari)
                                 </span>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 mt-1.5">Daily Inspection Output Volume</h3>
-                            <p class="text-xs text-slate-500">Comparison of accepted lots versus non-conforming / MRB lots.</p>
+                            <h3 class="text-base font-bold text-slate-900 mt-1.5">Tren Inspeksi 7 Hari</h3>
                         </div>
                     </div>
 
@@ -451,7 +434,6 @@
                     <span>Commodity Analytics</span>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mt-1">Commodity Workload & Yield</h3>
-                <p class="text-xs text-slate-500 mt-0.5">Aggregated throughput & quality metrics across the 3 IQC commodity divisions.</p>
 
                 <div class="mt-5 space-y-4">
                     @foreach($commodityStats as $c)
@@ -504,7 +486,7 @@
                     <span class="material-symbols-outlined text-[16px] text-indigo-600">verified_user</span>
                     MIL-STD-105E AQL Standard
                 </div>
-                Target acceptance yield: &ge; 95.0% for active electronics and &ge; 98.0% for automotive/passive components.
+                <p class="text-xs text-slate-500 mt-0.5">Target yield: EE ≥ 95% | Automotive ≥ 98%</p>
             </div>
         </div>
 
@@ -517,8 +499,7 @@
                             <span class="material-symbols-outlined text-[16px]">conveyor_belt</span>
                             <span>FIFO Inbound Backlog Queue</span>
                         </div>
-                        <h3 class="text-base font-bold text-slate-900 mt-1">Incoming Materials Ready for Inspection</h3>
-                        <p class="text-xs text-slate-500">Dock arrivals prioritized by FIFO and queue aging. Click inspect to launch digital logbook.</p>
+                        <h3 class="text-base font-bold text-slate-900 mt-1">Antrean Inbound — Siap Inspeksi</h3>
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -623,7 +604,7 @@
                         <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> &gt; 24h Overdue
                     </span>
                 </div>
-                <span>SOP: FIFO inspection priority based on dock arrival timestamp</span>
+                <span class="text-xs font-semibold text-slate-400">SOP: FIFO priority</span>
             </div>
         </div>
     </div>
@@ -637,8 +618,7 @@
                     <span class="material-symbols-outlined text-[16px]">shield_lock</span>
                     <span>System Security & Integrity</span>
                 </div>
-                <h3 class="text-base font-bold text-slate-900 mt-1">Recent Real-Time Audit Trail</h3>
-                <p class="text-xs text-slate-500">Immutable audit log tracking user actions, critical changes, and Poka-Yoke violations.</p>
+                <h3 class="text-base font-bold text-slate-900 mt-1">Audit Trail Terkini</h3>
             </div>
             <a href="{{ route('admin.audit-trails.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition">
                 View Full Logs &rarr;

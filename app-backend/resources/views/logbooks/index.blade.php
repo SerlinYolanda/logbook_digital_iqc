@@ -16,7 +16,7 @@
                         Digital Inspection Standard
                     </span>
                 </div>
-                <p class="text-xs text-slate-500 mt-0.5">Centralized digital repository of lot quality inspections, multi-point verification audits, and MRB review loop.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Rekap inspeksi kualitas lot material masuk.</p>
             </div>
         </div>
 

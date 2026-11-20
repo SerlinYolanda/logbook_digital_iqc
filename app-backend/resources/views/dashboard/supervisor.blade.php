@@ -15,7 +15,7 @@
                 <h1 class="text-xl font-bold text-slate-900">IQC Supervisor Control Center</h1>
             </div>
             <p class="text-xs text-slate-400 mt-1">
-                Welcome back, <span class="font-semibold text-slate-700">{{ Auth::user()->name ?? 'Supervisor' }}</span>. Monitor MRB dispositions, supplier compliance, and team inspection throughput.
+                Selamat datang, <span class="font-semibold text-slate-700">{{ Auth::user()->name ?? 'Supervisor' }}</span>
             </p>
         </div>
         <div class="flex items-center gap-3">
@@ -43,8 +43,7 @@
                     <span class="material-symbols-outlined icon-md">show_chart</span>
                 </div>
                 <div>
-                    <h2 class="text-sm font-bold text-slate-900 tracking-tight">7-Day Inspection Trend</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Daily outcome breakdown — approved, pending, and rejected.</p>
+                    <h2 class="text-sm font-bold text-slate-900 tracking-tight">Tren Inspeksi 7 Hari</h2>
                 </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">

@@ -16,7 +16,7 @@
                         Lot: {{ $receiving->no_lot }}
                     </span>
                 </div>
-                <p class="text-xs text-slate-500 mt-0.5">Comprehensive end-to-end quality tracking from supplier to IQC final disposition.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Riwayat alur kualitas lot dari kedatangan hingga rilis akhir.</p>
             </div>
         </div>
 

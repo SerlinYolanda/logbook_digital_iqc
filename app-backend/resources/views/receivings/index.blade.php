@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Inbound Material (GRN) & Queue Management</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Inbound material registration, IQA GRN assignment, and queue aging benchmark monitoring.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Registrasi material masuk dan pengelolaan antrean inspeksi.</p>
             </div>
         </div>
 

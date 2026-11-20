@@ -10,8 +10,7 @@
                 <span class="material-symbols-outlined text-[26px]">assignment</span>
             </div>
             <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">IQC Quality Inspection Logbook Form</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Testing dimensional, electrical & visual parameters against nominal tolerance specifications.</p>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight">Form Inspeksi Kualitas IQC</h1>
             </div>
         </div>
 
@@ -98,11 +97,9 @@
             <div class="flex items-center justify-between gap-4 flex-wrap pb-2 border-b border-slate-100">
                 <div>
                     @if(request('search'))
-                        <h3 class="text-base font-bold text-slate-900">Search Result for GR / Lot: "<span class="font-mono text-indigo-600">{{ request('search') }}</span>"</h3>
-                        <p class="text-xs text-slate-500">Review the material specifications and supplier below before opening inspection sheet.</p>
+                        <h3 class="text-base font-bold text-slate-900">Hasil Pencarian GRN / Lot: "<span class="font-mono text-indigo-600">{{ request('search') }}</span>"</h3>
                     @else
-                        <h3 class="text-base font-bold text-slate-900">Available Inbound Queue ({{ auth()->user()->role_label }})</h3>
-                        <p class="text-xs text-slate-500">Pick any pending arrival batch below to proceed with quality inspection.</p>
+                        <h3 class="text-base font-bold text-slate-900">Antrean Inbound Tersedia ({{ auth()->user()->role_label }})</h3>
                     @endif
                 </div>
                 <div class="flex items-center gap-2">
@@ -235,14 +232,10 @@
         <!-- 1. Visual & Packaging Inspection Gate -->
         <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100">
-                <div>
-                    <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
-                        <span class="material-symbols-outlined text-[16px]">visibility</span>
-                        <span>Visual & Packaging Inspection Gate</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900 mt-0.5">Physical Packaging, Labeling & Visual Verification</h3>
-                    <p class="text-xs text-slate-500">Inspect physical condition before taking dimensional measurements. Any visual failure triggers MRB review.</p>
-                </div>
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-indigo-600">visibility</span>
+                    Verifikasi Visual & Kemasan
+                </h3>
                 <div class="flex items-center gap-2 text-xs">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 text-slate-700 font-bold border border-slate-200">
                         <span class="material-symbols-outlined text-[15px] text-indigo-600">verified</span>
@@ -370,14 +363,10 @@
         <!-- 2. Shelf-Life & Expiration Date Code Verification -->
         <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100">
-                <div>
-                    <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
-                        <span class="material-symbols-outlined text-[16px]">event_available</span>
-                        <span>Shelf-Life & Expiration Verification</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900 mt-0.5">Date Code & Expiration Date Check</h3>
-                    <p class="text-xs text-slate-500">Verify manufacturer date code and solderability / chemical expiration date.</p>
-                </div>
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-indigo-600">event_available</span>
+                    Pemeriksaan Date Code & Masa Kedaluwarsa
+                </h3>
                 <div id="shelfLifeStatusBadge" class="hidden px-3 py-1 rounded-xl text-xs font-bold border">
                     <!-- Dynamically populated by JS -->
                 </div>
@@ -425,13 +414,10 @@
         <!-- 3. Sample Measurements Table -->
         <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2">
-                <div>
-                    <div class="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider">
-                        <span class="material-symbols-outlined text-[16px]">straighten</span>
-                        <span>Dimensional & Physical Parameter Measurement Sheet</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900 mt-0.5">Record Sample Measurement Values</h3>
-                </div>
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-indigo-600">straighten</span>
+                    Lembar Pengukuran Dimensi & Parameter
+                </h3>
                 <div class="flex items-center gap-2 text-xs">
                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> PASS (In Tolerance)

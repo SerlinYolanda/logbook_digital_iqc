@@ -17,7 +17,6 @@
                     </span>
                 </div>
                 <p class="text-xs text-slate-500 mt-0.5">GRN No: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_grn_iqa }}</b> | Lot: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_lot }}</b></p>
-                <p class="text-xs text-slate-500 mt-0.5">GR No: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_grn_iqa }}</b> | Lot: <b class="font-mono text-slate-800">{{ $logbook->receiving->no_lot }}</b></p>
             </div>
         </div>
 
@@ -295,10 +294,9 @@
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-rose-600">report_problem</span>
                     <h3 class="text-base font-bold text-slate-900">
-                        Quality Non-Conformance, Defects & Anomaly Escalation
+                        Defects & NEST Escalation
                     </h3>
                 </div>
-                <p class="text-xs text-slate-500 mt-0.5">Physical non-conformance defect logs, sample photo evidence, and special track (NEST) incident escalations.</p>
             </div>
 
             <!-- Single Action Button: NEST Process -->

@@ -11,8 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Material Quality History & Traceability</h1>
-                <p class="text-xs text-slate-500 mt-0.5">End-to-end tracking of material quality from GR inbound, sampling inspection, through MRB disposition.</p>
-                <p class="text-xs text-slate-500 mt-0.5">End-to-end tracking of material quality from GR inbound, sampling inspection, through MRB disposition.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Lacak riwayat kualitas material dari inbound hingga rilis produksi.</p>
             </div>
         </div>
     </div>

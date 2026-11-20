@@ -10,8 +10,8 @@
                 <span class="material-symbols-outlined text-[26px]">database</span>
             </div>
             <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">Manage System Master Data</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Management of master component catalog (Parts & Parameters), Supplier vendor records, and Defect taxonomy.</p>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight">Master Data Management</h1>
+                <p class="text-xs text-slate-500 mt-0.5">Kelola data part, supplier, dan kategori defect.</p>
             </div>
         </div>
 
