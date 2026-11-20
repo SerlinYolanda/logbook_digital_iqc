@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Logbook;
 use App\Models\Receiving;
+use App\Models\Supplier;
 use App\Models\Part;
 use App\Models\PartParameter;
 use App\Models\Measurement;
