@@ -7,7 +7,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200">
         <div>
             <h1 class="text-xl font-bold text-slate-900 tracking-tight">Inbound Material (GRN) & Queue</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Penerimaan dock, antrean inspeksi IQA, dan monitoring aging FIFO.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Dock receiving registration, IQA inspection queue, and FIFO aging monitoring.</p>
         </div>
 
         @if(auth()->user()->isMasterData() || auth()->user()->isAdmin())
@@ -47,20 +47,20 @@
     <div class="bg-white rounded-xl p-3.5 border border-slate-200 shadow-xs">
         <form method="GET" action="{{ route('receivings.index') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
             <div>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari GRN, PO, Lot, Part..." 
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search GRN, PO, Lot, Part..." 
                     class="w-full text-xs rounded-lg border-slate-200 px-3 py-2 bg-slate-50 focus:bg-white">
             </div>
             <div>
                 <select name="status_antrean" class="w-full text-xs rounded-lg border-slate-200 px-3 py-2 bg-slate-50 focus:bg-white">
-                    <option value="">Semua Status Antrean</option>
-                    <option value="menunggu_inspeksi" {{ request('status_antrean') === 'menunggu_inspeksi' ? 'selected' : '' }}>Menunggu Inspeksi</option>
-                    <option value="dalam_inspeksi" {{ request('status_antrean') === 'dalam_inspeksi' ? 'selected' : '' }}>Dalam Inspeksi</option>
-                    <option value="selesai" {{ request('status_antrean') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    <option value="">All Queue Statuses</option>
+                    <option value="menunggu_inspeksi" {{ request('status_antrean') === 'menunggu_inspeksi' ? 'selected' : '' }}>Waiting for Inspection</option>
+                    <option value="dalam_inspeksi" {{ request('status_antrean') === 'dalam_inspeksi' ? 'selected' : '' }}>In Inspection</option>
+                    <option value="selesai" {{ request('status_antrean') === 'selesai' ? 'selected' : '' }}>Completed</option>
                 </select>
             </div>
             <div>
                 <select name="komoditas" class="w-full text-xs rounded-lg border-slate-200 px-3 py-2 bg-slate-50 focus:bg-white">
-                    <option value="">Semua Komoditas</option>
+                    <option value="">All Commodities</option>
                     <option value="ee_part" {{ request('komoditas') === 'ee_part' ? 'selected' : '' }}>EE Part</option>
                     <option value="automotive" {{ request('komoditas') === 'automotive' ? 'selected' : '' }}>Automotive</option>
                     <option value="wire_harness" {{ request('komoditas') === 'wire_harness' ? 'selected' : '' }}>Wire Harness</option>
@@ -84,13 +84,13 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
                         <th class="py-3 px-4">IQA GRN No</th>
-                        <th class="py-3 px-4">Tgl Masuk & Aging</th>
+                        <th class="py-3 px-4">Arrival Date & Aging</th>
                         <th class="py-3 px-4">Supplier</th>
-                        <th class="py-3 px-4">Komponen & Komoditas</th>
+                        <th class="py-3 px-4">Component & Commodity</th>
                         <th class="py-3 px-4">PO / Lot Number</th>
-                        <th class="py-3 px-4 text-right">Qty Masuk</th>
-                        <th class="py-3 px-4">Status Antrean</th>
-                        <th class="py-3 px-4 text-right">Aksi</th>
+                        <th class="py-3 px-4 text-right">Inbound Qty</th>
+                        <th class="py-3 px-4">Queue Status</th>
+                        <th class="py-3 px-4 text-right">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -143,15 +143,15 @@
                             <a href="{{ route('logbooks.create', ['receiving_id' => $item->id]) }}" 
                                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium text-[11px] shadow-xs transition">
                                 <span class="material-symbols-outlined text-[14px]">fact_check</span>
-                                <span>Inspeksi</span>
+                                <span>Inspect</span>
                             </a>
                             @endif
 
                             @if((auth()->user()->isMasterData() || auth()->user()->isAdmin()) && $item->status_antrean === 'menunggu_inspeksi')
-                            <form action="{{ route('receivings.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus data antrean inbound ini?')">
+                            <form action="{{ route('receivings.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this inbound material queue entry?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Hapus">
+                                <button type="submit" class="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Delete">
                                     <span class="material-symbols-outlined text-[16px]">delete</span>
                                 </button>
                             </form>
@@ -161,7 +161,7 @@
                     @empty
                     <tr>
                         <td colspan="8" class="py-8 text-center text-slate-400 text-xs">
-                            Tidak ada data antrean inbound material yang sesuai filter.
+                            No inbound material queue records found matching the selected filter.
                         </td>
                     </tr>
                     @endforelse
@@ -183,7 +183,7 @@
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-blue-600 text-[18px]">post_add</span>
-                Registrasi Inbound Material (GRN)
+                Inbound Material Registration (GRN)
             </h3>
             <button type="button" onclick="document.getElementById('registerGrnModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
                 <span class="material-symbols-outlined text-[18px]">close</span>
@@ -193,20 +193,20 @@
         <form action="{{ route('receivings.store') }}" method="POST" class="mt-4 space-y-3">
             @csrf
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor IQA GRN *</label>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">IQA GRN Number *</label>
                 <input type="text" name="no_grn_iqa" required value="GRN-{{ date('Ym') }}-{{ str_pad(rand(10, 999), 3, '0', STR_PAD_LEFT) }}" 
                     class="w-full text-xs font-mono rounded-lg border-slate-200 px-3 py-2">
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal & Waktu Masuk *</label>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Received Date & Time *</label>
                     <input type="datetime-local" name="tanggal_terima" required value="{{ date('Y-m-d\TH:i') }}"
                         class="w-full text-xs rounded-lg border-slate-200 px-3 py-2">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Qty Inbound (pcs) *</label>
-                    <input type="number" name="qty_datang" required min="1" placeholder="Contoh: 5000"
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Inbound Quantity (pcs) *</label>
+                    <input type="number" name="qty_datang" required min="1" placeholder="e.g. 5000"
                         class="w-full text-xs rounded-lg border-slate-200 px-3 py-2 font-mono">
                 </div>
             </div>
@@ -214,7 +214,7 @@
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">Supplier / Vendor *</label>
                 <select name="supplier_id" required class="w-full text-xs rounded-lg border-slate-200 px-3 py-2">
-                    <option value="">Pilih Supplier...</option>
+                    <option value="">Select Supplier...</option>
                     @foreach($suppliers as $sup)
                         <option value="{{ $sup->id }}">{{ $sup->nama_supplier }} ({{ $sup->negara_asal }})</option>
                     @endforeach
@@ -222,9 +222,9 @@
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Part / Komponen *</label>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Part / Component *</label>
                 <select name="part_id" required class="w-full text-xs rounded-lg border-slate-200 px-3 py-2">
-                    <option value="">Pilih Komponen...</option>
+                    <option value="">Select Component...</option>
                     @foreach($parts as $pt)
                         <option value="{{ $pt->id }}">{{ $pt->kode_part }} - {{ $pt->nama_part }} ({{ $pt->komoditas_label }})</option>
                     @endforeach
@@ -233,21 +233,21 @@
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor PO *</label>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">PO Number *</label>
                     <input type="text" name="no_po" required placeholder="PO-2026-..." class="w-full text-xs rounded-lg border-slate-200 px-3 py-2 font-mono">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor Lot *</label>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Lot Number *</label>
                     <input type="text" name="no_lot" required placeholder="LOT-..." class="w-full text-xs rounded-lg border-slate-200 px-3 py-2 font-mono">
                 </div>
             </div>
 
             <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
                 <button type="button" onclick="document.getElementById('registerGrnModal').classList.add('hidden')" class="px-3 py-2 rounded-lg text-slate-600 text-xs font-medium hover:bg-slate-100 transition">
-                    Batal
+                    Cancel
                 </button>
                 <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-xs transition">
-                    Daftarkan ke Antrean
+                    Register into Queue
                 </button>
             </div>
         </form>

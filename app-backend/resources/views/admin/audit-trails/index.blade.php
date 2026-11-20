@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">System Audit Trail</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Catatan riwayat aktivitas pengguna dan proteksi Poka-Yoke.</p>
+                <p class="text-xs text-slate-500 mt-0.5">System activity audit trails and Poka-Yoke enforcement log.</p>
             </div>
         </div>
 

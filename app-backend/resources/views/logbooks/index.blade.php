@@ -16,7 +16,7 @@
                         Digital Inspection Standard
                     </span>
                 </div>
-                <p class="text-xs text-slate-500 mt-0.5">Rekap inspeksi kualitas lot material masuk.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Quality inspection records for inbound material lots.</p>
             </div>
         </div>
 

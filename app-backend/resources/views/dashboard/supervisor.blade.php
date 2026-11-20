@@ -15,7 +15,7 @@
                 <h1 class="text-xl font-bold text-slate-900">IQC Supervisor Control Center</h1>
             </div>
             <p class="text-xs text-slate-400 mt-1">
-                Selamat datang, <span class="font-semibold text-slate-700">{{ Auth::user()->name ?? 'Supervisor' }}</span>
+                Welcome, <span class="font-semibold text-slate-700">{{ Auth::user()->name ?? 'Supervisor' }}</span>
             </p>
         </div>
         <div class="flex items-center gap-3">

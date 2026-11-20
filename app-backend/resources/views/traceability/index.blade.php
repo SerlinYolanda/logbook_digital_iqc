@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Material Quality History & Traceability</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Lacak riwayat kualitas material dari inbound hingga rilis produksi.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Trace material quality history from dock inbound to production release.</p>
             </div>
         </div>
     </div>
@@ -26,10 +26,8 @@
         <form method="GET" action="{{ route('traceability.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div class="lg:col-span-2">
                 <label class="block text-slate-600 font-bold text-xs mb-1">General Search (Lot / GRN / PO / Part No):</label>
-                <label class="block text-slate-600 font-bold text-xs mb-1">General Search (Lot / GR / PO / Part No):</label>
                 <input type="text" name="search" value="{{ request('search') }}" 
                     placeholder="e.g. LOT-STM-2610A or GRN-202611-001..." 
-                    placeholder="e.g. LOT-STM-2610A or GR-202611-001..." 
                     class="w-full text-xs font-mono rounded-xl border-slate-200 py-2.5">
             </div>
 

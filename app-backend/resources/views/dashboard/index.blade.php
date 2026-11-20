@@ -7,7 +7,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200">
         <div>
             <h1 class="text-xl font-bold text-slate-900 tracking-tight">Executive Dashboard</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Monitoring mutu incoming material, throughput inspeksi, dan antrean real-time.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Real-time incoming material quality monitoring, inspection throughput, and queue velocity.</p>
         </div>
 
         <div class="flex items-center gap-2 flex-wrap">
@@ -21,7 +21,7 @@
             @if($user->isInspector())
             <a href="{{ route('logbooks.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition">
                 <span class="material-symbols-outlined text-[16px]">add_task</span>
-                <span>Mulai Inspeksi</span>
+                <span>Start Inspection</span>
             </a>
             @endif
 
@@ -43,10 +43,10 @@
     <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex items-center justify-between gap-4 text-xs">
         <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-[20px] text-amber-600">warning</span>
-            <span><b>Perhatian:</b> Terdapat {{ count($myRevisionQueue) }} logbook yang memerlukan revisi dari Supervisor.</span>
+            <span><b>Attention:</b> You have {{ count($myRevisionQueue) }} inspection logbooks requiring revision from Supervisor.</span>
         </div>
         <a href="{{ route('logbooks.edit', $myRevisionQueue[0]->id) }}" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold transition shrink-0">
-            Perbaiki Sekarang &rarr;
+            Review Now &rarr;
         </a>
     </div>
     @endif
@@ -61,11 +61,11 @@
             </div>
             <div class="mt-2 flex items-baseline gap-2">
                 <span class="text-2xl font-bold text-slate-900 tracking-tight">{{ $waitingQueue }}</span>
-                <span class="text-xs text-slate-500 font-medium">Lots Antre</span>
+                <span class="text-xs text-slate-500 font-medium">Lots in Queue</span>
             </div>
             <div class="mt-2.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
                 <span>Total Inbound: <b class="text-slate-800">{{ $totalInbound }}</b></span>
-                <span class="text-blue-600 font-medium">{{ $inProgress }} proses</span>
+                <span class="text-blue-600 font-medium">{{ $inProgress }} In Inspection</span>
             </div>
         </div>
 
@@ -77,7 +77,7 @@
             </div>
             <div class="mt-2 flex items-baseline gap-2">
                 <span class="text-2xl font-bold text-emerald-600 tracking-tight">{{ $acceptedCount }}</span>
-                <span class="text-xs text-slate-500 font-medium">Lots Lolos</span>
+                <span class="text-xs text-slate-500 font-medium">Lots Passed</span>
             </div>
             <div class="mt-2.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
                 <span>Pass Rate: <b class="text-emerald-700 font-bold">{{ $passRate }}%</b></span>
@@ -93,10 +93,10 @@
             </div>
             <div class="mt-2 flex items-baseline gap-2">
                 <span class="text-2xl font-bold text-amber-600 tracking-tight">{{ $mrbPendingCount }}</span>
-                <span class="text-xs text-slate-500 font-medium">Butuh Review</span>
+                <span class="text-xs text-slate-500 font-medium">Awaiting Review</span>
             </div>
             <div class="mt-2.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                <span>{{ $revisionsCount }} Perlu Revisi</span>
+                <span>{{ $revisionsCount }} Needs Revision</span>
                 <span class="text-rose-600 font-semibold">{{ $rejectedCount }} RTV / Scrap</span>
             </div>
         </div>
@@ -113,57 +113,56 @@
             </div>
             <div class="mt-2.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
                 <span>{{ $normalAgingCount }} Normal (&lt;12h)</span>
-                <span>{{ $prioritasAgingCount }} Prioritas</span>
+                <span>{{ $prioritasAgingCount }} Priority</span>
             </div>
         </div>
     </div>
 
-    <!-- Inspector Quick Barcode Scanner -->
+    <!-- Inspector Quick Barcode Scanner (Prominent, High-Efficiency) -->
     @if($user->isInspector())
-    <div class="bg-slate-900 rounded-xl p-4 text-white border border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shrink-0">
-                <span class="material-symbols-outlined text-[18px]">qr_code_scanner</span>
+    <div class="bg-slate-900 rounded-xl p-5 text-white border border-slate-800 shadow-md flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                <span class="material-symbols-outlined text-[24px]">qr_code_scanner</span>
             </div>
             <div>
-                <h3 class="text-xs font-bold text-white tracking-wide uppercase">Quick Lot Barcode Scanner</h3>
-                <p class="text-[11px] text-slate-400">Scan barcode atau ketik nomor GRN untuk membuka form inspeksi.</p>
+                <h3 class="text-sm font-bold text-white tracking-wide uppercase">Quick Lot Barcode Scanner</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Scan physical barcode or enter IQA GRN / Lot number to directly open inspection sheet.</p>
             </div>
         </div>
 
-        <form action="{{ route('logbooks.scan') }}" method="GET" class="flex items-center gap-2 w-full md:w-auto md:min-w-[420px]">
+        <form action="{{ route('logbooks.scan') }}" method="GET" class="flex items-center gap-3 w-full lg:w-auto lg:min-w-[500px]">
             <div class="relative flex-1">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-[16px]">barcode_scanner</span>
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-[20px]">barcode_scanner</span>
                 <input type="text" name="code" required autofocus
-                    placeholder="Scan barcode / no. GRN (contoh: GRN-202611-001)..."
-                    class="w-full pl-9 pr-3 py-2 text-xs font-mono rounded-lg bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500">
+                    placeholder="Scan barcode or type GRN (e.g. GRN-202611-001)..."
+                    class="w-full pl-11 pr-4 py-3 text-sm font-mono rounded-lg bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
             </div>
-            <button type="submit" class="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shrink-0 flex items-center gap-1.5">
-                <span>Periksa</span>
-                <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+            <button type="submit" class="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition shrink-0 flex items-center gap-2 shadow-xs cursor-pointer">
+                <span>Inspect</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
             </button>
         </form>
     </div>
     @endif
 
-    <!-- Material Flow & Throughput Monitoring Section -->
     <!-- Material Flow & Throughput Section -->
     <div class="space-y-4">
         <!-- Section Controls & Tabs -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h2 class="text-base font-bold text-slate-900 tracking-tight">Material Flow & Quality Throughput</h2>
-                <p class="text-xs text-slate-500">Pergerakan material harian (inbound vs outbound) dan analisis pareto cacat.</p>
+                <p class="text-xs text-slate-500">Daily material velocity (inbound dock vs IQC released) and defect pareto analytics.</p>
             </div>
             <!-- Tab Buttons -->
             <div class="flex items-center gap-1 p-1 rounded-lg bg-slate-100 border border-slate-200 self-start sm:self-auto">
                 <button type="button" id="tabFlowBtn" onclick="switchDashboardTab('flow')" 
-                    class="px-3 py-1.5 rounded-md text-xs font-semibold bg-white text-slate-900 shadow-xs border border-slate-200/80 transition flex items-center gap-1.5">
+                    class="px-3.5 py-1.5 rounded-md text-xs font-semibold bg-white text-slate-900 shadow-xs border border-slate-200/80 transition flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-[15px] text-blue-600">show_chart</span>
                     <span>Material Flow</span>
                 </button>
                 <button type="button" id="tabParetoBtn" onclick="switchDashboardTab('pareto')" 
-                    class="px-3 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+                    class="px-3.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-[15px] text-slate-400">bar_chart</span>
                     <span>Defect Pareto</span>
                 </button>
@@ -179,9 +178,9 @@
                         <div>
                             <span class="text-xs font-semibold text-slate-500 flex items-center gap-1">
                                 <span class="material-symbols-outlined text-[14px] text-slate-400">calendar_month</span>
-                                Periode: {{ $flowDates[0] ?? '' }} – {{ end($flowDates) ?? '' }} (7 Hari Terakhir)
+                                Period: {{ $flowDates[0] ?? '' }} – {{ end($flowDates) ?? '' }} (Last 7 Days)
                             </span>
-                            <h3 class="text-sm font-bold text-slate-900 mt-1">Tren Arus Material (Inbound vs Outbound vs Backlog)</h3>
+                            <h3 class="text-sm font-bold text-slate-900 mt-1">Material Flow Trend (Inbound vs Outbound vs Backlog)</h3>
                         </div>
                         <div class="flex items-center gap-4 text-xs font-medium text-slate-600 shrink-0">
                             <span class="flex items-center gap-1.5">
@@ -209,14 +208,14 @@
                         <span class="text-[10px] text-slate-400 block">({{ number_format($sumInboundQty) }} pcs)</span>
                     </div>
                     <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200/80">
-                        <span class="text-[10px] font-bold uppercase text-emerald-700 block">Total Rilis (Cleared)</span>
+                        <span class="text-[10px] font-bold uppercase text-emerald-700 block">Total Released (Cleared)</span>
                         <span class="text-sm font-bold text-emerald-700 font-mono">{{ $sumOutboundLots }} Lots</span>
                         <span class="text-[10px] text-slate-400 block">({{ number_format($sumOutboundQty) }} pcs)</span>
                     </div>
                     <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200/80">
                         <span class="text-[10px] font-bold uppercase text-blue-700 block">Clearance Rate</span>
                         <span class="text-sm font-bold text-blue-700 font-mono">{{ $flowClearanceRate }}%</span>
-                        <span class="text-[10px] text-slate-400 block">Rasio Penyelesaian</span>
+                        <span class="text-[10px] text-slate-400 block">Completion Ratio</span>
                     </div>
                 </div>
             </div>
@@ -225,8 +224,8 @@
             <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between gap-2">
-                        <h3 class="text-sm font-bold text-slate-900">Distribusi Status Inbound</h3>
-                        <span class="text-[11px] text-slate-400 font-medium">Per: {{ now()->translatedFormat('d M Y') }}</span>
+                        <h3 class="text-sm font-bold text-slate-900">Inbound Status Distribution</h3>
+                        <span class="text-[11px] text-slate-400 font-medium">As of: {{ now()->format('d M Y') }}</span>
                     </div>
 
                     <div class="mt-4 relative h-48 w-full flex items-center justify-center">
@@ -284,10 +283,10 @@
                 <div>
                     <div class="flex items-center justify-between gap-4">
                         <div>
-                            <h3 class="text-sm font-bold text-slate-900">Analisis Pareto Cacat (80/20 Rule)</h3>
-                            <span class="text-[11px] text-slate-400">Periode MTD: {{ now()->startOfMonth()->translatedFormat('d M') }} – {{ now()->translatedFormat('d M Y') }}</span>
+                            <h3 class="text-sm font-bold text-slate-900">Defect Pareto Analysis (80/20 Rule)</h3>
+                            <span class="text-[11px] text-slate-400">MTD Period: {{ now()->startOfMonth()->format('d M') }} – {{ now()->format('d M Y') }}</span>
                         </div>
-                        <span class="font-bold text-xs text-blue-600 font-mono">Total Cacat: {{ array_sum($paretoBarData) }} pcs</span>
+                        <span class="font-bold text-xs text-blue-600 font-mono">Total Defects: {{ array_sum($paretoBarData) }} pcs</span>
                     </div>
 
                     <div class="mt-4 relative h-64 w-full">
@@ -301,8 +300,8 @@
                 <div>
                     <div class="flex items-center justify-between gap-4">
                         <div>
-                            <h3 class="text-sm font-bold text-slate-900">Tren Hasil Inspeksi (7 Hari)</h3>
-                            <span class="text-[11px] text-slate-400">Periode: {{ $trendDates[0] ?? '' }} – {{ end($trendDates) ?? '' }}</span>
+                            <h3 class="text-sm font-bold text-slate-900">7-Day Inspection Results Trend</h3>
+                            <span class="text-[11px] text-slate-400">Period: {{ $trendDates[0] ?? '' }} – {{ end($trendDates) ?? '' }}</span>
                         </div>
                         <div class="flex items-center gap-3 text-xs text-slate-500">
                             <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Accepted</span>
@@ -324,7 +323,7 @@
         <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-slate-900">Workload & Yield per Komoditas</h3>
+                    <h3 class="text-sm font-bold text-slate-900">Commodity Workload & Quality Yield</h3>
                     <span class="text-[11px] text-slate-400">MTD</span>
                 </div>
 
@@ -385,8 +384,8 @@
             <div>
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
                     <div>
-                        <h3 class="text-sm font-bold text-slate-900">Antrean Inbound Siap Inspeksi</h3>
-                        <p class="text-[11px] text-slate-400">Prioritas FIFO berdasarkan waktu kedatangan dock.</p>
+                        <h3 class="text-sm font-bold text-slate-900">Inbound Material Queue — Ready for Inspection</h3>
+                        <p class="text-[11px] text-slate-400">FIFO queue priority based on dock arrival timestamp.</p>
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -397,7 +396,7 @@
                         </a>
                         @endif
                         <a href="{{ route('receivings.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition">
-                            Semua Inbound &rarr;
+                            View All Inbounds &rarr;
                         </a>
                     </div>
                 </div>
@@ -407,11 +406,11 @@
                         <thead>
                             <tr class="border-b border-slate-200 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
                                 <th class="pb-2">GRN / Lot</th>
-                                <th class="pb-2">Komponen</th>
+                                <th class="pb-2">Component</th>
                                 <th class="pb-2">Supplier</th>
                                 <th class="pb-2 text-center">Qty</th>
-                                <th class="pb-2">Waktu Masuk</th>
-                                <th class="pb-2 text-right">Aksi</th>
+                                <th class="pb-2">Received Time</th>
+                                <th class="pb-2 text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
@@ -442,17 +441,17 @@
                                         @if($user->canInspectCommodity($rcv->part->kategori_komoditas))
                                         <a href="{{ route('logbooks.create', ['receiving_id' => $rcv->id]) }}" 
                                             class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium text-[11px] shadow-xs transition">
-                                            <span>Inspeksi</span>
+                                            <span>Inspect</span>
                                         </a>
                                         @else
-                                        <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-400 text-[10px]" title="Terkunci untuk komoditas ini">
-                                            Terkunci
+                                        <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-400 text-[10px]" title="Commodity locked for other inspector role (Poka-Yoke)">
+                                            Locked
                                         </span>
                                         @endif
                                     @else
                                     <a href="{{ route('logbooks.create', ['receiving_id' => $rcv->id]) }}" 
                                         class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[11px] transition">
-                                        <span>Inspeksi</span>
+                                        <span>Inspect</span>
                                     </a>
                                     @endif
                                 </td>
@@ -460,7 +459,7 @@
                             @empty
                             <tr>
                                 <td colspan="6" class="py-6 text-center text-slate-400 text-xs">
-                                    Tidak ada antrean material yang menunggu inspeksi.
+                                    No incoming materials waiting for inspection. All dock arrivals have been inspected!
                                 </td>
                             </tr>
                             @endforelse
@@ -473,7 +472,7 @@
             <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
                 <div class="flex items-center gap-3">
                     <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> &lt;12h Normal</span>
-                    <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> 12-24h Prioritas</span>
+                    <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> 12-24h Priority</span>
                     <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> &gt;24h Overdue</span>
                 </div>
                 <span>FIFO Aging Benchmark</span>
@@ -486,11 +485,11 @@
     <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
-                <h3 class="text-sm font-bold text-slate-900">Audit Trail Terkini</h3>
-                <p class="text-[11px] text-slate-400">Log integritas & aktivitas keamanan sistem.</p>
+                <h3 class="text-sm font-bold text-slate-900">Recent Audit Trail</h3>
+                <p class="text-[11px] text-slate-400">System security & integrity audit logs.</p>
             </div>
             <a href="{{ route('admin.audit-trails.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition">
-                Semua Log &rarr;
+                View All Logs &rarr;
             </a>
         </div>
 
@@ -558,13 +557,13 @@ function switchDashboardTab(tab) {
     if (tab === 'flow') {
         viewFlow.classList.remove('hidden');
         viewPareto.classList.add('hidden');
-        tabFlowBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-sm transition flex items-center gap-1.5";
-        tabParetoBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-transparent hover:bg-slate-200 text-slate-600 transition flex items-center gap-1.5";
+        tabFlowBtn.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold bg-white text-slate-900 shadow-xs border border-slate-200/80 transition flex items-center gap-1.5";
+        tabParetoBtn.className = "px-3.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5";
     } else {
         viewFlow.classList.add('hidden');
         viewPareto.classList.remove('hidden');
-        tabFlowBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-transparent hover:bg-slate-200 text-slate-600 transition flex items-center gap-1.5";
-        tabParetoBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-sm transition flex items-center gap-1.5";
+        tabFlowBtn.className = "px-3.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5";
+        tabParetoBtn.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold bg-white text-slate-900 shadow-xs border border-slate-200/80 transition flex items-center gap-1.5";
     }
 }
 
@@ -589,13 +588,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     {
                         label: 'Inbound Lots (Dock Arrivals)',
                         data: flowInboundLots,
-                        borderColor: '#4f46e5',
-                        backgroundColor: 'rgba(79, 70, 229, 0.12)',
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.12)',
                         fill: true,
                         tension: 0.35,
                         borderWidth: 2.5,
                         pointRadius: 4,
-                        pointBackgroundColor: '#4f46e5',
+                        pointBackgroundColor: '#2563eb',
                         order: 2
                     },
                     {
@@ -744,9 +743,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     {
                         label: 'Defect Qty (pcs)',
                         data: paretoBarData,
-                        backgroundColor: 'rgba(99, 102, 241, 0.75)',
-                        hoverBackgroundColor: '#4f46e5',
-                        borderRadius: 8,
+                        backgroundColor: 'rgba(37, 99, 235, 0.75)',
+                        hoverBackgroundColor: '#1d4ed8',
+                        borderRadius: 6,
                         yAxisID: 'y',
                         order: 2
                     }

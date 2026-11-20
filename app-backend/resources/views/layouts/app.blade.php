@@ -274,7 +274,7 @@
                 <!-- Date -->
                 <div class="flex items-center gap-1.5 text-slate-500 text-xs font-medium">
                     <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                    <span>{{ now()->translatedFormat('d F Y') }}</span>
+                    <span>{{ now()->format('d F Y') }}</span>
                 </div>
 
                 <span class="h-4 w-px bg-slate-200"></span>

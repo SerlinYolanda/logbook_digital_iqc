@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-black text-slate-900 tracking-tight">Master Data Management</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Kelola data part, supplier, dan kategori defect.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Manage part catalogs, supplier directory, and defect categories.</p>
             </div>
         </div>
 

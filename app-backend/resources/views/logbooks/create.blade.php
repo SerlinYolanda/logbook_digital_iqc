@@ -10,7 +10,7 @@
                 <span class="material-symbols-outlined text-[26px]">assignment</span>
             </div>
             <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">Form Inspeksi Kualitas IQC</h1>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight">IQC Quality Inspection Sheet</h1>
             </div>
         </div>
 

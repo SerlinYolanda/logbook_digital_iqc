@@ -10,8 +10,8 @@
                 <span class="material-symbols-outlined text-[26px]">manage_accounts</span>
             </div>
             <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">Manajemen Akun Pengguna</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Kelola akun pengguna, hak akses role, dan status aktif.</p>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight">User Account Management</h1>
+                <p class="text-xs text-slate-500 mt-0.5">Manage user credentials, role access control, and active status.</p>
             </div>
         </div>
 

@@ -10,8 +10,8 @@
                 <span class="material-symbols-outlined text-[26px]">gavel</span>
             </div>
             <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">Verifikasi & Disposisi MRB</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Verifikasi logbook anomali dan otorisasi disposisi MRB.</p>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight">MRB Verification & Disposition</h1>
+                <p class="text-xs text-slate-500 mt-0.5">Non-conformance logbook review and MRB authorization gateway.</p>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber-600">pending_actions</span>
-                Antrean Menunggu Disposisi MRB
+                Pending MRB Disposition Queue
             </h3>
         </div>
 
@@ -37,7 +37,6 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                         <th class="py-3 px-4">GRN & Lot No</th>
-                        <th class="py-3 px-4">GR & Lot No</th>
                         <th class="py-3 px-4">Component & Commodity</th>
                         <th class="py-3 px-4">Supplier / Vendor</th>
                         <th class="py-3 px-4">Inspector & Date</th>
@@ -118,7 +117,6 @@
                     <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
                         <th class="py-3 px-4">Decision Date</th>
                         <th class="py-3 px-4">GRN & Lot No</th>
-                        <th class="py-3 px-4">GR & Lot No</th>
                         <th class="py-3 px-4">Component & Supplier</th>
                         <th class="py-3 px-4">Authorized Disposition</th>
                         <th class="py-3 px-4">Supervisor</th>
