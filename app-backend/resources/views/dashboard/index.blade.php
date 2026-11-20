@@ -237,17 +237,17 @@
                 <div>
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                            <div class="flex items-center gap-2 flex-wrap">
+                            <div class="flex items-center gap-2">
                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
-                                    Real-Time Throughput
+                                    7-Day Flow
                                 </span>
-                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 inline-flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[13px] text-slate-500">calendar_month</span>
-                                    Periode: {{ $flowDates[0] ?? '' }} – {{ end($flowDates) ?? '' }} (7 Hari Terakhir)
+                                <span class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[13px] text-slate-400">calendar_month</span>
+                                    {{ $flowDates[0] ?? '' }} – {{ end($flowDates) ?? '' }}
                                 </span>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 mt-1.5">Material Flow Velocity: Inbound vs Outbound vs Backlog</h3>
-                            <p class="text-xs text-slate-500">Daily comparison of dock inbound arrivals, lots cleared & released by IQC, and pending queue backlog.</p>
+                            <h3 class="text-base font-bold text-slate-900 mt-1">Material Flow & Throughput</h3>
+                            <p class="text-xs text-slate-500">Perbandingan harian barang masuk (inbound), rilis (released), dan antrean.</p>
                         </div>
                         <div class="flex items-center gap-4 text-xs font-semibold shrink-0">
                             <span class="flex items-center gap-1.5 text-indigo-700">
