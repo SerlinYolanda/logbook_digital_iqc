@@ -6,13 +6,13 @@
     <!-- 1. Header Banner -->
     <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs shrink-0">
                 <span class="material-symbols-outlined text-[26px]">folder_managed</span>
             </div>
             <div>
                 <div class="flex items-center gap-2 flex-wrap">
-                    <h1 class="text-xl font-black text-slate-900 tracking-tight">Inspection Logbook Digital Archive</h1>
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">Inspection Logbook Digital Archive</h1>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
                         Digital Inspection Standard
                     </span>
                 </div>
@@ -22,7 +22,7 @@
 
         <div class="flex items-center gap-3">
             @if(auth()->user()->isInspector())
-            <a href="{{ route('logbooks.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition">
+            <a href="{{ route('logbooks.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>Record New Logbook</span>
             </a>

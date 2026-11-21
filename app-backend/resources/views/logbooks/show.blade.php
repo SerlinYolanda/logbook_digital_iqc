@@ -6,12 +6,12 @@
     <!-- Header Banner -->
     <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs shrink-0">
                 <span class="material-symbols-outlined text-[26px]">fact_check</span>
             </div>
             <div>
                 <div class="flex items-center gap-2">
-                    <h1 class="text-xl font-black text-slate-900 tracking-tight">IQC Quality Logbook Sheet</h1>
+                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">IQC Quality Logbook Sheet</h1>
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold border {{ $logbook->status_badge_class }}">
                         {{ $logbook->status_label }}
                     </span>
@@ -21,11 +21,11 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <button type="button" onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+            <button type="button" onclick="window.print()" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-[16px]">print</span>
                 <span>Print Sheet</span>
             </button>
-            <a href="{{ route('logbooks.index') }}" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">
+            <a href="{{ route('logbooks.index') }}" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">
                 Back
             </a>
         </div>
@@ -46,7 +46,7 @@
             </div>
         </div>
         @if(auth()->user()->isInspector())
-        <a href="{{ route('logbooks.edit', $logbook->id) }}" class="px-5 py-2.5 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-md shadow-amber-500/20 transition shrink-0">
+        <a href="{{ route('logbooks.edit', $logbook->id) }}" class="px-5 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-md shadow-amber-500/20 transition shrink-0">
             Correct & Revise Now &rarr;
         </a>
         @endif
@@ -183,19 +183,19 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3 text-xs">
-                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
                     <span class="text-slate-400 block text-[10px] uppercase font-bold">Date Code / Lot DOM</span>
                     <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
                         {{ $logbook->date_code ?? 'Not Recorded' }}
                     </span>
                 </div>
-                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
                     <span class="text-slate-400 block text-[10px] uppercase font-bold">Manufacturing Date</span>
                     <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
                         {{ $logbook->manufacturing_date ? $logbook->manufacturing_date->format('d/m/Y') : '-' }}
                     </span>
                 </div>
-                <div class="col-span-2 p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                <div class="col-span-2 p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
                     <div>
                         <span class="text-slate-400 block text-[10px] uppercase font-bold">Expiration / Solderability Limit</span>
                         <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
@@ -311,7 +311,7 @@
 
         <!-- Integrated NEST Escalation Banner (Active Incident) -->
         @if($logbook->nestProcess)
-        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-300 space-y-2.5">
+        <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-300 space-y-2.5">
             <div class="flex justify-between items-center text-xs flex-wrap gap-2">
                 <div class="flex items-center gap-2">
                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-600 text-white shadow-xs flex items-center gap-1">
@@ -390,7 +390,7 @@
         <!-- Defect Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="defectsGrid">
             @forelse($logbook->defects as $defect)
-            <div class="defect-card p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between transition hover:border-slate-300 hover:shadow-xs"
+            <div class="defect-card p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between transition hover:border-slate-300 hover:shadow-xs"
                 data-severity="{{ strtolower($defect->tingkat_keparahan) }}"
                 data-has-photo="{{ !empty($defect->foto_bukti) ? 'true' : 'false' }}"
                 data-text="{{ strtolower(($defect->defectCategory->nama_defect ?? '') . ' ' . $defect->deskripsi) }}">
@@ -450,7 +450,7 @@
 
         <div class="space-y-3">
             @forelse($logbook->mrbDispositions as $disp)
-            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2">
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
                 <div class="flex justify-between items-center text-xs">
                     <span class="font-bold text-slate-800">
                         Disposition: <span class="text-blue-600 font-black">{{ $disp->decision_label }}</span>

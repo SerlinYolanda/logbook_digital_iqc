@@ -6,23 +6,24 @@
     <!-- Header Banner -->
     <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs shrink-0">
                 <span class="material-symbols-outlined text-[26px]">assignment</span>
             </div>
             <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">IQC Quality Inspection Sheet</h1>
+                <h1 class="text-xl font-bold text-slate-900 tracking-tight">IQC Quality Inspection Sheet</h1>
+                <p class="text-xs text-slate-500">Record incoming material quality verification and parameter measurements.</p>
             </div>
         </div>
 
         <div class="flex items-center gap-2">
-            <span class="px-3 py-1.5 rounded-xl text-xs font-bold border
+            <span class="px-3 py-1.5 rounded-lg text-xs font-bold border
                 @if(auth()->user()->role === 'inspector_ee') bg-emerald-50 text-emerald-700 border-emerald-200
                 @elseif(auth()->user()->role === 'inspector_automotive') bg-teal-50 text-teal-700 border-teal-200
                 @elseif(auth()->user()->role === 'inspector_wire_harness') bg-purple-50 text-purple-700 border-purple-200
                 @else bg-indigo-50 text-indigo-700 border-indigo-200 @endif">
-                Sub-Role: {{ auth()->user()->role_label }}
+                Commodity Gate: {{ auth()->user()->role_label }}
             </span>
-            <a href="{{ route('logbooks.index') }}" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">
+            <a href="{{ route('logbooks.index') }}" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">
                 Back to History
             </a>
         </div>
@@ -32,52 +33,31 @@
     <!-- Step 1: Select Material from Available Inbound Queue -->
     <div class="space-y-6">
 
-        <!-- Prominent High-Visibility Quick Barcode Scanner Banner -->
-        <div class="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-6 sm:p-8 text-white shadow-xl overflow-hidden border border-indigo-500/30">
-            <!-- Background Glow Decor -->
-            <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="relative z-10 space-y-4">
-                <div class="flex items-start gap-4">
-                    <div class="w-14 h-14 rounded-2xl bg-blue-600/30 text-indigo-300 border border-indigo-400/30 flex items-center justify-center shadow-inner shrink-0">
-                        <span class="material-symbols-outlined text-[30px]">qr_code_scanner</span>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                                Barcode Scanner Ready
-                            </span>
-                            <span class="text-xs text-indigo-200 font-semibold">Authorized: {{ auth()->user()->role_label }}</span>
-                        </div>
-                        <h2 class="text-xl sm:text-2xl font-black mt-1 text-white tracking-tight">
-                            Quick Inbound Barcode Scanner
-                        </h2>
-                        <p class="text-xs sm:text-sm text-slate-300 mt-0.5">
-                            Scan physical traveler tag or type the <strong>GR Number</strong> (e.g. <span class="font-mono text-indigo-200">GR-202611-0105</span> or <span class="font-mono text-indigo-200">0105</span>) or <strong>Lot Number</strong> to jump directly into parameter measurement.
-                        </p>
-                    </div>
+        <!-- Quick Lot Barcode Scanner -->
+        <div class="bg-slate-900 rounded-xl p-5 text-white border border-slate-800 shadow-md flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                    <span class="material-symbols-outlined text-[24px]">qr_code_scanner</span>
                 </div>
-
-                <!-- Large Industrial Scanner Search Form -->
-                <form action="{{ route('logbooks.create') }}" method="GET" class="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                    <div class="relative w-full flex-1">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-[22px]">search</span>
-                        <input type="text" name="search" value="{{ request('search') }}" required autofocus autocomplete="off"
-                            placeholder="Search or scan GR Number (e.g. GR-202611-0105 or 0105) or Lot Number..." 
-                            class="w-full pl-12 pr-10 py-4 rounded-2xl text-slate-900 placeholder:text-slate-400 text-sm sm:text-base font-mono font-bold border-0 focus:ring-4 focus:ring-indigo-400 shadow-inner bg-white">
-                        @if(request('search'))
-                            <a href="{{ route('logbooks.create') }}" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 font-bold text-lg" title="Clear search">&times;</a>
-                        @endif
-                    </div>
-                    <button type="submit" 
-                        class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-indigo-500 hover:bg-blue-600 text-white font-black text-sm sm:text-base shrink-0 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 cursor-pointer">
-                        <span class="material-symbols-outlined text-[20px]">search</span>
-                        <span>Find GR</span>
-                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-                    </button>
-                </form>
+                <div>
+                    <h3 class="text-sm font-bold text-white tracking-wide uppercase">Quick Lot Barcode Scanner</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Scan physical barcode or enter IQA GRN / Lot number to directly open inspection sheet.</p>
+                </div>
             </div>
+
+            <form action="{{ route('logbooks.create') }}" method="GET" class="flex items-center gap-3 w-full lg:w-auto lg:min-w-[500px]">
+                <div class="relative flex-1">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-[20px]">barcode_scanner</span>
+                    <input type="text" name="search" value="{{ request('search') }}" required autofocus autocomplete="off"
+                        placeholder="Scan barcode or type GRN / Lot No..." 
+                        class="w-full pl-11 pr-4 py-3 text-sm font-mono rounded-lg bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
+                <button type="submit" 
+                    class="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition shrink-0 flex items-center gap-2 shadow-xs cursor-pointer">
+                    <span>Find Lot</span>
+                    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+            </form>
         </div>
 
         <!-- Section Divider -->
@@ -97,9 +77,9 @@
             <div class="flex items-center justify-between gap-4 flex-wrap pb-2 border-b border-slate-100">
                 <div>
                     @if(request('search'))
-                        <h3 class="text-base font-bold text-slate-900">Hasil Pencarian GRN / Lot: "<span class="font-mono text-blue-600">{{ request('search') }}</span>"</h3>
+                        <h3 class="text-base font-bold text-slate-900">Search Results for GRN / Lot: "<span class="font-mono text-blue-600">{{ request('search') }}</span>"</h3>
                     @else
-                        <h3 class="text-base font-bold text-slate-900">Antrean Inbound Tersedia ({{ auth()->user()->role_label }})</h3>
+                        <h3 class="text-base font-bold text-slate-900">Available Inbound Queue ({{ auth()->user()->role_label }})</h3>
                     @endif
                 </div>
                 <div class="flex items-center gap-2">
@@ -109,7 +89,7 @@
                             <span class="material-symbols-outlined text-[14px]">close</span>
                         </a>
                     @endif
-                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
                         {{ $pendingReceivings->count() }} Lot(s) Available
                     </span>
                 </div>
@@ -117,10 +97,10 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
                 @forelse($pendingReceivings as $item)
-                <div class="p-4 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition bg-slate-50/50 flex flex-col justify-between">
+                <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition bg-slate-50/50 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-start gap-2">
-                            <span class="font-mono text-sm font-bold text-blue-600 bg-white px-2 py-0.5 rounded border border-indigo-100">{{ $item->no_grn_iqa }}</span>
+                            <span class="font-mono text-sm font-bold text-blue-600 bg-white px-2 py-0.5 rounded border border-blue-100">{{ $item->no_grn_iqa }}</span>
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold border {{ $item->aging_badge_class }}">
                                 {{ $item->aging_status }}
                             </span>
@@ -132,7 +112,7 @@
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-200 flex justify-between items-center">
                         <span class="text-[11px] font-semibold text-slate-500">{{ $item->part->komoditas_label }}</span>
-                        <a href="{{ route('logbooks.create', ['receiving_id' => $item->id]) }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition">
+                        <a href="{{ route('logbooks.create', ['receiving_id' => $item->id]) }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition">
                             <span class="material-symbols-outlined text-[15px]">play_arrow</span>
                             <span>Inspect This Lot &rarr;</span>
                         </a>
@@ -234,10 +214,10 @@
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                     <span class="material-symbols-outlined text-blue-600">visibility</span>
-                    Verifikasi Visual & Kemasan
+                    Visual & Packaging Inspection Gate
                 </h3>
                 <div class="flex items-center gap-2 text-xs">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 text-slate-700 font-bold border border-slate-200">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold border border-slate-200">
                         <span class="material-symbols-outlined text-[15px] text-blue-600">verified</span>
                         Standard: MIL-STD-105E Visual Level II
                     </span>
@@ -246,7 +226,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
                 <!-- Check 1: Packaging & Label Integrity -->
-                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
                             <span class="material-symbols-outlined text-blue-600 text-[18px]">inventory_2</span>
@@ -271,7 +251,7 @@
                 </div>
 
                 <!-- Check 2: ESD Protection & Moisture Barrier Bag -->
-                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
                             <span class="material-symbols-outlined text-blue-600 text-[18px]">shield</span>
@@ -301,7 +281,7 @@
                 </div>
 
                 <!-- Check 3: Physical Body Condition -->
-                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
                             <span class="material-symbols-outlined text-blue-600 text-[18px]">category</span>
@@ -326,7 +306,7 @@
                 </div>
 
                 <!-- Check 4: Lead Pin / Terminal Condition -->
-                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
                             <span class="material-symbols-outlined text-blue-600 text-[18px]">cable</span>
@@ -352,7 +332,7 @@
             </div>
 
             <!-- Visual Warning Alert -->
-            <div id="visualFailAlert" class="hidden p-3.5 rounded-2xl bg-rose-50 border border-rose-300 text-rose-800 text-xs flex items-center gap-2.5">
+            <div id="visualFailAlert" class="hidden p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs flex items-center gap-2.5">
                 <span class="material-symbols-outlined text-[18px] text-rose-600 shrink-0">report_problem</span>
                 <div>
                     <b>Visual Non-Conformance Alert:</b> One or more visual/packaging parameters have been marked as FAIL. Upon submission, this lot will be automatically routed to <b>Pending MRB Review</b>.
@@ -365,7 +345,7 @@
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                     <span class="material-symbols-outlined text-blue-600">event_available</span>
-                    Pemeriksaan Date Code & Masa Kedaluwarsa
+                    Date Code & Shelf-Life Verification
                 </h3>
                 <div id="shelfLifeStatusBadge" class="hidden px-3 py-1 rounded-xl text-xs font-bold border">
                     <!-- Dynamically populated by JS -->
@@ -376,34 +356,34 @@
                 <div>
                     <label class="block text-slate-700 font-bold text-xs mb-1">Date Code / Lot Code (DOM Code):</label>
                     <input type="text" name="date_code" placeholder="e.g. 2418, 2024-W18, or LOT26B"
-                        class="w-full text-xs font-mono rounded-xl border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-indigo-500">
+                        class="w-full text-xs font-mono rounded-lg border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-blue-500">
                     <span class="text-[10px] text-slate-400 mt-1 block">Printed production date code on reel or IC label.</span>
                 </div>
 
                 <div>
                     <label class="block text-slate-700 font-bold text-xs mb-1">Manufacturing Date (Optional):</label>
                     <input type="date" name="manufacturing_date" id="mfgDateInput"
-                        class="w-full text-xs rounded-xl border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-indigo-500">
+                        class="w-full text-xs rounded-lg border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-blue-500">
                     <span class="text-[10px] text-slate-400 mt-1 block">Factory production or packaging date.</span>
                 </div>
 
                 <div>
                     <label class="block text-slate-700 font-bold text-xs mb-1">Expiration Date / Solderability Limit:</label>
                     <input type="date" name="expiration_date" id="expDateInput" onchange="evaluateShelfLife()"
-                        class="w-full text-xs rounded-xl border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-indigo-500">
+                        class="w-full text-xs rounded-lg border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-blue-500">
                     <span class="text-[10px] text-slate-400 mt-1 block">Maximum shelf-life date before solder degradation.</span>
                 </div>
             </div>
 
             <!-- Expiry Poka-Yoke Warning Banner -->
-            <div id="expiryWarningAlert" class="hidden p-3.5 rounded-2xl bg-rose-50 border border-rose-300 text-rose-800 text-xs flex items-center gap-2.5 animate-pulse">
+            <div id="expiryWarningAlert" class="hidden p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs flex items-center gap-2.5 animate-pulse">
                 <span class="material-symbols-outlined text-[20px] text-rose-600 shrink-0">timer_off</span>
                 <div>
                     <b>POKA-YOKE WARNING: MATERIAL EXPIRED!</b> The selected expiration date is in the past. This material is past its certified shelf-life and will automatically be held for <b>Material Review Board (MRB) Disposition</b> upon submission.
                 </div>
             </div>
 
-            <div id="nearExpiryAlert" class="hidden p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-800 text-xs flex items-center gap-2.5">
+            <div id="nearExpiryAlert" class="hidden p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-800 text-xs flex items-center gap-2.5">
                 <span class="material-symbols-outlined text-[18px] text-amber-600 shrink-0">alarm</span>
                 <div>
                     <b>Near Expiry Notice:</b> This material has less than 30 days of shelf-life remaining. Prioritize for immediate assembly line usage.
@@ -416,7 +396,7 @@
             <div class="flex items-center justify-between flex-wrap gap-2">
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                     <span class="material-symbols-outlined text-blue-600">straighten</span>
-                    Lembar Pengukuran Dimensi & Parameter
+                    Dimensional & Parameter Measurement Sheet
                 </h3>
                 <div class="flex items-center gap-2 text-xs">
                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
@@ -466,7 +446,7 @@
                                     name="measurements[{{ $param->id }}][{{ $s }}]"
                                     data-min="{{ $param->batas_min }}"
                                     data-max="{{ $param->batas_max }}"
-                                    class="w-20 text-center text-xs font-mono py-1.5 px-2 rounded-xl border border-slate-200 measurement-input focus:ring-2 focus:ring-indigo-500"
+                                    class="w-20 text-center text-xs font-mono py-1.5 px-2 rounded-lg border border-slate-200 measurement-input focus:ring-2 focus:ring-blue-500"
                                     placeholder="{{ $param->nominal ?? '0.00' }}"
                                     oninput="validateInput(this)">
                             </td>
@@ -483,7 +463,7 @@
                 </table>
             </div>
 
-            <div id="outOfSpecAlert" class="hidden mt-4 p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-800 text-xs flex items-center gap-3">
+            <div id="outOfSpecAlert" class="hidden mt-4 p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs flex items-center gap-3">
                 <span class="material-symbols-outlined text-[20px] text-rose-600 shrink-0">report_problem</span>
                 <div>
                     <b>Out-of-Spec Warning:</b> Sample measurement(s) detected outside nominal tolerance limits. Upon submission, this logbook will automatically route to <b>Pending MRB Review</b> for supervisor disposition.
@@ -498,11 +478,11 @@
             </div>
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <button type="button" onclick="submitAs('draft')" 
-                    class="px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex-1 sm:flex-none">
+                    class="px-5 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex-1 sm:flex-none">
                     Save as Draft
                 </button>
                 <button type="button" onclick="submitAs('submit')" 
-                    class="px-6 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition flex-1 sm:flex-none">
+                    class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition flex-1 sm:flex-none">
                     Submit Inspection Logbook &rarr;
                 </button>
             </div>
