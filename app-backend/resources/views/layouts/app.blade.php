@@ -306,7 +306,7 @@
                         </div>
                         <div>
                             <div class="text-xs font-bold text-slate-800 leading-tight">{{ $uName }}</div>
-                            <div class="text-[10px] text-slate-400 font-mono">Shift {{ auth()->user()->shift ?? '1' }} • {{ auth()->user()->nik ?? '-' }}</div>
+                            <div class="text-[10px] text-slate-400 font-mono">{{ auth()->user()->nik ?? '-' }}</div>
                         </div>
                     </div>
                     
