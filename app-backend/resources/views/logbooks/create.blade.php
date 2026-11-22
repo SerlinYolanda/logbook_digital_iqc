@@ -82,71 +82,145 @@
                         <h3 class="text-base font-bold text-slate-900">Available Inbound Queue ({{ auth()->user()->role_label }})</h3>
                     @endif
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
                     @if(request('search'))
                         <a href="{{ route('logbooks.create') }}" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center gap-1">
                             <span>Reset Search</span>
                             <span class="material-symbols-outlined text-[14px]">close</span>
                         </a>
                     @endif
-                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                        {{ $pendingReceivings->count() }} Lot(s) Available
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[16px]">search</span>
+                        <input type="text" id="queueFilterInput" onkeyup="filterQueueTable(this.value)" placeholder="Quick filter queue..."
+                            class="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 text-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-44 sm:w-56">
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
+                        <span id="queueCountDisplay">{{ $pendingReceivings->count() }}</span> Lot(s) Available
                     </span>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
-                @forelse($pendingReceivings as $item)
-                <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition bg-slate-50/50 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start gap-2">
-                            <span class="font-mono text-sm font-bold text-blue-600 bg-white px-2 py-0.5 rounded border border-blue-100">{{ $item->no_grn_iqa }}</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold border {{ $item->aging_badge_class }}">
-                                {{ $item->aging_status }}
-                            </span>
-                        </div>
-                        <h3 class="font-bold text-sm text-slate-800 mt-2.5">{{ $item->part->nama_part ?? '-' }}</h3>
-                        <div class="text-xs text-slate-500 font-mono mt-0.5">Part: <b class="text-slate-700">{{ $item->part->kode_part ?? '-' }}</b></div>
-                        <div class="text-xs text-slate-500 mt-1">Supplier: <b class="text-slate-700">{{ $item->supplier->nama_supplier ?? '-' }}</b></div>
-                        <div class="text-xs text-slate-500 font-mono mt-0.5">Lot: <b>{{ $item->no_lot }}</b> | Qty: <b>{{ number_format($item->qty_datang) }} pcs</b></div>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-200 flex justify-between items-center">
-                        <span class="text-[11px] font-semibold text-slate-500">{{ $item->part->komoditas_label }}</span>
-                        <a href="{{ route('logbooks.create', ['receiving_id' => $item->id]) }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition">
-                            <span class="material-symbols-outlined text-[15px]">play_arrow</span>
-                            <span>Inspect This Lot &rarr;</span>
-                        </a>
-                    </div>
-                </div>
-                @empty
-                <div class="col-span-full py-16 text-center">
-                    <div class="w-16 h-16 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
-                        <span class="material-symbols-outlined text-[38px]">search_off</span>
-                    </div>
-                    <h3 class="text-base font-extrabold text-slate-800">
-                        @if(request('search'))
-                            No Inbound Material Found
-                        @else
-                            Queue Is Currently Empty
-                        @endif
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
-                        @if(request('search'))
-                            No material matching GR / Lot Number "<strong class="font-mono text-slate-700">{{ request('search') }}</strong>" was found in your available queue ({{ auth()->user()->role_label }}).
-                        @else
-                            No inbound materials currently awaiting inspection for your commodity.
-                        @endif
-                    </p>
-                    @if(request('search'))
-                    <div class="mt-4">
-                        <a href="{{ route('logbooks.create') }}" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold border border-indigo-200 transition">
-                            <span class="material-symbols-outlined text-[16px]">refresh</span>
-                            <span>Reset Search & View All Queue</span>
-                        </a>
-                    </div>
-                    @endif
-                </div>
-                @endforelse
+            <!-- Inbound Queue Data Table (Memanjang ke Bawah / Full-Width Enterprise Row Table) -->
+            <div class="overflow-x-auto rounded-lg border border-slate-200/80">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+                            <th class="py-3 px-4">GRN & Lot No</th>
+                            <th class="py-3 px-4">Component & Commodity</th>
+                            <th class="py-3 px-4">Supplier & Origin</th>
+                            <th class="py-3 px-4 text-center">Inbound Qty</th>
+                            <th class="py-3 px-4">Arrival & Aging</th>
+                            <th class="py-3 px-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100" id="inboundQueueTableBody">
+                        @forelse($pendingReceivings as $item)
+                        @php
+                            $searchPayload = strtolower(
+                                ($item->no_grn_iqa ?? '') . ' ' .
+                                ($item->no_lot ?? '') . ' ' .
+                                ($item->no_po ?? '') . ' ' .
+                                ($item->part->kode_part ?? '') . ' ' .
+                                ($item->part->nama_part ?? '') . ' ' .
+                                ($item->part->komoditas_label ?? '') . ' ' .
+                                ($item->supplier->nama_supplier ?? '') . ' ' .
+                                ($item->supplier->negara_asal ?? '') . ' ' .
+                                ($item->aging_status ?? '')
+                            );
+                        @endphp
+                        <tr class="hover:bg-slate-50/80 transition group queue-row" data-search="{{ $searchPayload }}">
+                            <!-- GRN & Lot -->
+                            <td class="py-3.5 px-4">
+                                <span class="font-mono text-xs sm:text-sm font-bold text-blue-600 bg-white px-2 py-0.5 rounded border border-blue-100 inline-block">{{ $item->no_grn_iqa }}</span>
+                                <div class="text-[11px] text-slate-500 font-mono mt-1">
+                                    Lot: <strong class="text-slate-800">{{ $item->no_lot }}</strong>
+                                    @if($item->no_po)
+                                        <span class="text-slate-300 mx-1">|</span> PO: <span class="text-slate-600">{{ $item->no_po }}</span>
+                                    @endif
+                                </div>
+                            </td>
+
+                            <!-- Component & Commodity -->
+                            <td class="py-3.5 px-4">
+                                <div class="font-bold text-slate-800 text-xs sm:text-sm">{{ $item->part->nama_part ?? '-' }}</div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="font-mono text-xs text-slate-500">Part: <strong class="text-slate-700">{{ $item->part->kode_part ?? '-' }}</strong></span>
+                                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                                        {{ $item->part->komoditas_label }}
+                                    </span>
+                                </div>
+                            </td>
+
+                            <!-- Supplier & Origin -->
+                            <td class="py-3.5 px-4">
+                                <div class="font-bold text-slate-800 text-xs">{{ $item->supplier->nama_supplier ?? '-' }}</div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">{{ $item->supplier->negara_asal ?? 'Indonesia' }}</div>
+                            </td>
+
+                            <!-- Inbound Qty -->
+                            <td class="py-3.5 px-4 text-center">
+                                <span class="font-mono font-bold text-slate-800 text-xs px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 inline-block">
+                                    {{ number_format($item->qty_datang) }} pcs
+                                </span>
+                            </td>
+
+                            <!-- Arrival Date & Queue Aging -->
+                            <td class="py-3.5 px-4">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border {{ $item->aging_badge_class }}">
+                                    {{ $item->aging_status }}
+                                </span>
+                                <div class="text-[11px] text-slate-400 font-mono mt-1">
+                                    {{ $item->tanggal_terima ? $item->tanggal_terima->format('d M Y, H:i') : '-' }}
+                                </div>
+                            </td>
+
+                            <!-- Action Button -->
+                            <td class="py-3.5 px-4 text-right">
+                                <a href="{{ route('logbooks.create', ['receiving_id' => $item->id]) }}" 
+                                    class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition group-hover:shadow-sm shrink-0">
+                                    <span class="material-symbols-outlined text-[16px]">play_arrow</span>
+                                    <span>Inspect This Lot &rarr;</span>
+                                </a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-400">
+                                <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-2">
+                                    <span class="material-symbols-outlined text-[28px]">search_off</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-700">
+                                    @if(request('search'))
+                                        No Inbound Material Found
+                                    @else
+                                        Queue Is Currently Empty
+                                    @endif
+                                </h4>
+                                <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                                    @if(request('search'))
+                                        No material matching GR / Lot Number "<strong class="font-mono text-slate-700">{{ request('search') }}</strong>" was found in your available queue ({{ auth()->user()->role_label }}).
+                                    @else
+                                        No inbound materials currently awaiting inspection for your commodity.
+                                    @endif
+                                </p>
+                                @if(request('search'))
+                                <div class="mt-3">
+                                    <a href="{{ route('logbooks.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-200 transition">
+                                        <span class="material-symbols-outlined text-[15px]">refresh</span>
+                                        <span>Reset Search & View All Queue</span>
+                                    </a>
+                                </div>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="queueNoMatchMessage" class="hidden py-8 text-center text-slate-400 text-xs">
+                <span class="material-symbols-outlined text-[24px] text-slate-300 block mb-1">filter_alt_off</span>
+                No matching material found in queue for "<span id="queueQuerySpan" class="font-semibold text-slate-700"></span>".
             </div>
         </div>
     </div>
@@ -589,6 +663,38 @@ function checkAllOutOfSpec() {
 function submitAs(type) {
     document.getElementById('actionTypeInput').value = type;
     document.getElementById('inspectionForm').submit();
+}
+
+function filterQueueTable(val) {
+    const q = (val || '').trim().toLowerCase();
+    const rows = document.querySelectorAll('.queue-row');
+    let visibleCount = 0;
+    rows.forEach(r => {
+        const text = r.getAttribute('data-search') || '';
+        if (!q || text.includes(q)) {
+            r.classList.remove('hidden');
+            visibleCount++;
+        } else {
+            r.classList.add('hidden');
+        }
+    });
+
+    const noMatch = document.getElementById('queueNoMatchMessage');
+    const span = document.getElementById('queueQuerySpan');
+    const countDisplay = document.getElementById('queueCountDisplay');
+
+    if (countDisplay) {
+        countDisplay.textContent = visibleCount;
+    }
+
+    if (noMatch) {
+        if (visibleCount === 0 && rows.length > 0) {
+            noMatch.classList.remove('hidden');
+            if (span) span.textContent = val;
+        } else {
+            noMatch.classList.add('hidden');
+        }
+    }
 }
 </script>
 @endsection
