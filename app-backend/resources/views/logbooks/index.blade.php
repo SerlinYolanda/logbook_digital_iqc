@@ -335,17 +335,17 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
+            <table class="w-full text-left text-xs min-w-[1150px] border-collapse">
                 <thead>
-                    <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
-                        <th class="py-3.5 px-4">GRN & Lot No</th>
-                        <th class="py-3.5 px-4">Component & Commodity</th>
-                        <th class="py-3.5 px-4">Supplier & Origin</th>
-                        <th class="py-3.5 px-4">Inspection Checks</th>
-                        <th class="py-3.5 px-4">Tgl Keluar / Rilis & Inspector</th>
-                        <th class="py-3.5 px-4">Running Status</th>
-                        <th class="py-3.5 px-4">MRB Disposition</th>
-                        <th class="py-3.5 px-4 text-right">Actions</th>
+                    <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
+                        <th class="py-3 px-4 w-52">GRN & Lot No</th>
+                        <th class="py-3 px-4 w-60">Component & Commodity</th>
+                        <th class="py-3 px-4 w-52">Supplier & Origin</th>
+                        <th class="py-3 px-4 w-52">Inspection Checks</th>
+                        <th class="py-3 px-4 w-48">Release Date & Inspector</th>
+                        <th class="py-3 px-4 w-40 text-center">Running Status</th>
+                        <th class="py-3 px-4 w-48">MRB Disposition</th>
+                        <th class="py-3 px-4 w-32 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100" id="logbookTableBody">
@@ -367,25 +367,27 @@
                             ($log->date_code ?? '')
                         );
                     @endphp
-                    <tr class="hover:bg-slate-50/70 transition logbook-row"
+                    <tr class="hover:bg-slate-50/70 transition logbook-row group"
                         data-status="{{ $log->status }}"
                         data-search="{{ $searchPayload }}">
                         <!-- GRN & Lot -->
-                        <td class="py-3.5 px-4">
-                            <span class="font-mono font-bold text-blue-600 text-sm block">{{ $rcv->no_grn_iqa ?? '-' }}</span>
-                            <div class="text-[10px] text-slate-400 font-mono mt-0.5">Lot: <b class="text-slate-600">{{ $rcv->no_lot ?? '-' }}</b></div>
-                            <div class="text-[10px] text-slate-400 font-mono">PO: {{ $rcv->no_po ?? '-' }}</div>
-                            <div class="text-[10px] text-slate-500 flex items-center gap-1 mt-1 font-sans">
+                        <td class="align-top py-3.5 px-4 whitespace-nowrap">
+                            <span class="font-mono font-bold text-blue-600 text-sm block tracking-tight">{{ $rcv->no_grn_iqa ?? '-' }}</span>
+                            <div class="text-[11px] text-slate-600 font-mono mt-1">Lot: <strong class="text-slate-800">{{ $rcv->no_lot ?? '-' }}</strong></div>
+                            @if(!empty($rcv->no_po))
+                                <div class="text-[10px] text-slate-400 font-mono mt-0.5">PO: {{ $rcv->no_po }}</div>
+                            @endif
+                            <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-1 font-sans">
                                 <span class="material-symbols-outlined text-[13px] text-blue-600">login</span>
-                                <span>Masuk: <b class="text-slate-700 font-mono">{{ $rcv->tanggal_terima ? $rcv->tanggal_terima->format('d M Y') : '-' }}</b></span>
+                                <span>Inbound: <b class="text-slate-600 font-mono">{{ $rcv->tanggal_terima ? $rcv->tanggal_terima->format('d M Y') : '-' }}</b></span>
                             </div>
                         </td>
 
                         <!-- Component & Commodity -->
-                        <td class="py-3.5 px-4">
-                            <div class="font-bold text-slate-900 text-xs">{{ $rcv->part->kode_part ?? '-' }}</div>
-                            <div class="text-[10px] text-slate-500 truncate max-w-[130px]">{{ $rcv->part->nama_part ?? '-' }}</div>
-                            <span class="inline-block px-2 py-0.5 rounded text-[9px] font-bold mt-1
+                        <td class="align-top py-3.5 px-4">
+                            <div class="font-mono font-bold text-slate-800 text-xs">{{ $rcv->part->kode_part ?? '-' }}</div>
+                            <div class="text-xs font-semibold text-slate-700 mt-0.5 leading-snug">{{ $rcv->part->nama_part ?? '-' }}</div>
+                            <span class="inline-block px-2 py-0.5 rounded text-[9px] font-bold mt-1.5
                                 @if($rcv->part->kategori_komoditas === 'ee_part') bg-emerald-50 text-emerald-700 border border-emerald-200
                                 @elseif($rcv->part->kategori_komoditas === 'automotive') bg-teal-50 text-teal-700 border border-teal-200
                                 @else bg-purple-50 text-purple-700 border border-purple-200 @endif">
@@ -394,61 +396,61 @@
                         </td>
 
                         <!-- Supplier & Origin -->
-                        <td class="py-3.5 px-4 text-slate-700">
-                            <div class="font-bold text-slate-800">{{ $rcv->supplier->nama_supplier ?? '-' }}</div>
-                            <div class="text-[10px] text-slate-400">{{ $rcv->supplier->negara_asal ?? 'Indonesia' }}</div>
-                            <div class="text-[10px] text-slate-500 font-mono mt-0.5">Inbound: {{ number_format($rcv->qty_datang) }} pcs</div>
+                        <td class="align-top py-3.5 px-4 text-slate-700">
+                            <div class="font-bold text-slate-800 text-xs leading-snug">{{ $rcv->supplier->nama_supplier ?? '-' }}</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">{{ $rcv->supplier->negara_asal ?? 'Indonesia' }}</div>
+                            <div class="text-[11px] text-slate-500 font-mono mt-1">Inbound: <b class="text-slate-700">{{ number_format($rcv->qty_datang) }} pcs</b></div>
                         </td>
 
                         <!-- Quality Verification Checks Summary -->
-                        <td class="py-3.5 px-4">
-                            <div class="space-y-1">
+                        <td class="align-top py-3.5 px-4">
+                            <div class="space-y-1.5 text-[11px]">
                                 <!-- Measurement Check -->
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] text-slate-400">Measurement:</span>
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-slate-400">Measurement:</span>
                                     @if($hasMeasFail)
-                                        <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-100 text-rose-800">Out-of-Spec</span>
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">Out-of-Spec</span>
                                     @else
-                                        <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">{{ $log->qty_sampel }} Smp (PASS)</span>
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">{{ $log->qty_sampel }} Smp (PASS)</span>
                                     @endif
                                 </div>
 
                                 <!-- Visual Check -->
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] text-slate-400">Visual Gate:</span>
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-slate-400">Visual Gate:</span>
                                     @if($log->hasVisualFail())
-                                        <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-100 text-rose-800">Visual FAIL</span>
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">Visual FAIL</span>
                                     @else
-                                        <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">Visual OK</span>
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">Visual OK</span>
                                     @endif
                                 </div>
 
                                 <!-- Shelf Life / Expiry Check -->
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] text-slate-400">Date Code:</span>
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-slate-400">Date Code:</span>
                                     @if($log->is_expired)
-                                        <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-100 text-rose-800 animate-pulse">EXPIRED</span>
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-200 animate-pulse whitespace-nowrap">EXPIRED</span>
                                     @elseif($log->date_code)
-                                        <span class="font-mono text-[10px] text-slate-600 font-semibold">{{ $log->date_code }}</span>
+                                        <span class="font-mono text-[10px] text-slate-700 font-semibold whitespace-nowrap">{{ $log->date_code }}</span>
                                     @else
-                                        <span class="text-[10px] text-slate-400 font-mono">Verified</span>
+                                        <span class="text-[10px] text-slate-400 font-mono whitespace-nowrap">Verified</span>
                                     @endif
                                 </div>
                             </div>
                         </td>
 
-                        <!-- Tgl Selesai / Keluar & Inspector -->
-                        <td class="py-3.5 px-4 text-slate-600">
-                            <div class="text-xs font-bold text-slate-900 font-mono flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px] text-emerald-600">logout</span>
-                                {{ $log->tanggal_inspeksi ? $log->tanggal_inspeksi->format('d M Y, H:i') : '-' }}
+                        <!-- Release Date & Inspector -->
+                        <td class="align-top py-3.5 px-4 text-slate-600 whitespace-nowrap">
+                            <div class="text-xs font-semibold text-slate-800 font-mono flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[15px] text-blue-600">event</span>
+                                <span>{{ $log->tanggal_inspeksi ? $log->tanggal_inspeksi->format('d M Y, H:i') : '-' }}</span>
                             </div>
-                            <div class="font-semibold text-slate-700 text-[11px] mt-1">{{ $log->inspector->name ?? '-' }}</div>
+                            <div class="font-bold text-slate-800 text-xs mt-1.5">{{ $log->inspector->name ?? '-' }}</div>
                             <div class="text-[10px] text-slate-400">{{ $log->inspector->role_label ?? 'Inspector' }}</div>
                         </td>
 
                         <!-- Running Status -->
-                        <td class="py-3.5 px-4">
+                        <td class="align-top py-3.5 px-4 text-center whitespace-nowrap">
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border {{ $log->status_badge_class }}">
                                 @if($log->status === 'accept')
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
@@ -464,37 +466,39 @@
                         </td>
 
                         <!-- MRB Disposition Notes -->
-                        <td class="py-3.5 px-4">
+                        <td class="align-top py-3.5 px-4">
                             @if($log->latestMrbDisposition)
-                                <div class="font-bold text-slate-800 text-[11px]">{{ $log->latestMrbDisposition->decision_label }}</div>
-                                <div class="text-[10px] text-slate-500 truncate max-w-[140px]" title="{{ $log->latestMrbDisposition->catatan }}">
-                                    {{ $log->latestMrbDisposition->catatan }}
+                                <div class="font-bold text-slate-800 text-xs">{{ $log->latestMrbDisposition->decision_label }}</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug" title="{{ $log->latestMrbDisposition->catatan }}">
+                                    {{ Str::limit($log->latestMrbDisposition->catatan, 60) }}
                                 </div>
                             @elseif($log->status === 'menunggu_penetapan')
-                                <span class="text-amber-700 font-semibold text-[10px] flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[13px]">hourglass_top</span>
+                                <span class="text-amber-700 font-semibold text-xs flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">hourglass_top</span>
                                     Under SPV Review
                                 </span>
                             @else
-                                <span class="text-slate-400 text-[11px]">-</span>
+                                <span class="text-slate-400 text-xs">-</span>
                             @endif
                         </td>
 
                         <!-- Actions -->
-                        <td class="py-3.5 px-4 text-right space-x-1 whitespace-nowrap">
-                            <a href="{{ route('logbooks.show', $log->id) }}" 
-                                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition">
-                                <span class="material-symbols-outlined text-[13px]">visibility</span>
-                                <span>View</span>
-                            </a>
+                        <td class="align-top py-3.5 px-4 text-right whitespace-nowrap">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <a href="{{ route('logbooks.show', $log->id) }}" 
+                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                                    <span class="material-symbols-outlined text-[15px]">visibility</span>
+                                    <span>View</span>
+                                </a>
 
-                            @if($log->status === 'perlu_revisi' && auth()->user()->isInspector())
-                            <a href="{{ route('logbooks.edit', $log->id) }}" 
-                                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-[11px] shadow-xs transition">
-                                <span class="material-symbols-outlined text-[13px]">edit_note</span>
-                                <span>Revise</span>
-                            </a>
-                            @endif
+                                @if($log->status === 'perlu_revisi' && auth()->user()->isInspector())
+                                <a href="{{ route('logbooks.edit', $log->id) }}" 
+                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-xs transition">
+                                    <span class="material-symbols-outlined text-[15px]">edit_note</span>
+                                    <span>Revise</span>
+                                </a>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty
