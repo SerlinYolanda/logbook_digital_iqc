@@ -19,15 +19,6 @@
                 <p class="text-xs text-slate-500 mt-0.5">Quality inspection records for inbound material lots.</p>
             </div>
         </div>
-
-        <div class="flex items-center gap-3">
-            @if(auth()->user()->isInspector())
-            <a href="{{ route('logbooks.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition">
-                <span class="material-symbols-outlined text-[18px]">add_circle</span>
-                <span>Record New Logbook</span>
-            </a>
-            @endif
-        </div>
     </div>
 
     <!-- 2. Direct Inspection Bar: Quick GRN / Lot Lookup -->
