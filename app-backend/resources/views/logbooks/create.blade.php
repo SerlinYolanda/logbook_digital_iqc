@@ -283,6 +283,10 @@
             </div>
         </div>
 
+        @php
+            $isWireHarness = ($receiving->part->kategori_komoditas ?? '') === 'wire_harness';
+        @endphp
+
         <!-- 1. Visual & Packaging Inspection Gate -->
         <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100">
@@ -293,13 +297,114 @@
                 <div class="flex items-center gap-2 text-xs">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold border border-slate-200">
                         <span class="material-symbols-outlined text-[15px] text-blue-600">verified</span>
-                        Standard: MIL-STD-105E Visual Level II
+                        @if($isWireHarness)
+                            Standard: IPC/WHMA-A-620 Cable & Wire Quality
+                        @else
+                            Standard: MIL-STD-105E Visual Level II
+                        @endif
                     </span>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
-                <!-- Check 1: Packaging & Label Integrity -->
+                @if($isWireHarness)
+                <!-- Wire Harness Check 1: Spool & Bundle Packaging / Spec Labeling -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">inventory_2</span>
+                            <span>Spool & Spec Labeling</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                            Spool/bundle intact, AWG gauge spec, color code & lot label verified against PO.
+                        </p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_packaging" value="pass" checked onchange="checkVisualStatus()"
+                                class="text-emerald-600 focus:ring-emerald-500">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_packaging" value="fail" onchange="checkVisualStatus()"
+                                class="text-rose-600 focus:ring-rose-500">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Wire Harness Check 2: Moisture & Static Shield (Exempt for Wire) -->
+                <div class="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-slate-700 font-bold text-xs">
+                            <span class="material-symbols-outlined text-slate-500 text-[18px]">shield</span>
+                            <span>Moisture / ESD (Exempt)</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                            Non-ESD/MSL Wire Commodity. Moisture barrier bag & desiccant HIC are exempt.
+                        </p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-200 text-slate-700">
+                            <span class="material-symbols-outlined text-[14px]">check</span>
+                            EXEMPT (N/A)
+                        </span>
+                        <input type="hidden" name="visual_esd_moisture" value="na">
+                        <span class="text-[10px] text-slate-400 font-medium">Passive Hardware</span>
+                    </div>
+                </div>
+
+                <!-- Wire Harness Check 3: Cable Insulation & Outer Jacket Integrity -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">cable</span>
+                            <span>Insulation & Jacket Integrity</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                            No cuts, tears, burns, pinholes, exposed copper strands, or jacket damage.
+                        </p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_body" value="pass" checked onchange="checkVisualStatus()"
+                                class="text-emerald-600 focus:ring-emerald-500">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_body" value="fail" onchange="checkVisualStatus()"
+                                class="text-rose-600 focus:ring-rose-500">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Wire Harness Check 4: Connector Housing & Terminal Crimp -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">electrical_services</span>
+                            <span>Housing & Terminal Crimp</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                            Housing not cracked, locking lance intact, terminal retention secure (no push-out).
+                        </p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_terminal" value="pass" checked onchange="checkVisualStatus()"
+                                class="text-emerald-600 focus:ring-emerald-500">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_terminal" value="fail" onchange="checkVisualStatus()"
+                                class="text-rose-600 focus:ring-rose-500">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+                @else
+                <!-- Check 1: Packaging & Label Integrity (EE / Standard) -->
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
@@ -403,6 +508,7 @@
                         </label>
                     </div>
                 </div>
+                @endif
             </div>
 
             <!-- Visual Warning Alert -->
@@ -419,36 +525,77 @@
             <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                     <span class="material-symbols-outlined text-blue-600">event_available</span>
-                    Date Code & Shelf-Life Verification
+                    @if($isWireHarness)
+                        Batch / Date Code Verification
+                    @else
+                        Date Code & Shelf-Life Verification
+                    @endif
                 </h3>
-                <div id="shelfLifeStatusBadge" class="hidden px-3 py-1 rounded-xl text-xs font-bold border">
-                    <!-- Dynamically populated by JS -->
-                </div>
+                @if($isWireHarness)
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        NON-PERISHABLE (EXEMPT FROM EXPIRY)
+                    </span>
+                @else
+                    <div id="shelfLifeStatusBadge" class="hidden px-3 py-1 rounded-xl text-xs font-bold border">
+                        <!-- Dynamically populated by JS -->
+                    </div>
+                @endif
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-slate-700 font-bold text-xs mb-1">Date Code / Lot Code (DOM Code):</label>
-                    <input type="text" name="date_code" placeholder="e.g. 2418, 2024-W18, or LOT26B"
+                    <label class="block text-slate-700 font-bold text-xs mb-1">
+                        @if($isWireHarness)
+                            Spool / Batch Code (DOM):
+                        @else
+                            Date Code / Lot Code (DOM Code):
+                        @endif
+                    </label>
+                    <input type="text" name="date_code" placeholder="{{ $isWireHarness ? 'e.g. BATCH-2405-A or SPOOL#12' : 'e.g. 2418, 2024-W18, or LOT26B' }}"
                         class="w-full text-xs font-mono rounded-lg border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-blue-500">
-                    <span class="text-[10px] text-slate-400 mt-1 block">Printed production date code on reel or IC label.</span>
+                    <span class="text-[10px] text-slate-400 mt-1 block">
+                        {{ $isWireHarness ? 'Printed production batch or spool ID on wire harness label.' : 'Printed production date code on reel or IC label.' }}
+                    </span>
                 </div>
 
                 <div>
-                    <label class="block text-slate-700 font-bold text-xs mb-1">Manufacturing Date (Optional):</label>
+                    <label class="block text-slate-700 font-bold text-xs mb-1">
+                        @if($isWireHarness)
+                            Assembly / Extrusion Date (Optional):
+                        @else
+                            Manufacturing Date (Optional):
+                        @endif
+                    </label>
                     <input type="date" name="manufacturing_date" id="mfgDateInput"
                         class="w-full text-xs rounded-lg border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-blue-500">
-                    <span class="text-[10px] text-slate-400 mt-1 block">Factory production or packaging date.</span>
+                    <span class="text-[10px] text-slate-400 mt-1 block">
+                        {{ $isWireHarness ? 'Factory wire extrusion or crimping assembly date.' : 'Factory production or packaging date.' }}
+                    </span>
                 </div>
 
+                @if($isWireHarness)
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <span class="text-slate-700 font-bold text-xs block mb-1">Shelf-Life Expiration Limit:</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-200 text-slate-700">
+                            <span class="material-symbols-outlined text-[13px]">all_inclusive</span>
+                            Non-Perishable / Exempt
+                        </span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1">Wire harness & raw copper assemblies do not suffer MSL solder degradation.</p>
+                    <input type="hidden" name="expiration_date" id="expDateInput" value="">
+                </div>
+                @else
                 <div>
                     <label class="block text-slate-700 font-bold text-xs mb-1">Expiration Date / Solderability Limit:</label>
                     <input type="date" name="expiration_date" id="expDateInput" onchange="evaluateShelfLife()"
                         class="w-full text-xs rounded-lg border border-slate-200 py-2.5 px-3 focus:ring-2 focus:ring-blue-500">
                     <span class="text-[10px] text-slate-400 mt-1 block">Maximum shelf-life date before solder degradation.</span>
                 </div>
+                @endif
             </div>
 
+            @if(!$isWireHarness)
             <!-- Expiry Poka-Yoke Warning Banner -->
             <div id="expiryWarningAlert" class="hidden p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs flex items-center gap-2.5 animate-pulse">
                 <span class="material-symbols-outlined text-[20px] text-rose-600 shrink-0">timer_off</span>
@@ -463,6 +610,7 @@
                     <b>Near Expiry Notice:</b> This material has less than 30 days of shelf-life remaining. Prioritize for immediate assembly line usage.
                 </div>
             </div>
+            @endif
         </div>
 
         <!-- 3. Sample Measurements Table -->

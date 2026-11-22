@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        @if(auth()->user()->isInspector())
+        @if(auth()->user()?->isInspector())
         <a href="{{ route('logbooks.edit', $logbook->id) }}" class="px-5 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-md shadow-amber-500/20 transition shrink-0">
             Correct & Revise Now &rarr;
         </a>
@@ -107,6 +107,10 @@
     </div>
 
     <!-- Visual & Shelf-Life Verification Results -->
+    @php
+        $isWireHarness = ($logbook->receiving->part->kategori_komoditas ?? '') === 'wire_harness';
+    @endphp
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Visual & Packaging Checklist Results -->
         <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
@@ -128,7 +132,9 @@
 
             <div class="space-y-2.5 text-xs">
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-slate-700 font-medium">Packaging & Label Integrity</span>
+                    <span class="text-slate-700 font-medium">
+                        {{ $isWireHarness ? 'Spool & Wire Specification Labeling' : 'Packaging & Label Integrity' }}
+                    </span>
                     @if($logbook->visual_packaging === 'pass')
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
                     @else
@@ -136,8 +142,12 @@
                     @endif
                 </div>
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-slate-700 font-medium">ESD Protection & Moisture Barrier (HIC)</span>
-                    @if($logbook->visual_esd_moisture === 'pass')
+                    <span class="text-slate-700 font-medium">
+                        {{ $isWireHarness ? 'Moisture & Static Shielding (Exempt for Wire)' : 'ESD Protection & Moisture Barrier (HIC)' }}
+                    </span>
+                    @if($isWireHarness)
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">EXEMPT (N/A)</span>
+                    @elseif($logbook->visual_esd_moisture === 'pass')
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
                     @elseif($logbook->visual_esd_moisture === 'na')
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">N/A</span>
@@ -146,7 +156,9 @@
                     @endif
                 </div>
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-slate-700 font-medium">Physical Body Condition (No Cracks)</span>
+                    <span class="text-slate-700 font-medium">
+                        {{ $isWireHarness ? 'Cable Insulation & Outer Jacket Integrity' : 'Physical Body Condition (No Cracks)' }}
+                    </span>
                     @if($logbook->visual_body === 'pass')
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
                     @else
@@ -154,7 +166,9 @@
                     @endif
                 </div>
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-slate-700 font-medium">Lead Pin / Terminal (No Bent Leads/Oxidation)</span>
+                    <span class="text-slate-700 font-medium">
+                        {{ $isWireHarness ? 'Connector Housing & Terminal Crimp Condition' : 'Lead Pin / Terminal (No Bent Leads/Oxidation)' }}
+                    </span>
                     @if($logbook->visual_terminal === 'pass')
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
                     @else
@@ -169,28 +183,34 @@
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <span class="text-xs font-bold uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-[16px]">event_available</span>
-                    Shelf-Life & Expiration Status
+                    {{ $isWireHarness ? 'Batch & Exemption Status' : 'Shelf-Life & Expiration Status' }}
                 </span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border {{ $logbook->shelf_life_badge_class }}">
-                    @if($logbook->is_expired)
-                        EXPIRED LOT
-                    @elseif($logbook->shelf_life_status === 'near_expiry')
-                        NEAR EXPIRY (&lt;30d)
-                    @else
-                        CERTIFIED VALID
-                    @endif
-                </span>
+                @if($isWireHarness)
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border border-emerald-300 bg-emerald-50 text-emerald-800">
+                        NON-PERISHABLE (EXEMPT)
+                    </span>
+                @else
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border {{ $logbook->shelf_life_badge_class }}">
+                        @if($logbook->is_expired)
+                            EXPIRED LOT
+                        @elseif($logbook->shelf_life_status === 'near_expiry')
+                            NEAR EXPIRY (&lt;30d)
+                        @else
+                            CERTIFIED VALID
+                        @endif
+                    </span>
+                @endif
             </div>
 
             <div class="grid grid-cols-2 gap-3 text-xs">
                 <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Date Code / Lot DOM</span>
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">{{ $isWireHarness ? 'Spool / Batch Code' : 'Date Code / Lot DOM' }}</span>
                     <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
                         {{ $logbook->date_code ?? 'Not Recorded' }}
                     </span>
                 </div>
                 <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Manufacturing Date</span>
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">{{ $isWireHarness ? 'Assembly / Extrusion Date' : 'Manufacturing Date' }}</span>
                     <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
                         {{ $logbook->manufacturing_date ? $logbook->manufacturing_date->format('d/m/Y') : '-' }}
                     </span>
@@ -199,10 +219,14 @@
                     <div>
                         <span class="text-slate-400 block text-[10px] uppercase font-bold">Expiration / Solderability Limit</span>
                         <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">
-                            {{ $logbook->expiration_date ? $logbook->expiration_date->format('d F Y') : 'Not Specified' }}
+                            @if($isWireHarness)
+                                Non-Perishable (Exempt from Shelf-Life Expiry)
+                            @else
+                                {{ $logbook->expiration_date ? $logbook->expiration_date->format('d F Y') : 'Not Specified' }}
+                            @endif
                         </span>
                     </div>
-                    @if($logbook->expiration_date)
+                    @if(!$isWireHarness && $logbook->expiration_date)
                         @php
                             $diff = (int) now()->diffInDays($logbook->expiration_date, false);
                         @endphp
@@ -212,6 +236,10 @@
                             @else
                                 <span class="text-emerald-700 font-bold font-mono text-xs">{{ $diff }} days remaining</span>
                             @endif
+                        </div>
+                    @elseif($isWireHarness)
+                        <div class="text-right">
+                            <span class="text-emerald-700 font-bold font-mono text-xs">Passive Cable Assembly</span>
                         </div>
                     @endif
                 </div>

@@ -68,6 +68,10 @@
             </div>
         </div>
 
+        @php
+            $isWireHarness = ($logbook->receiving->part->kategori_komoditas ?? '') === 'wire_harness';
+        @endphp
+
         <!-- 1. Visual & Packaging Verification (Correction) -->
         <div class="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
@@ -78,9 +82,88 @@
                     </div>
                     <h3 class="text-base font-bold text-slate-900 mt-0.5">Physical Packaging & Visual Verification</h3>
                 </div>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold border border-slate-200 text-xs">
+                    <span class="material-symbols-outlined text-[15px] text-blue-600">verified</span>
+                    @if($isWireHarness)
+                        IPC/WHMA-A-620 Cable & Wire
+                    @else
+                        MIL-STD-105E Visual Level II
+                    @endif
+                </span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+                @if($isWireHarness)
+                <!-- Wire Harness Check 1: Spool & Bundle Packaging / Spec Labeling -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">Spool & Spec Labeling</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Spool intact, AWG spec, color & lot label match PO.</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_packaging" value="pass" {{ $logbook->visual_packaging === 'pass' ? 'checked' : '' }} class="text-emerald-600">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_packaging" value="fail" {{ $logbook->visual_packaging === 'fail' ? 'checked' : '' }} class="text-rose-600">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Wire Harness Check 2: Moisture & Static Shield (Exempt) -->
+                <div class="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-700">Moisture / ESD (Exempt)</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Non-ESD/MSL Wire Commodity. Moisture bag exempt.</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-200 text-slate-700">
+                            <span class="material-symbols-outlined text-[14px]">check</span>
+                            EXEMPT (N/A)
+                        </span>
+                        <input type="hidden" name="visual_esd_moisture" value="na">
+                        <span class="text-[10px] text-slate-400 font-medium">Passive Hardware</span>
+                    </div>
+                </div>
+
+                <!-- Wire Harness Check 3: Insulation & Jacket Integrity -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">Insulation & Jacket Integrity</div>
+                        <p class="text-[11px] text-slate-500 mt-1">No cuts, tears, burns, exposed strands, or damage.</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_body" value="pass" {{ $logbook->visual_body === 'pass' ? 'checked' : '' }} class="text-emerald-600">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_body" value="fail" {{ $logbook->visual_body === 'fail' ? 'checked' : '' }} class="text-rose-600">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Wire Harness Check 4: Connector Housing & Terminal Crimp -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">Housing & Terminal Crimp</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Housing not cracked, lance intact, crimp secure.</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_terminal" value="pass" {{ $logbook->visual_terminal === 'pass' ? 'checked' : '' }} class="text-emerald-600">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_terminal" value="fail" {{ $logbook->visual_terminal === 'fail' ? 'checked' : '' }} class="text-rose-600">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+                @else
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
                     <div>
                         <div class="font-bold text-xs text-slate-900">Packaging & Labeling</div>
@@ -152,6 +235,7 @@
                         </label>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
 
@@ -161,28 +245,51 @@
                 <div>
                     <div class="flex items-center gap-2 text-blue-600 text-xs font-bold uppercase tracking-wider">
                         <span class="material-symbols-outlined text-[16px]">event_available</span>
-                        <span>Shelf-Life & Expiration Verification</span>
+                        <span>{{ $isWireHarness ? 'Batch / Date Code Verification' : 'Shelf-Life & Expiration Verification' }}</span>
                     </div>
-                    <h3 class="text-base font-bold text-slate-900 mt-0.5">Date Code & Expiry Limit</h3>
+                    <h3 class="text-base font-bold text-slate-900 mt-0.5">{{ $isWireHarness ? 'Batch Code & Non-Perishable Exemption' : 'Date Code & Expiry Limit' }}</h3>
                 </div>
+                @if($isWireHarness)
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        NON-PERISHABLE (EXEMPT FROM EXPIRY)
+                    </span>
+                @endif
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-slate-700 font-bold text-xs mb-1">Date Code / Lot Code:</label>
+                    <label class="block text-slate-700 font-bold text-xs mb-1">
+                        {{ $isWireHarness ? 'Spool / Batch Code:' : 'Date Code / Lot Code:' }}
+                    </label>
                     <input type="text" name="date_code" value="{{ $logbook->date_code }}"
                         class="w-full text-xs font-mono rounded-lg border border-slate-200 py-2.5 px-3">
                 </div>
                 <div>
-                    <label class="block text-slate-700 font-bold text-xs mb-1">Manufacturing Date:</label>
+                    <label class="block text-slate-700 font-bold text-xs mb-1">
+                        {{ $isWireHarness ? 'Assembly / Extrusion Date:' : 'Manufacturing Date:' }}
+                    </label>
                     <input type="date" name="manufacturing_date" value="{{ $logbook->manufacturing_date ? $logbook->manufacturing_date->format('Y-m-d') : '' }}"
                         class="w-full text-xs rounded-lg border border-slate-200 py-2.5 px-3">
                 </div>
+                @if($isWireHarness)
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <span class="text-slate-700 font-bold text-xs block mb-1">Shelf-Life Expiration Limit:</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-200 text-slate-700">
+                            <span class="material-symbols-outlined text-[13px]">all_inclusive</span>
+                            Non-Perishable / Exempt
+                        </span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1">Wire harness & raw copper assemblies do not suffer MSL solder degradation.</p>
+                    <input type="hidden" name="expiration_date" value="">
+                </div>
+                @else
                 <div>
                     <label class="block text-slate-700 font-bold text-xs mb-1">Expiration Date:</label>
                     <input type="date" name="expiration_date" value="{{ $logbook->expiration_date ? $logbook->expiration_date->format('Y-m-d') : '' }}"
                         class="w-full text-xs rounded-lg border border-slate-200 py-2.5 px-3">
                 </div>
+                @endif
             </div>
         </div>
 
