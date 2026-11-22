@@ -133,7 +133,7 @@
             <div class="space-y-2.5 text-xs">
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                     <span class="text-slate-700 font-medium">
-                        {{ $isWireHarness ? 'Spool & Wire Specification Labeling' : 'Packaging & Label Integrity' }}
+                        {{ $isWireHarness ? 'Harness Label & Drawing Identification' : 'Packaging & Label Integrity' }}
                     </span>
                     @if($logbook->visual_packaging === 'pass')
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
@@ -143,21 +143,7 @@
                 </div>
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                     <span class="text-slate-700 font-medium">
-                        {{ $isWireHarness ? 'Moisture & Static Shielding (Exempt for Wire)' : 'ESD Protection & Moisture Barrier (HIC)' }}
-                    </span>
-                    @if($isWireHarness)
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">EXEMPT (N/A)</span>
-                    @elseif($logbook->visual_esd_moisture === 'pass')
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
-                    @elseif($logbook->visual_esd_moisture === 'na')
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">N/A</span>
-                    @else
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">FAIL</span>
-                    @endif
-                </div>
-                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-slate-700 font-medium">
-                        {{ $isWireHarness ? 'Cable Insulation & Outer Jacket Integrity' : 'Physical Body Condition (No Cracks)' }}
+                        {{ $isWireHarness ? 'Connector Housing & Locking Mechanism' : 'Physical Body Condition (No Cracks)' }}
                     </span>
                     @if($logbook->visual_body === 'pass')
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
@@ -167,10 +153,22 @@
                 </div>
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                     <span class="text-slate-700 font-medium">
-                        {{ $isWireHarness ? 'Connector Housing & Terminal Crimp Condition' : 'Lead Pin / Terminal (No Bent Leads/Oxidation)' }}
+                        {{ $isWireHarness ? 'Pin, Terminal & Wire Markers' : 'Lead Pin / Terminal (No Bent Leads/Oxidation)' }}
                     </span>
                     @if($logbook->visual_terminal === 'pass')
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
+                    @else
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">FAIL</span>
+                    @endif
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-slate-700 font-medium">
+                        {{ $isWireHarness ? 'Continuity & Pinout Test (100% Path Test)' : 'ESD Protection & Moisture Barrier (HIC)' }}
+                    </span>
+                    @if($logbook->visual_esd_moisture === 'pass')
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PASS</span>
+                    @elseif($logbook->visual_esd_moisture === 'na')
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">N/A</span>
                     @else
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">FAIL</span>
                     @endif

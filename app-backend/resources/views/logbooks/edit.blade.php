@@ -94,11 +94,11 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
                 @if($isWireHarness)
-                <!-- Wire Harness Check 1: Spool & Bundle Packaging / Spec Labeling -->
+                <!-- Wire Harness Check 1: Harness Label & Drawing Identification -->
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
                     <div>
-                        <div class="font-bold text-xs text-slate-900">Spool & Spec Labeling</div>
-                        <p class="text-[11px] text-slate-500 mt-1">Spool intact, AWG spec, color & lot label match PO.</p>
+                        <div class="font-bold text-xs text-slate-900">Harness Label & Drawing Spec</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Part number harness, drawing revision, and lot/PO verified against drawing spec.</p>
                     </div>
                     <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
                         <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
@@ -112,27 +112,11 @@
                     </div>
                 </div>
 
-                <!-- Wire Harness Check 2: Moisture & Static Shield (Exempt) -->
-                <div class="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 flex flex-col justify-between">
-                    <div>
-                        <div class="font-bold text-xs text-slate-700">Moisture / ESD (Exempt)</div>
-                        <p class="text-[11px] text-slate-500 mt-1">Non-ESD/MSL Wire Commodity. Moisture bag exempt.</p>
-                    </div>
-                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-200 text-slate-700">
-                            <span class="material-symbols-outlined text-[14px]">check</span>
-                            EXEMPT (N/A)
-                        </span>
-                        <input type="hidden" name="visual_esd_moisture" value="na">
-                        <span class="text-[10px] text-slate-400 font-medium">Passive Hardware</span>
-                    </div>
-                </div>
-
-                <!-- Wire Harness Check 3: Insulation & Jacket Integrity -->
+                <!-- Wire Harness Check 2: Connector Housing & Locking Mechanism -->
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
                     <div>
-                        <div class="font-bold text-xs text-slate-900">Insulation & Jacket Integrity</div>
-                        <p class="text-[11px] text-slate-500 mt-1">No cuts, tears, burns, exposed strands, or damage.</p>
+                        <div class="font-bold text-xs text-slate-900">Housing & Locking Mechanism</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Housing crack-free, locking levers, latches & jack screws intact and operating smoothly.</p>
                     </div>
                     <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
                         <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
@@ -146,11 +130,11 @@
                     </div>
                 </div>
 
-                <!-- Wire Harness Check 4: Connector Housing & Terminal Crimp -->
+                <!-- Wire Harness Check 3: Pin, Terminal & Wire Markers -->
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
                     <div>
-                        <div class="font-bold text-xs text-slate-900">Housing & Terminal Crimp</div>
-                        <p class="text-[11px] text-slate-500 mt-1">Housing not cracked, lance intact, crimp secure.</p>
+                        <div class="font-bold text-xs text-slate-900">Pin, Terminal & Wire Markers</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Pins straight (no bent/missing pins), terminal retention secure (no push-out), sleeves intact.</p>
                     </div>
                     <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
                         <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
@@ -159,6 +143,24 @@
                         </label>
                         <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
                             <input type="radio" name="visual_terminal" value="fail" {{ $logbook->visual_terminal === 'fail' ? 'checked' : '' }} class="text-rose-600">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Wire Harness Check 4: Continuity & Pinout Test -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">Continuity & Pinout Test</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Buzzer/tester verification: 100% point-to-point continuity, no open circuit, no short, and no mis-wiring.</p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_esd_moisture" value="pass" {{ $logbook->visual_esd_moisture === 'pass' ? 'checked' : '' }} class="text-emerald-600">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_esd_moisture" value="fail" {{ $logbook->visual_esd_moisture === 'fail' ? 'checked' : '' }} class="text-rose-600">
                             <span>FAIL</span>
                         </label>
                     </div>

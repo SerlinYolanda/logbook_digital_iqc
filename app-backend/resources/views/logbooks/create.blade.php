@@ -308,15 +308,15 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
                 @if($isWireHarness)
-                <!-- Wire Harness Check 1: Spool & Bundle Packaging / Spec Labeling -->
+                <!-- Wire Harness Check 1: Harness Label & Drawing Identification -->
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
-                            <span class="material-symbols-outlined text-blue-600 text-[18px]">inventory_2</span>
-                            <span>Spool & Spec Labeling</span>
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">label</span>
+                            <span>Harness Label & Drawing Spec</span>
                         </div>
                         <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                            Spool/bundle intact, AWG gauge spec, color code & lot label verified against PO.
+                            Harness part number, drawing revision, and lot/PO verified against drawing spec.
                         </p>
                     </div>
                     <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
@@ -333,36 +333,15 @@
                     </div>
                 </div>
 
-                <!-- Wire Harness Check 2: Moisture & Static Shield (Exempt for Wire) -->
-                <div class="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center gap-2 text-slate-700 font-bold text-xs">
-                            <span class="material-symbols-outlined text-slate-500 text-[18px]">shield</span>
-                            <span>Moisture / ESD (Exempt)</span>
-                        </div>
-                        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                            Non-ESD/MSL Wire Commodity. Moisture barrier bag & desiccant HIC are exempt.
-                        </p>
-                    </div>
-                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-200 text-slate-700">
-                            <span class="material-symbols-outlined text-[14px]">check</span>
-                            EXEMPT (N/A)
-                        </span>
-                        <input type="hidden" name="visual_esd_moisture" value="na">
-                        <span class="text-[10px] text-slate-400 font-medium">Passive Hardware</span>
-                    </div>
-                </div>
-
-                <!-- Wire Harness Check 3: Cable Insulation & Outer Jacket Integrity -->
+                <!-- Wire Harness Check 2: Connector Housing & Locking Mechanism -->
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
-                            <span class="material-symbols-outlined text-blue-600 text-[18px]">cable</span>
-                            <span>Insulation & Jacket Integrity</span>
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">electrical_services</span>
+                            <span>Housing & Locking Mechanism</span>
                         </div>
                         <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                            No cuts, tears, burns, pinholes, exposed copper strands, or jacket damage.
+                            Housing crack-free, locking levers, latches & jack screws intact and operating smoothly.
                         </p>
                     </div>
                     <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
@@ -379,15 +358,15 @@
                     </div>
                 </div>
 
-                <!-- Wire Harness Check 4: Connector Housing & Terminal Crimp -->
+                <!-- Wire Harness Check 3: Pin, Terminal & Wire Markers -->
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
-                            <span class="material-symbols-outlined text-blue-600 text-[18px]">electrical_services</span>
-                            <span>Housing & Terminal Crimp</span>
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">pin</span>
+                            <span>Pin, Terminal & Wire Markers</span>
                         </div>
                         <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                            Housing not cracked, locking lance intact, terminal retention secure (no push-out).
+                            Pins straight (no bent/missing pins), terminal retention secure (no push-out), sleeves intact.
                         </p>
                     </div>
                     <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
@@ -398,6 +377,31 @@
                         </label>
                         <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
                             <input type="radio" name="visual_terminal" value="fail" onchange="checkVisualStatus()"
+                                class="text-rose-600 focus:ring-rose-500">
+                            <span>FAIL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Wire Harness Check 4: Continuity & Pinout Test -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-slate-900 font-bold text-xs">
+                            <span class="material-symbols-outlined text-blue-600 text-[18px]">rule</span>
+                            <span>Continuity & Pinout Test</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                            Buzzer/tester verification: 100% point-to-point continuity, no open circuit, no short, and no mis-wiring.
+                        </p>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                            <input type="radio" name="visual_esd_moisture" value="pass" checked onchange="checkVisualStatus()"
+                                class="text-emerald-600 focus:ring-emerald-500">
+                            <span>PASS</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                            <input type="radio" name="visual_esd_moisture" value="fail" onchange="checkVisualStatus()"
                                 class="text-rose-600 focus:ring-rose-500">
                             <span>FAIL</span>
                         </label>
